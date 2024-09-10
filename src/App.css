@@ -1,0 +1,68 @@
+:root {
+  --sidebar-bg: rgb(236, 236, 236);
+  --main-color: #ffb80c;
+}
+
+.main-section {
+  position: relative;
+  background-color: rgb(236, 236, 236);
+  min-height: 100vh;
+}
+
+/* ================ navbar ============== */
+
+.navbar {
+  height: 60px;
+  background-color: var(--main-color);
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.navbar-btn {
+  background-color: black;
+  height: 38px;
+  width: 80px;
+  border-radius: 5px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 0.1s;
+}
+
+.navbar-btn:hover {
+  transform: scale(1.02);
+}
+
+.navbar-btn:active {
+  transform: scale(0.99);
+}
+
+.navbar .menus .menu {
+  padding: 0 6px;
+  line-height: 25px;
+  cursor: pointer;
+}
+
+.navbar .menus .menu:hover {
+  border-bottom: 1px solid black;
+  margin-top: 2px;
+}
+
+/* ================ sidebar ============== */
+
+.sidebar {
+  background-color: var(--sidebar-bg);
+  min-height: 100%;
+  position: fixed;
+  padding-top: 60px;
+}
+
+.content {
+  padding-top: 60px;
+  min-height: 120vh;
+}
