@@ -1,6 +1,8 @@
 :root {
   --sidebar-bg: rgb(236, 236, 236);
   --main-color: #ffb80c;
+  --red: #d9517847;
+  --blue: #008efb24;
 }
 
 .main-section {
@@ -57,12 +59,81 @@
 
 .sidebar {
   background-color: var(--sidebar-bg);
-  min-height: 100%;
   position: fixed;
   padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
-.content {
-  padding-top: 60px;
-  min-height: 120vh;
+::-webkit-scrollbar{
+  display: none;
 }
+
+/* ================ content ============== */
+
+.content {
+  padding-top: 78px;
+  min-height: 100vh;
+  transition: all;
+  transition-duration: 0.5s;
+}
+
+.home-hero-section-swiper{
+  height: 350px;
+  border-radius: 10px;
+}
+
+.home-hero-section-swiper .swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.home-hero-section-swiper .swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-pagination-bullet{
+  background-color: gray;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: white; /* Change active bullet color */
+}
+
+.home-hero-section-swiper .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-cards-section{
+  flex: 1;
+  min-height: 77px;
+  border-radius: 7px;
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.123);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.2s;
+}
+
+.home-cards-section:hover{
+  scale: 1.03;
+}
+
+.home-cards-section:active{
+  scale: 1.00;
+}
+

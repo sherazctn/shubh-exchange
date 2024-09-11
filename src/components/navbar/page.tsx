@@ -2,7 +2,7 @@ import { IoMenuSharp } from "react-icons/io5";
 
 const Navbar = () => {
   return (
-    <div className="navbar">
+    <div className="navbar shadow-md">
       <div>
         <p className="text-[28px] font-[700]">Betting App</p>
       </div>
