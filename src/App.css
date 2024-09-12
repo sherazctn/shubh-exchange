@@ -64,6 +64,7 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
+  z-index: 99;
 }
 
 ::-webkit-scrollbar{
@@ -73,14 +74,12 @@
 /* ================ content ============== */
 
 .content {
-  padding-top: 78px;
   min-height: 100vh;
   transition: all;
   transition-duration: 0.5s;
 }
 
 .home-hero-section-swiper{
-  height: 350px;
   border-radius: 10px;
 }
 
@@ -126,11 +125,12 @@
   gap: 4px;
   cursor: pointer;
   transition: all;
-  transition-duration: 0.2s;
+  transition-duration: 0.3s;
 }
 
 .home-cards-section:hover{
-  scale: 1.03;
+  scale: 1.02;
+  border: 1px solid rgba(128, 128, 128, 0.233);
 }
 
 .home-cards-section:active{

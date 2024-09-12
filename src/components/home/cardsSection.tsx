@@ -1,29 +1,36 @@
+import { useEffect } from "react";
+import aos from "aos";
+import "aos/dist/aos.css";
+
 import sports from "../../assets/sports.png";
 import inPlay from "../../assets/inplay.png";
 import casino from "../../assets/casino.png";
 import trophy from "../../assets/trophy.png";
 
 const CardsSection = () => {
+  useEffect(() => {
+    aos.init();
+  }, []);
   return (
-    <div className="mt-[15px] flex gap-[8px]">
-        <div className="home-cards-section shadow-sm">
-            <img alt="sports" src={sports} className="h-[25px]" />
-            <p className="text-[13px] font-[500]">Sports</p>
-        </div>
-        <div className="home-cards-section shadow-sm">
-            <img alt="inPlay" src={inPlay} className="h-[25px]" />
-            <p className="text-[13px] font-[500]">In-Play</p>
-        </div>
-        <div className="home-cards-section shadow-sm">
-            <img alt="casino" src={casino} className="h-[25px]" />
-            <p className="text-[13px] font-[500]">Live Casino</p>
-        </div>
-        <div className="home-cards-section shadow-sm">
-            <img alt="trophy" src={trophy} className="h-[25px]" />
-            <p className="text-[13px] font-[500]">Slots</p>
-        </div>
+    <div className="mt-[15px] grid grid-cols-2 lg:grid-cols-4 gap-[8px]">
+      <div data-aos="zoom-in" data-aos-duration="500" className="home-cards-section shadow-sm">
+        <img alt="sports" src={sports} className="h-[25px]" />
+        <p className="text-[13px] font-[500]">Sports</p>
+      </div>
+      <div data-aos="zoom-in" data-aos-duration="500" data-aos-delay="250" className="home-cards-section shadow-sm">
+        <img alt="inPlay" src={inPlay} className="h-[25px]" />
+        <p className="text-[13px] font-[500]">In-Play</p>
+      </div>
+      <div data-aos="zoom-in" data-aos-duration="500" data-aos-delay="500" className="home-cards-section shadow-sm">
+        <img alt="casino" src={casino} className="h-[25px]" />
+        <p className="text-[13px] font-[500]">Live Casino</p>
+      </div>
+      <div data-aos="zoom-in" data-aos-duration="500" data-aos-delay="750" className="home-cards-section shadow-sm">
+        <img alt="trophy" src={trophy} className="h-[25px]" />
+        <p className="text-[13px] font-[500]">Slots</p>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default CardsSection
+export default CardsSection;

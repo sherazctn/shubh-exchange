@@ -1,37 +1,36 @@
-import { useState } from "react";
-import {
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
-} from "react-icons/md";
-import { FiSearch } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import aos from "aos";
 import { useDispatch, useSelector } from "react-redux";
 
+import { updateMobileSidebar, updateSidebar } from "../../features/features";
+
+import { FiSearch } from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 import cricketBall from "../../assets/cricket-ball.png";
 import soccerBall from "../../assets/soccer-ball.png";
 import tennisBall from "../../assets/tennis-ball.png";
-import { updateSidebar } from "../../features/features";
 
 // options
-import {
-  CricketOptions,
-  SoccerOptions,
-  TennisOptions,
-} from "../../assets/data";
+import { CricketOptions, SoccerOptions, TennisOptions } from "../../assets/data";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const screenHeight = `${window.innerHeight - 15}px`;
+  const screenHeight = `${window.innerHeight}px`;
   const showSidebar = useSelector((state: any) => state.showSidebar);
+  const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   const [openCricketOptions, setOpenCricketOptions] = useState(false);
   const [openSoccerOptions, setOpenSoccerOptions] = useState(false);
   const [openTennisOptions, setOpenTennisOptions] = useState(false);
+  useEffect(() => {
+    aos.init();
+  }, []);
   return (
     <div
-      className={`sidebar top-0 left-0 transition-all duration-500 ${
+      className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${
         showSidebar ? "w-[270px]" : "w-[67px] ms-2"
-      }`}
+      } ${mobileSidebar ? "left-0" : "left-[-270px] md:left-0"}`}
       style={{ height: screenHeight }}
     >
       {/* button-control-sidebar */}
@@ -41,10 +40,20 @@ const Sidebar = () => {
             <p className="uppercase font-[700] text-[14px]">Sports</p>
           )}
           <div
-            className="bg-black w-[30px] min-w-[30px] h-[30px] rounded-full text-white flex justify-center items-center cursor-pointer"
+            className="bg-black hidden md:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
             onClick={() => dispatch(updateSidebar(!showSidebar))}
           >
             {showSidebar ? (
+              <MdKeyboardDoubleArrowLeft className="text-[20px]" />
+            ) : (
+              <MdKeyboardDoubleArrowRight className="text-[20px]" />
+            )}
+          </div>
+          <div
+            className="bg-black flex md:hidden w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            onClick={() => dispatch(updateMobileSidebar(!mobileSidebar))}
+          >
+            {mobileSidebar ? (
               <MdKeyboardDoubleArrowLeft className="text-[20px]" />
             ) : (
               <MdKeyboardDoubleArrowRight className="text-[20px]" />
@@ -67,7 +76,7 @@ const Sidebar = () => {
       )}
       {/* sports */}
       <div
-        className={`sidebar-menus mt-[15px] flex flex-col gap-1.5 items-center`}
+        className={`sidebar-menus my-[15px] flex flex-col gap-1.5 items-center`}
       >
         <CricketOption
           showSidebar={showSidebar}
@@ -97,7 +106,7 @@ const CricketOption = ({
   setOpenCricketOptions,
 }: any) => {
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
       {/* header */}
       <div
         className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${
@@ -153,7 +162,7 @@ const SoccerOption = ({
   setOpenSoccerOptions,
 }: any) => {
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="250">
       {/* header */}
       <div
         className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${
@@ -209,7 +218,7 @@ const TennisOption = ({
   setOpenTennisOptions,
 }: any) => {
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="500">
       {/* header */}
       <div
         className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${

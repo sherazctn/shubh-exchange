@@ -1,4 +1,5 @@
 import "./App.css";
+import "aos/dist/aos.css";
 import { Route, Routes } from "react-router-dom";
 
 import Navbar from "./components/navbar/page";
@@ -12,7 +13,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sports" element={<Sports />} />
+        <Route path="/all-sports" element={<Sports />} />
       </Routes>
     </>
   );

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   showSidebar: true,
+  mobileSidebar: false
 };
 
 export const featuresSlice = createSlice({
@@ -11,8 +12,11 @@ export const featuresSlice = createSlice({
     updateSidebar: (state, action) => {
       state.showSidebar = action.payload;
     },
+    updateMobileSidebar: (state, action) => {
+      state.mobileSidebar = action.payload;
+    },
   },
 });
 
-export const { updateSidebar } = featuresSlice.actions;
+export const { updateSidebar, updateMobileSidebar } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

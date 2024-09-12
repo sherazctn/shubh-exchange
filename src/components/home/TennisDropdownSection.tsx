@@ -2,9 +2,9 @@ import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 
-import crciketBall from "../../assets/cricket-ball.png";
+import crciketBall from "../../assets/tennis-ball.png";
 
-const CricketDropdownsSection = ({ text }: any) => {
+const TennisDropdownsSection = ({ text }: any) => {
   const [dropdown, setDropdown] = useState(true);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
@@ -774,4 +774,4 @@ const CricketDropdownsSection = ({ text }: any) => {
   );
 };
 
-export default CricketDropdownsSection;
+export default TennisDropdownsSection;
