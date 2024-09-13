@@ -1,20 +1,21 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { IoMenuSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { updateMobileSidebar } from "../../features/features";
+import { updateMobileMenu, updateMobileSidebar } from "../../features/features";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const mobileMenu = useSelector((state: any) => state.mobileMenu);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   return (
     <div className="navbar shadow-md">
       <div>
-        <Link to={"/"} className="text-[28px] font-[700]">Betting App</Link>
+        <Link to={"/"} className="text-[28px] font-[700]">
+          Betting App
+        </Link>
       </div>
       <div className="hidden md:flex gap-[25px]">
         <ul className="menus flex items-center gap-[15px] font-[600] text-[15px]">
@@ -32,7 +33,7 @@ const Navbar = () => {
       <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-black cursor-pointer">
         <IoMenuSharp
           className="text-white text-[25px]"
-          onClick={() => setMobileMenu(true)}
+          onClick={() => dispatch(updateMobileMenu(true))}
         />
       </div>
       <div
@@ -42,19 +43,27 @@ const Navbar = () => {
       >
         <div className="flex justify-end absolute right-[20px]">
           <div
-            onClick={() => setMobileMenu(false)}
+            onClick={() => dispatch(updateMobileMenu(false))}
             className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-[--main-color] cursor-pointer"
           >
             <RxCross2 className="text-white text-[25px]" />
           </div>
         </div>
         <ul className="menus flex flex-col text-white justify-center gap-[15px] font-[600] text-[15px] w-full">
-          <li className="menu w-[max-content]" style={{ borderColor: "white" }}>
-            Sports
-          </li>
-          <li className="menu w-[max-content]" style={{ borderColor: "white" }}>
+          <Link
+            to={"/"}
+            className="menu w-[max-content]"
+            style={{ borderColor: "white" }}
+          >
             My Markets
-          </li>
+          </Link>
+          <Link
+            to={"/all-sports"}
+            className="menu w-[max-content]"
+            style={{ borderColor: "white" }}
+          >
+            Sports
+          </Link>
           <li className="menu w-[max-content]" style={{ borderColor: "white" }}>
             In-Play
           </li>
@@ -70,7 +79,7 @@ const Navbar = () => {
         </ul>
       </div>
       {!mobileSidebar && (
-        <div className="absolute md:hidden w-[38px] h-[38px] left-[10px] top-[68px] bg-gray-100 rounded-[7px] shadow-md border z-[999] flex justify-center items-center">
+        <div className="absolute lg:hidden w-[38px] h-[38px] left-[10px] top-[68px] bg-gray-100 rounded-[7px] shadow-md border z-[999] flex justify-center items-center">
           <MdKeyboardDoubleArrowRight
             onClick={() => dispatch(updateMobileSidebar(!mobileSidebar))}
             className="text-[25px]"

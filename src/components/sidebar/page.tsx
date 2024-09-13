@@ -24,13 +24,13 @@ const Sidebar = () => {
   const [openSoccerOptions, setOpenSoccerOptions] = useState(false);
   const [openTennisOptions, setOpenTennisOptions] = useState(false);
   useEffect(() => {
-    aos.init();
+    aos.init({ once: true });
   }, []);
   return (
     <div
       className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${
         showSidebar ? "w-[270px]" : "w-[67px] ms-2"
-      } ${mobileSidebar ? "left-0" : "left-[-270px] md:left-0"}`}
+      } ${mobileSidebar ? "left-0" : "left-[-270px] lg:left-0"}`}
       style={{ height: screenHeight }}
     >
       {/* button-control-sidebar */}
@@ -40,7 +40,7 @@ const Sidebar = () => {
             <p className="uppercase font-[700] text-[14px]">Sports</p>
           )}
           <div
-            className="bg-black hidden md:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            className="bg-black hidden lg:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
             onClick={() => dispatch(updateSidebar(!showSidebar))}
           >
             {showSidebar ? (
@@ -50,7 +50,7 @@ const Sidebar = () => {
             )}
           </div>
           <div
-            className="bg-black flex md:hidden w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            className="bg-black flex lg:hidden w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
             onClick={() => dispatch(updateMobileSidebar(!mobileSidebar))}
           >
             {mobileSidebar ? (

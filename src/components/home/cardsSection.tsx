@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import aos from "aos";
-import "aos/dist/aos.css";
 
 import sports from "../../assets/sports.png";
 import inPlay from "../../assets/inplay.png";
