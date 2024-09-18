@@ -2,15 +2,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { updateMobileMenu, updatePageNav } from "../../features/features";
-import RightSection from "../../components/sports/RightSection";
-import LeftSection from "../../components/sports/LeftSection";
+import LeftSection from "../../components/inplay/LeftSection";
 
-const Sports = () => {
+const InPlay = () => {
   const dispatch = useDispatch();
   const showSidebar = useSelector((state: any) => state.showSidebar);
   useEffect(() => {
     dispatch(updateMobileMenu(false));
-    dispatch(updatePageNav("sports"));
+    dispatch(updatePageNav("inplay"));
   }, [dispatch]);
   return (
     <div
@@ -21,9 +20,8 @@ const Sports = () => {
       } pe-[10px] sm:pe-[20px] flex`}
     >
       <LeftSection />
-      <RightSection />
     </div>
   );
 };
 
-export default Sports;
+export default InPlay;

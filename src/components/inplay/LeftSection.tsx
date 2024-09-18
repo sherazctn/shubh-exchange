@@ -1,31 +1,42 @@
 import { useEffect, useState } from "react";
 import aos from "aos";
 
+import allTabsImg from "../../assets/inplay.png";
 import cricketBall from "../../assets/cricket-ball.png";
 import soccerBall from "../../assets/soccer-ball.png";
 import tennisBall from "../../assets/tennis-ball.png";
 import { IoIosArrowUp } from "react-icons/io";
 
 import Footer from "../footer/page";
+import { GoDotFill } from "react-icons/go";
 
 const LeftSection = () => {
   const divHeight = `${window.innerHeight - 60}px`;
-  const [cricketTab, setCricketTab] = useState(true);
+  const [allTabs, setAllTabs] = useState(true);
+  const [cricketTab, setCricketTab] = useState(false);
   const [soccerTab, setSoccerTab] = useState(false);
   const [tennisTab, setTennisTab] = useState(false);
   useEffect(() => {
     aos.refresh();
   }, [cricketTab, soccerTab, tennisTab]);
   const fn_controlTabs = (value: string) => {
-    if (value === "cricket") {
+    if (value === "allTabs") {
+      setAllTabs(true);
+      setCricketTab(false);
+      setSoccerTab(false);
+      setTennisTab(false);
+    } else if (value === "cricket") {
+      setAllTabs(false);
       setCricketTab(true);
       setSoccerTab(false);
       setTennisTab(false);
     } else if (value === "soccer") {
+      setAllTabs(false);
       setCricketTab(false);
       setSoccerTab(true);
       setTennisTab(false);
     } else {
+      setAllTabs(false);
       setCricketTab(false);
       setSoccerTab(false);
       setTennisTab(true);
@@ -40,16 +51,30 @@ const LeftSection = () => {
       <div className="h-[67px] flex gap-[8px] sm:gap-[15px] overflow-auto">
         <div
           className={`sports-left-top-tabs shadow-sm ${
+            allTabs
+              ? "bg-[#f3f3f3] border border-[--main-color-light]"
+              : " bg-white"
+          }`}
+          onClick={() => fn_controlTabs("allTabs")}
+          data-aos="zoom-in"
+          data-aos-duration="500"
+        >
+          <img alt="img" src={allTabsImg} className="w-[21px] h-[21px]" />
+          <p className="font-[500] text-[14px]">All</p>
+        </div>
+        <div
+          className={`sports-left-top-tabs shadow-sm ${
             cricketTab
               ? "bg-[#f3f3f3] border border-[--main-color-light]"
               : " bg-white"
           }`}
           onClick={() => fn_controlTabs("cricket")}
-          data-aos="zoom-in" data-aos-duration="500"
+          data-aos="zoom-in"
+          data-aos-duration="500"
+          data-aos-delay="250"
         >
           <img alt="img" src={cricketBall} className="w-[21px] h-[21px]" />
           <p className="font-[500] text-[14px]">Cricket</p>
-          <p className="count">29</p>
         </div>
         <div
           className={`sports-left-top-tabs shadow-sm ${
@@ -58,11 +83,12 @@ const LeftSection = () => {
               : " bg-white"
           }`}
           onClick={() => fn_controlTabs("soccer")}
-          data-aos="zoom-in" data-aos-duration="500" data-aos-delay="250"
+          data-aos="zoom-in"
+          data-aos-duration="500"
+          data-aos-delay="500"
         >
           <img alt="img" src={soccerBall} className="w-[21px] h-[21px]" />
           <p className="font-[500] text-[14px]">Soccer</p>
-          <p className="count">111</p>
         </div>
         <div
           className={`sports-left-top-tabs shadow-sm ${
@@ -71,13 +97,15 @@ const LeftSection = () => {
               : " bg-white"
           }`}
           onClick={() => fn_controlTabs("tennis")}
-          data-aos="zoom-in" data-aos-duration="500" data-aos-delay="500"
+          data-aos="zoom-in"
+          data-aos-duration="500"
+          data-aos-delay="750"
         >
           <img alt="img" src={tennisBall} className="w-[21px] h-[21px]" />
           <p className="font-[500] text-[14px]">Tennis</p>
-          <p className="count">134</p>
         </div>
       </div>
+      {allTabs && <AllTabs />}
       {cricketTab && <CricketTab />}
       {soccerTab && <SoccerTab />}
       {tennisTab && <TennisTab />}
@@ -88,72 +116,152 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const List = () => {
+const List = ({ value }: any) => {
   return (
-    <div className="border-b p-[7px] flex flex-col lg:flex-row gap-[10px] items-center justify-between cursor-pointer">
-      <div className="flex gap-[10px] w-full lg:w-auto">
-        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] sm:h-[55px] bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center">
-          <p className="text-[11px] sm:text-[13px] font-[500]">20:30</p>
-          <p className="text-[11px] sm:text-[13px] font-[500]">Today</p>
+    <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+      <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
+        <img
+          src={
+            value === "cricket"
+              ? cricketBall
+              : value === "soccer"
+              ? soccerBall
+              : tennisBall
+          }
+          alt="img"
+          className="w-[21px]"
+        />
+        <p className="text-[14px]">
+          Durham <span className="font-[600]">vs</span> Lanchire
+        </p>
+        <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+          Live
+          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
-        <div className="flex flex-col gap-[5px] justify-center">
-          <p className="text-[11px] sm:text-[13px] font-[500]">
-            Northern Raiders VS Stellenbosh Kings
+      </div>
+      <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
+        <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+          Live
+          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+            620
           </p>
-          <p className="text-[10px] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] bg-[--main-color] w-[max-content]">
-            Live
+          <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+            3.35k
+          </p>
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[15px]">620</p>
+          <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+            3.35k
+          </p>
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[15px]">620</p>
+          <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+            3.35k
+          </p>
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[15px]">620</p>
+          <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+            3.35k
+          </p>
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[15px]">620</p>
+          <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+            3.35k
+          </p>
+        </div>
+        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+          <p className="font-[800] text-center text-[15px]">620</p>
+          <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+            3.35k
           </p>
         </div>
       </div>
-      <div className="flex justify-end flex-wrap gap-[6px] sm:gap-[10px]">
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
-          </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
+    </div>
+  );
+};
+
+const AllTabs = () => {
+  const [sub1, setSub1] = useState(true);
+  const [sub2, setSub2] = useState(true);
+  const [sub3, setSub3] = useState(true);
+  return (
+    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
+      <div>
+        <div
+          onClick={() => setSub1(!sub1)}
+          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+        >
+          <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
+          <div className="flex items-center gap-[10px]">
+            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
+            <IoIosArrowUp
+              className={`transition-all duration-300 ${
+                sub1 ? "" : "-rotate-180"
+              }`}
+            />
+          </div>
         </div>
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
+        {sub1 && (
+          <div className="bg-white rounded-b-[7px]">
+            <List value="cricket" />
+          </div>
+        )}
+      </div>
+      <div>
+        <div
+          onClick={() => setSub2(!sub2)}
+          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+        >
+          <p className="text-[13px] sm:text-[15px] font-[500]">
+            Mens T20 International
           </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
+          <div className="flex items-center gap-[10px]">
+            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
+            <IoIosArrowUp
+              className={`transition-all duration-300 ${
+                sub2 ? "" : "-rotate-180"
+              }`}
+            />
+          </div>
         </div>
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
+        {sub2 && (
+          <div className="bg-white rounded-b-[7px]">
+            <List value="soccer" />
+            <List value="soccer" />
+            <List value="soccer" />
+          </div>
+        )}
+      </div>
+      <div>
+        <div
+          onClick={() => setSub3(!sub3)}
+          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+        >
+          <p className="text-[13px] sm:text-[15px] font-[500]">
+            Bangladesh Premium League
           </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
+          <div className="flex items-center gap-[10px]">
+            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
+            <IoIosArrowUp
+              className={`transition-all duration-300 ${
+                sub3 ? "" : "-rotate-180"
+              }`}
+            />
+          </div>
         </div>
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
-          </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
-        </div>
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
-          </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
-        </div>
-        <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-          <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-            1.38
-          </p>
-          <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-            4.5M
-          </p>
-        </div>
+        {sub3 && (
+          <div className="bg-white rounded-b-[7px]">
+            <List value="tennis" />
+            <List value="tennis" />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -182,8 +290,7 @@ const CricketTab = () => {
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="cricket" />
           </div>
         )}
       </div>
@@ -206,8 +313,9 @@ const CricketTab = () => {
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="cricket" />
+            <List value="cricket" />
+            <List value="cricket" />
           </div>
         )}
       </div>
@@ -230,8 +338,8 @@ const CricketTab = () => {
         </div>
         {sub3 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="cricket" />
+            <List value="cricket" />
           </div>
         )}
       </div>
@@ -262,8 +370,8 @@ const SoccerTab = () => {
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="soccer" />
+            <List value="soccer" />
           </div>
         )}
       </div>
@@ -295,8 +403,8 @@ const TennisTab = () => {
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="tennis" />
+            <List value="tennis" />
           </div>
         )}
       </div>
@@ -319,8 +427,9 @@ const TennisTab = () => {
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List value="tennis" />
+            <List value="tennis" />
+            <List value="tennis" />
           </div>
         )}
       </div>

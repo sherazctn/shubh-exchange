@@ -4,6 +4,7 @@ const initialState = {
   showSidebar: true,
   mobileSidebar: false,
   mobileMenu: false,
+  navPage: "home",
 };
 
 export const featuresSlice = createSlice({
@@ -19,8 +20,16 @@ export const featuresSlice = createSlice({
     updateMobileMenu: (state, action) => {
       state.mobileMenu = action.payload;
     },
+    updatePageNav: (state, action) => {
+      state.navPage = action.payload;
+    },
   },
 });
 
-export const { updateSidebar, updateMobileSidebar, updateMobileMenu } = featuresSlice.actions;
+export const {
+  updateSidebar,
+  updateMobileSidebar,
+  updateMobileMenu,
+  updatePageNav,
+} = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

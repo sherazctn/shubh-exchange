@@ -239,7 +239,7 @@ const TennisOption = ({
             className="w-[20px] h-[20px]"
             style={{ imageRendering: "crisp-edges" }}
           />
-          {showSidebar && <p className="font-[600] text-[15px]">Soccer</p>}
+          {showSidebar && <p className="font-[600] text-[15px]">Tennis</p>}
         </div>
         {showSidebar && (
           <div className="flex items-center gap-2.5">

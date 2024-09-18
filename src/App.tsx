@@ -1,11 +1,12 @@
 import "./App.css";
 import "aos/dist/aos.css";
-import { Route, Routes } from "react-router-dom";
 
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/page";
-import Sidebar from "./components/sidebar/page";  // Moved Sidebar here
+import Sidebar from "./components/sidebar/page";
 import Home from "./pages/home/page";
 import Sports from "./pages/sports/page";
+import Inplay from "./pages/inplay/page";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/all-sports" element={<Sports />} />
+            <Route path="/in-play" element={<Inplay />} />
           </Routes>
         </div>
       </div>

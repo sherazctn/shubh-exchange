@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "../../components/home/HeroSection";
 import CardsSection from "../../components/home/cardsSection";
-import { updateMobileMenu } from "../../features/features";
+import { updateMobileMenu, updatePageNav } from "../../features/features";
 // live matches
 import CricketDropdownsSection from "../../components/home/DropdownsSection";
 import SoccerDropdownsSection from "../../components/home/SoccerDropdownSection";
@@ -19,6 +19,7 @@ const Home = () => {
   const showSidebar = useSelector((state: any) => state.showSidebar);
   useEffect(() => {
     dispatch(updateMobileMenu(false));
+    dispatch(updatePageNav("home"));
   }, [dispatch]);
   return (
     <div

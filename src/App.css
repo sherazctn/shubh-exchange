@@ -51,6 +51,19 @@
   cursor: pointer;
 }
 
+.navbar .menus .active {
+  background-color: rgba(255, 255, 255, 0.37);
+  border-radius: 4px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar .menus .active:hover {
+  border-bottom: none !important;  
+}
+
 .navbar .menus .menu:hover {
   border-bottom: 1px solid black;
   margin-top: 2px;
