@@ -5,6 +5,7 @@ const initialState = {
   mobileSidebar: false,
   mobileMenu: false,
   navPage: "home",
+  authentication: false,
 };
 
 export const featuresSlice = createSlice({
@@ -23,6 +24,9 @@ export const featuresSlice = createSlice({
     updatePageNav: (state, action) => {
       state.navPage = action.payload;
     },
+    authenticate: (state, action) => {
+      state.authentication = action.payload;
+    },
   },
 });
 
@@ -31,5 +35,6 @@ export const {
   updateMobileSidebar,
   updateMobileMenu,
   updatePageNav,
+  authenticate,
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

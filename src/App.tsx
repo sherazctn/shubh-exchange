@@ -7,6 +7,7 @@ import Sidebar from "./components/sidebar/page";
 import Home from "./pages/home/page";
 import Sports from "./pages/sports/page";
 import Inplay from "./pages/inplay/page";
+import LiveCricket from "./pages/cricket/LiveCricket";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/all-sports" element={<Sports />} />
             <Route path="/in-play" element={<Inplay />} />
+            <Route path="/cricket/live" element={<LiveCricket />} />
           </Routes>
         </div>
       </div>

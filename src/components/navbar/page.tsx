@@ -3,41 +3,50 @@ import { Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { updateMobileMenu, updateMobileSidebar } from "../../features/features";
+import {
+  authenticate,
+  updateMobileMenu,
+  updateMobileSidebar,
+} from "../../features/features";
 
 import { IoMenuSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   const pageNav = useSelector((state: any) => state.navPage);
+  const authentication = useSelector((state: any) => state.authentication);
   const [loginModal, setLoginModal] = useState(false);
+  const [accountDropdown, setAccountDropdown] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleMobileLogin = () => {
     dispatch(updateMobileMenu(false));
     setLoginModal(true);
-  }
+  };
   const fn_submit = (e: any) => {
     e.preventDefault();
-    setUsername('');
-    setPassword('');
-    setPasswordType('password');
+    setUsername("");
+    setPassword("");
+    setPasswordType("password");
     setLoginModal(false);
+    dispatch(authenticate(true));
   };
   return (
     <>
       <div className="navbar shadow-md">
+        {/* company name */}
         <div>
           <Link to={"/"} className="text-[28px] font-[700]">
             Betting App
           </Link>
         </div>
+        {/* web menus */}
         <div className="hidden md:flex gap-[25px]">
           <ul className="menus flex items-center gap-[15px] font-[600] text-[15px]">
             <Link to={"/"} className={`menu ${pageNav === "home" && "active"}`}>
@@ -57,16 +66,39 @@ const Navbar = () => {
             </Link>
             <li className="menu">Casino</li>
           </ul>
-          <button className="navbar-btn" onClick={() => setLoginModal(true)}>
-            Login
-          </button>
+          {authentication ? (
+            <button
+              className="navbar-profile"
+              onMouseEnter={() => setAccountDropdown(true)}
+              onMouseLeave={() => setAccountDropdown(false)}
+            >
+              <FaUser />
+            </button>
+          ) : (
+            <button className="navbar-btn" onClick={() => setLoginModal(true)}>
+              Login
+            </button>
+          )}
         </div>
-        <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-black cursor-pointer">
-          <IoMenuSharp
-            className="text-white text-[25px]"
-            onClick={() => dispatch(updateMobileMenu(true))}
-          />
+        {/* mobile menu btn */}
+        <div className="flex gap-[10px] md:hidden">
+          <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-black cursor-pointer">
+            <IoMenuSharp
+              className="text-white text-[25px]"
+              onClick={() => dispatch(updateMobileMenu(true))}
+            />
+          </div>
+          <div>
+            <button
+              className="navbar-profile"
+              onMouseEnter={() => setAccountDropdown(true)}
+              onMouseLeave={() => setAccountDropdown(false)}
+            >
+              <FaUser />
+            </button>
+          </div>
         </div>
+        {/* mobile menu */}
         <div
           className={`absolute transition-all flex z-[9999] justify-center duration-700 bg-[#000000c0] w-full min-h-[100vh] top-0 py-[11px] px-[20px] ${
             mobileMenu ? "left-0" : "left-[-100vw]"
@@ -114,13 +146,15 @@ const Navbar = () => {
             >
               Casino
             </li>
-            <button
-              className="navbar-btn"
-              style={{ backgroundColor: "var(--main-color)" }}
-              onClick={handleMobileLogin}
-            >
-              Login
-            </button>
+            {!authentication && (
+              <button
+                className="navbar-btn"
+                style={{ backgroundColor: "var(--main-color)" }}
+                onClick={handleMobileLogin}
+              >
+                Login
+              </button>
+            )}
           </ul>
         </div>
         {!mobileSidebar && (
@@ -129,6 +163,32 @@ const Navbar = () => {
               onClick={() => dispatch(updateMobileSidebar(!mobileSidebar))}
               className="text-[25px]"
             />
+          </div>
+        )}
+        {accountDropdown && (
+          <div
+            onMouseEnter={() => setAccountDropdown(true)}
+            onMouseLeave={() => setAccountDropdown(false)}
+            className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px]"
+          >
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]">
+              Profile
+            </p>
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+              My Wallet
+            </p>
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+              Account Statement
+            </p>
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+              Bonus Statement
+            </p>
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+              Bets
+            </p>
+            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]">
+              Login History
+            </p>
           </div>
         )}
       </div>
@@ -146,7 +206,10 @@ const Navbar = () => {
         </div>
         <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
           <div className="flex flex-col gap-[3px]">
-            <label htmlFor="username" className="font-[600] text-[16px] sm:text-[18px]">
+            <label
+              htmlFor="username"
+              className="font-[600] text-[16px] sm:text-[18px]"
+            >
               Username
             </label>
             <input
@@ -158,7 +221,10 @@ const Navbar = () => {
             />
           </div>
           <div className="relative flex flex-col gap-[3px]">
-            <label htmlFor="password" className="font-[600] text-[16px] sm:text-[18px]">
+            <label
+              htmlFor="password"
+              className="font-[600] text-[16px] sm:text-[18px]"
+            >
               Password
             </label>
             <input

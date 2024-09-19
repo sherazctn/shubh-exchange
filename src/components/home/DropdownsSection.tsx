@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 
@@ -32,7 +33,7 @@ const CricketDropdownsSection = ({ text }: any) => {
             >
               <p>Country Champianship</p>
               <div className="flex items-center gap-[10px]">
-                <p>10</p>
+                <p>4</p>
                 <IoIosArrowUp
                   className={`${
                     !sub1 ? "-rotate-180" : ""
@@ -43,7 +44,10 @@ const CricketDropdownsSection = ({ text }: any) => {
             {/* content */}
             {sub1 && (
               <div>
-                <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+                <Link
+                  to={"/cricket/live"}
+                  className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+                >
                   <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
                     <img src={crciketBall} alt="img" className="w-[21px]" />
                     <p className="text-[14px]">
@@ -98,8 +102,11 @@ const CricketDropdownsSection = ({ text }: any) => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+                </Link>
+                <Link
+                  to={"/cricket/live"}
+                  className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+                >
                   <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
                     <img src={crciketBall} alt="img" className="w-[21px]" />
                     <p className="text-[14px]">
@@ -155,8 +162,11 @@ const CricketDropdownsSection = ({ text }: any) => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+                </Link>
+                <Link
+                  to={"/cricket/live"}
+                  className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+                >
                   <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
                     <img src={crciketBall} alt="img" className="w-[21px]" />
                     <p className="text-[14px]">
@@ -211,8 +221,11 @@ const CricketDropdownsSection = ({ text }: any) => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+                </Link>
+                <Link
+                  to={"/cricket/live"}
+                  className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+                >
                   <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
                     <img src={crciketBall} alt="img" className="w-[21px]" />
                     <p className="text-[14px]">
@@ -268,7 +281,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
             )}
           </div>

@@ -4,6 +4,7 @@
   --main-color-light: #ffb60c59;
   --red: #d9517847;
   --blue: #008efb24;
+  --cashout: #BBF7D0;
 }
 
 .main-section {
@@ -37,6 +38,22 @@
   transition: transform 0.1s;
 }
 
+.navbar-profile {
+  background-color: black;
+  height: 38px;
+  width: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  padding-bottom: 2px;
+  padding: 0 10px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 0.1s;
+}
+
 .navbar-btn:hover {
   transform: scale(1.02);
 }
@@ -61,7 +78,7 @@
 }
 
 .navbar .menus .active:hover {
-  border-bottom: none !important;  
+  border-bottom: none !important;
 }
 
 .navbar .menus .menu:hover {
@@ -217,4 +234,28 @@
   border-radius: 3px;
   top: 5px;
   right: 5px;
+}
+
+.live-match-btn {
+  height: 30px;
+  background-color: black;
+  border-radius: 7px;
+  padding: 0 20px;
+  padding-top: 2px;
+  color: white;
+  font-weight: 500;
+  margin-top: 10px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% {
+    color: white;
+  }
+  50% {
+    color: gray;
+  }
+  100% {
+    color: white;
+  }
 }
