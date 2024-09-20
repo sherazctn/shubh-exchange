@@ -6,6 +6,8 @@ const initialState = {
   mobileMenu: false,
   navPage: "home",
   authentication: false,
+  dashboardDarkTheme: false,
+  colorScheme: "color1",
 };
 
 export const featuresSlice = createSlice({
@@ -27,6 +29,12 @@ export const featuresSlice = createSlice({
     authenticate: (state, action) => {
       state.authentication = action.payload;
     },
+    updateDarkTheme: (state, action) => {
+      state.dashboardDarkTheme = action.payload;
+    },
+    updateColorScheme: (state, action) => {
+      state.colorScheme = action.payload;
+    },
   },
 });
 
@@ -36,5 +44,7 @@ export const {
   updateMobileMenu,
   updatePageNav,
   authenticate,
+  updateDarkTheme,
+  updateColorScheme
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

@@ -169,26 +169,44 @@ const Navbar = () => {
           <div
             onMouseEnter={() => setAccountDropdown(true)}
             onMouseLeave={() => setAccountDropdown(false)}
-            className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px]"
+            className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
           >
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]">
+            <Link
+              to={"/account/profile"}
+              className="border-b flex-1 w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
+            >
               Profile
-            </p>
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+            </Link>
+            <Link
+              to={"/account/my-wallet"}
+              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+            >
               My Wallet
-            </p>
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+            </Link>
+            <Link
+              to={"/account/account-statement"}
+              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+            >
               Account Statement
-            </p>
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+            </Link>
+            <Link
+              to={"/account/bonus-statement"}
+              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+            >
               Bonus Statement
-            </p>
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300">
+            </Link>
+            <Link
+              to={"/account/bets"}
+              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+            >
               Bets
-            </p>
-            <p className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]">
+            </Link>
+            <Link
+              to={"/account/login-history"}
+              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
+            >
               Login History
-            </p>
+            </Link>
           </div>
         )}
       </div>

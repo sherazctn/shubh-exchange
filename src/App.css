@@ -5,6 +5,11 @@
   --red: #d9517847;
   --blue: #008efb24;
   --cashout: #BBF7D0;
+  --navy: rgb(148, 148, 219);
+  --navy-light: rgb(232, 232, 252);
+  --navy-dark: rgb(61, 61, 158);
+  --dashboard-bg-light: rgb(243, 244, 246);
+  --dashboard-bg-dark: #202020;
 }
 
 .main-section {
@@ -258,4 +263,22 @@
   100% {
     color: white;
   }
+}
+
+/* ================ account =================== */
+
+.account-sidebar-menu{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding-left: 15px;
+  cursor: pointer !important;
+}
+
+.account-sidebar-menu p{
+  /* text-[16px] font-[500] pt-[1px] */
+  font-size: 16px;
+  font-weight: 500;
+  padding-top: 1px;
 }
