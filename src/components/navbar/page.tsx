@@ -172,13 +172,13 @@ const Navbar = () => {
             className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
           >
             <Link
-              to={"/account/profile"}
+              to={"/account/dashboard"}
               className="border-b flex-1 w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
             >
               Profile
             </Link>
             <Link
-              to={"/account/my-wallet"}
+              to={"/account/wallet"}
               className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
               My Wallet

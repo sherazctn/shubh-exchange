@@ -8,6 +8,7 @@ const initialState = {
   authentication: false,
   dashboardDarkTheme: false,
   colorScheme: "color1",
+  smallSidebar: false
 };
 
 export const featuresSlice = createSlice({
@@ -35,6 +36,9 @@ export const featuresSlice = createSlice({
     updateColorScheme: (state, action) => {
       state.colorScheme = action.payload;
     },
+    updateSmallsidebar: (state, action) => {
+      state.smallSidebar = action.payload;
+    }
   },
 });
 
@@ -45,6 +49,7 @@ export const {
   updatePageNav,
   authenticate,
   updateDarkTheme,
-  updateColorScheme
+  updateColorScheme,
+  updateSmallsidebar
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;
