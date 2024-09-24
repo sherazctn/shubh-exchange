@@ -8,6 +8,8 @@ import { SiBetfair } from "react-icons/si";
 import { MdOutlineHistory } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
+import { BsBank } from "react-icons/bs";
+
 import { updateSmallsidebar } from "../../features/features";
 
 const Sidebar = ({ colors, path }: any) => {
@@ -52,6 +54,15 @@ const Sidebar = ({ colors, path }: any) => {
           path={path}
           url={"/account/wallet"}
           icon={<LuWallet2 className="text-[20px]" />}
+          smallSidebar={smallSidebar}
+        />
+        <Menus
+          title={"Deposit/Withdraw"}
+          colors={colors}
+          pathEquals={"depositWithdraw"}
+          path={path}
+          url={"/account/deposit-withdraw"}
+          icon={<BsBank className="text-[20px]" />}
           smallSidebar={smallSidebar}
         />
         <Menus
