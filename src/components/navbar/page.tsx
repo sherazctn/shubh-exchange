@@ -11,8 +11,12 @@ import {
 
 import { IoMenuSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
+import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
+import { GiNetworkBars, GiNotebook } from "react-icons/gi";
+import { FaHandHoldingDollar } from "react-icons/fa6";
+import { SiBetfair } from "react-icons/si";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -49,22 +53,25 @@ const Navbar = () => {
         {/* web menus */}
         <div className="hidden md:flex gap-[25px]">
           <ul className="menus flex items-center gap-[15px] font-[600] text-[15px]">
-            <Link to={"/"} className={`menu ${pageNav === "home" && "active"}`}>
+            <Link to={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
+              <GiNetworkBars className="w-[17px] h-[17px] text-gray-600" />
               My Markets
             </Link>
             <Link
               to={"/all-sports"}
-              className={`menu ${pageNav === "sports" && "active"}`}
+              className={`menu ${pageNav === "sports" && "active"} flex items-center gap-[4px]`}
             >
+              <MdOutlineSportsBaseball className="w-[17px] h-[17px] text-gray-600" />
               Sports
             </Link>
             <Link
               to={"/in-play"}
-              className={`menu ${pageNav === "inplay" && "active"}`}
+              className={`menu ${pageNav === "inplay" && "active"} flex items-center gap-[4px]`}
             >
+              <MdOutlineSportsScore className="w-[17px] h-[17px] text-gray-600" />
               In-Play
             </Link>
-            <li className="menu">Casino</li>
+            <li className="menu flex items-center gap-[4px]"><MdOutlineCasino className="w-[17px] h-[17px] text-gray-600" /> Casino</li>
           </ul>
           {authentication ? (
             <button
@@ -173,38 +180,44 @@ const Navbar = () => {
           >
             <Link
               to={"/account/dashboard"}
-              className="border-b flex-1 w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
+              className="border-b flex-1 flex items-center gap-[5px] w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
             >
-              Profile
+              <LuLayoutDashboard />
+              Dashboard
             </Link>
             <Link
               to={"/account/wallet"}
-              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+              className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
+              <LuWallet2 />
               My Wallet
             </Link>
             <Link
-              to={"/account/account-statement"}
-              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+              to={"/account/bets"}
+              className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
+              <SiBetfair />
+              Bets
+            </Link>
+            <Link
+              to={"/account/account-statement"}
+              className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+            >
+              <GiNotebook />
               Account Statement
             </Link>
             <Link
               to={"/account/bonus-statement"}
-              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
+              className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
+              <FaHandHoldingDollar />
               Bonus Statement
             </Link>
             <Link
-              to={"/account/bets"}
-              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
-            >
-              Bets
-            </Link>
-            <Link
               to={"/account/login-history"}
-              className="border-b text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
+              className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
             >
+              <MdOutlineHistory />
               Login History
             </Link>
           </div>

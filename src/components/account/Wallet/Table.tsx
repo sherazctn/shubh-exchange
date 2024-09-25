@@ -1,3 +1,5 @@
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+
 const WalletTable = ({ colors }: any) => {
   return (
     <>
@@ -11,10 +13,15 @@ const WalletTable = ({ colors }: any) => {
             >
               <td className="w-[150px] ps-[5px]">Date Time</td>
               <td>Narration</td>
-              <td className="w-[150px]">Total</td>
+              <td className="w-[150px]">Total<SortingArrows /></td>
             </tr>
           </thead>
           <tbody>
+            <TableRows colors={colors} />
+            <TableRows colors={colors} />
+            <TableRows colors={colors} />
+            <TableRows colors={colors} />
+            <TableRows colors={colors} />
             <TableRows colors={colors} />
             <TableRows colors={colors} />
             <TableRows colors={colors} />
@@ -94,3 +101,12 @@ const TableRows = ({ colors }: any) => {
     </tr>
   );
 };
+
+const SortingArrows = () => {
+  return(
+    <div className="inline-block ms-[10px] mb-[-4px]">
+      <BiSolidUpArrow className="h-[9px] cursor-pointer" />
+      <BiSolidDownArrow className="h-[9px] cursor-pointer" />
+    </div>
+  )
+}

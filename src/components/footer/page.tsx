@@ -7,7 +7,7 @@ import { IoLogoAndroid } from "react-icons/io";
 
 const Footer = () => {
   return (
-    <div className="flex flex-col md:flex-row gap-[40px] w-full pb-[60px]">
+    <div className="flex flex-col flex-wrap md:flex-row md:justify-between gap-[40px] w-full pb-[60px]">
       {/* info */}
       <div className="flex-1">
         <p className="font-[500]">Info</p>

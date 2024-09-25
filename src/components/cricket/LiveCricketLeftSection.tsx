@@ -15,7 +15,7 @@ const LiveCricketLeftSection = () => {
   const [tiedMatch, setTiedMatch] = useState(true);
   return (
     <div
-      className="w-[100%] xl:me-[15px] overflow-auto pt-[15px]"
+      className="w-[100%] lg:me-[15px] overflow-auto pt-[15px]"
       style={{ maxHeight: divHeight }}
     >
       <div className="min-h-[120px] bg-[--main-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center">

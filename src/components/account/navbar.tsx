@@ -1,5 +1,6 @@
-import { useState } from "react";
 import { Drawer } from "antd";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { FaUser } from "react-icons/fa";
 import { IoIosNotifications, IoMdSettings } from "react-icons/io";
@@ -9,6 +10,7 @@ import { updateColorScheme, updateDarkTheme } from "../../features/features";
 
 const Navbar = ({ pageName, darkTheme, colors }: any) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
@@ -59,7 +61,7 @@ const Navbar = ({ pageName, darkTheme, colors }: any) => {
         </div>
       </div>
       <Drawer
-        title="Theme Settings"
+        title="Settings"
         onClose={() => setOpenDrawer(false)}
         open={openDrawer}
         style={{ fontFamily: "Roboto" }}
@@ -81,6 +83,44 @@ const Navbar = ({ pageName, darkTheme, colors }: any) => {
             onClick={() => dispatch(updateColorScheme("color2"))}
           ></div>
         </div>
+        <hr className="my-[20px]" />
+        <p className="text-[15px] font-[600]">Account Info</p>
+        <div className="mt-[10px]">
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Name</p>
+            <p>Test</p>
+          </div>
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Username</p>
+            <p>test228</p>
+          </div>
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Mobile</p>
+            <p>+91 203 1234434</p>
+          </div>
+        </div>
+        <hr className="my-[20px]" />
+        <p className="text-[15px] font-[600]">Web Settings</p>
+        <div className="mt-[10px]">
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Currency</p>
+            <p>INR</p>
+          </div>
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Odds Format</p>
+            <p>--</p>
+          </div>
+          <div className="flex h-[22px]">
+            <p className="w-[120px] font-[500]">Time Zone</p>
+            <p>GMT+0500</p>
+          </div>
+        </div>
+        <button
+          onClick={() => navigate("/")}
+          className="w-full bg-gray-300 rounded-[4px] h-[35px] my-[15px] text-[15px] font-[500]"
+        >
+          Logout
+        </button>
       </Drawer>
     </>
   );

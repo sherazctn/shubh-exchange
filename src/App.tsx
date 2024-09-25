@@ -25,6 +25,7 @@ import BetHistory from "./pages/account/Bets/BetHistory/page";
 import ProfitLoss from "./pages/account/Bets/ProfitLoss/page";
 import FDProfitLoss from "./pages/account/Bets/FDProftLoss/page";
 import DepositWithdraw from "./pages/account/DepositWithdraw/page";
+import FloatingHomePage from "./components/FloatingHomePage/page";
 
 function App() {
   const location = useLocation();
@@ -61,6 +62,7 @@ function App() {
             </Route>
           </Routes>
         </div>
+        {isAccountPage && <FloatingHomePage colors={colors} />}
       </div>
     </>
   );

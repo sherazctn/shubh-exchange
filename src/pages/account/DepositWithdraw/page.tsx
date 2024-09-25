@@ -6,6 +6,7 @@ import Sidebar from "../../../components/account/sidebar";
 import Navbar from "../../../components/account/navbar";
 import useColorScheme from "../../../hooks/useColorScheme";
 import DepositMoney from "../../../components/account/DepositWithdraw/DepositMoney";
+import WithdrawMoney from "../../../components/account/DepositWithdraw/WithdrawMoney";
 
 const DepositWithdraw = ({ darkTheme }: any) => {
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
@@ -33,9 +34,9 @@ const DepositWithdraw = ({ darkTheme }: any) => {
           colors={colors}
         />
         <div className="mt-[15px] px-[10px] sm:px-[20px]">
-            <div className="flex gap-[15px]">
+            <div className="flex flex-col xl:flex-row gap-[15px] pb-[20px]">
                 <DepositMoney colors={colors} />
-                <div className="w-[40%] min-h-[100px] rounded-[15px] p-[15px]" style={{backgroundColor: colors.dark}}>Withdraw</div>
+                <WithdrawMoney colors={colors} />
             </div>
         </div>
       </div>

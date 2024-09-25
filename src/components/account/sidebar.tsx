@@ -48,6 +48,15 @@ const Sidebar = ({ colors, path }: any) => {
           smallSidebar={smallSidebar}
         />
         <Menus
+          title={"Bets"}
+          colors={colors}
+          pathEquals={"bets"}
+          path={path}
+          url={"/account/bets"}
+          icon={<SiBetfair className="text-[20px]" />}
+          smallSidebar={smallSidebar}
+        />
+        <Menus
           title={"My Wallet"}
           colors={colors}
           pathEquals={"wallet"}
@@ -81,15 +90,6 @@ const Sidebar = ({ colors, path }: any) => {
           path={path}
           url={"/account/bonus-statement"}
           icon={<FaHandHoldingDollar className="text-[20px]" />}
-          smallSidebar={smallSidebar}
-        />
-        <Menus
-          title={"Bets"}
-          colors={colors}
-          pathEquals={"bets"}
-          path={path}
-          url={"/account/bets"}
-          icon={<SiBetfair className="text-[20px]" />}
           smallSidebar={smallSidebar}
         />
         <Menus

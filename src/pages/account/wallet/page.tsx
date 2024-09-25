@@ -6,6 +6,7 @@ import Sidebar from "../../../components/account/sidebar";
 import Navbar from "../../../components/account/navbar";
 import useColorScheme from "../../../hooks/useColorScheme";
 import WalletTable from "../../../components/account/Wallet/Table";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const Wallet = ({ darkTheme }: any) => {
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
@@ -36,10 +37,10 @@ const Wallet = ({ darkTheme }: any) => {
             Available Balance
           </p>
           <p
-            className="text-center text-[30px] sm:text-[40px] font-[700] mt-[10px]"
+            className="text-center text-[30px] sm:text-[40px] font-[700] mt-[10px] flex items-center justify-center"
             style={{ color: colors.text }}
           >
-            $14000
+            <FaIndianRupeeSign />14000
           </p>
           <div
             className="my-[10px] sm:my-[15px] rounded-[22px] pb-[10px] sm:p-[10px] md:px-[15px]"
