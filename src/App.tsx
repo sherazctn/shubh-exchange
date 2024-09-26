@@ -26,6 +26,7 @@ import ProfitLoss from "./pages/account/Bets/ProfitLoss/page";
 import FDProfitLoss from "./pages/account/Bets/FDProftLoss/page";
 import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
+import PaymentInfo from "./pages/account/paymentInfo/page";
 
 function App() {
   const location = useLocation();
@@ -52,6 +53,7 @@ function App() {
             <Route path="/account/deposit-withdraw" element={<DepositWithdraw darkTheme={darkTheme} />} />
             <Route path="/account/account-statement" element={<AccountStatement darkTheme={darkTheme} />} />
             <Route path="/account/bonus-statement" element={<BonusStatement darkTheme={darkTheme} />} />
+            <Route path="/account/payment-info" element={<PaymentInfo darkTheme={darkTheme} />} />
             <Route path="/account/login-history" element={<LoginHistory darkTheme={darkTheme} />} />
             {/* bets pages */}
             <Route path="/account/bets" element={<Bets darkTheme={darkTheme} />}>

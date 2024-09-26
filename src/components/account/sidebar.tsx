@@ -9,6 +9,7 @@ import { MdOutlineHistory } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { BsBank } from "react-icons/bs";
+import { ImCreditCard } from "react-icons/im";
 
 import { updateSmallsidebar } from "../../features/features";
 
@@ -90,6 +91,15 @@ const Sidebar = ({ colors, path }: any) => {
           path={path}
           url={"/account/bonus-statement"}
           icon={<FaHandHoldingDollar className="text-[20px]" />}
+          smallSidebar={smallSidebar}
+        />
+        <Menus
+          title={"Payment Information"}
+          colors={colors}
+          pathEquals={"payment"}
+          path={path}
+          url={"/account/payment-info"}
+          icon={<ImCreditCard className="text-[20px]" />}
           smallSidebar={smallSidebar}
         />
         <Menus

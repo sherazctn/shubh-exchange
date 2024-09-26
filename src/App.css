@@ -286,3 +286,18 @@
   font-weight: 500;
   padding-top: 1px;
 }
+
+.account-card {
+  background-image: linear-gradient(to top right, #a36b8b 15%, #ad6a90 15%, #5796b8 80%);
+  width: 340px;
+  height: 200px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.account-card-sim{
+  width: 60px;
+  position: absolute;
+  top: 60px;
+  left: 20px;
+}
