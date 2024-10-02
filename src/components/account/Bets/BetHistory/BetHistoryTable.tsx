@@ -1,3 +1,5 @@
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+
 const BetHistoryTable = ({ colors }: any) => {
   return (
     <>
@@ -9,13 +11,13 @@ const BetHistoryTable = ({ colors }: any) => {
               className="leading-[40px] font-[600] text-[15px]"
               style={{ color: colors.text, backgroundColor: colors.light }}
             >
-              <td className="ps-[5px] w-[90px]">BetId</td>
+              <td className="ps-[5px] w-[90px]">BetId<SortingArrows /></td>
               <td className="min-w-[280px]">Market Name</td>
               <td>Runner Name</td>
               <td className="w-[60px]">Side</td>
-              <td>Price</td>
-              <td>Matched Size</td>
-              <td>Remaining Size</td>
+              <td>Price<SortingArrows /></td>
+              <td>Matched Size<SortingArrows /></td>
+              <td>Remaining Size<SortingArrows /></td>
               <td>Created Date</td>
               <td>Updated Date</td>
               <td>Action</td>
@@ -53,3 +55,12 @@ const TableRows = ({ colors }: any) => {
     </tr>
   );
 };
+
+const SortingArrows = () => {
+  return(
+    <div className="inline-block ms-[10px] mb-[-4px]">
+      <BiSolidUpArrow className="h-[9px] cursor-pointer" />
+      <BiSolidDownArrow className="h-[9px] cursor-pointer" />
+    </div>
+  )
+}

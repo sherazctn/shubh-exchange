@@ -8,7 +8,8 @@ const initialState = {
   authentication: false,
   dashboardDarkTheme: false,
   colorScheme: "color1",
-  smallSidebar: false
+  smallSidebar: false,
+  bettingSlip: "hide"
 };
 
 export const featuresSlice = createSlice({
@@ -38,7 +39,10 @@ export const featuresSlice = createSlice({
     },
     updateSmallsidebar: (state, action) => {
       state.smallSidebar = action.payload;
-    }
+    },
+    updateBettingSlip: (state, action) => {
+      state.bettingSlip = action.payload;
+    },
   },
 });
 
@@ -50,6 +54,7 @@ export const {
   authenticate,
   updateDarkTheme,
   updateColorScheme,
-  updateSmallsidebar
+  updateSmallsidebar,
+  updateBettingSlip
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

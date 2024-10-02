@@ -47,6 +47,17 @@
   transition: transform 0.1s;
 }
 
+.navbar-signup-btn {
+  border: 2px solid black;
+  height: 38px;
+  width: 80px;
+  border-radius: 5px;
+  color: text;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 0.1s;
+}
+
 .navbar-profile {
   background-color: black;
   height: 38px;
@@ -68,6 +79,14 @@
 }
 
 .navbar-btn:active {
+  transform: scale(0.99);
+}
+
+.navbar-signup-btn:hover {
+  transform: scale(1.02);
+}
+
+.navbar-signup-btn:active {
   transform: scale(0.99);
 }
 
@@ -356,4 +375,13 @@
   right: 38px;
   color: black;
   font-weight: 500;
+}
+
+.bet-slip-main{
+  background-color: var(--main-color);
+  position: fixed;
+  z-index: 9999;
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }

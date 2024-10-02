@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 
 import crciketBall from "../../assets/cricket-ball.png";
+import { updateBettingSlip } from "../../features/features";
 
 const CricketDropdownsSection = ({ text }: any) => {
+  const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
+  const handleBetClicked = (e:any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(updateBettingSlip("open"));
+  }
   return (
     <div className="mt-[15px]">
       <div
@@ -18,9 +27,8 @@ const CricketDropdownsSection = ({ text }: any) => {
       >
         <p className="text-[18px] font-[500]">{text}</p>
         <IoIosArrowUp
-          className={`text-[20px] transition-all duration-300 ${
-            dropdown ? "-rotate-180" : ""
-          }`}
+          className={`text-[20px] transition-all duration-300 ${dropdown ? "-rotate-180" : ""
+            }`}
         />
       </div>
       {dropdown && (
@@ -35,9 +43,8 @@ const CricketDropdownsSection = ({ text }: any) => {
               <div className="flex items-center gap-[10px]">
                 <p>4</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub1 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub1 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>
@@ -63,7 +70,10 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
-                    <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+                      onClick={handleBetClicked}
+                    >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -295,9 +305,8 @@ const CricketDropdownsSection = ({ text }: any) => {
               <div className="flex items-center gap-[10px]">
                 <p>10</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub2 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub2 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>
@@ -543,9 +552,8 @@ const CricketDropdownsSection = ({ text }: any) => {
               <div className="flex items-center gap-[10px]">
                 <p>10</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub3 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub3 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>

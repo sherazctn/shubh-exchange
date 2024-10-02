@@ -1,3 +1,5 @@
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+
 const FDProfitLossTable = ({ colors }: any) => {
   return (
     <>
@@ -13,7 +15,7 @@ const FDProfitLossTable = ({ colors }: any) => {
               <td className="min-w-[280px]">Game Name</td>
               <td>Provider</td>
               <td>Profit/Loss</td>
-              <td>Settled Time</td>
+              <td>Settled Time<SortingArrows /></td>
             </tr>
           </thead>
           <tbody>
@@ -43,3 +45,13 @@ const TableRows = ({ colors }: any) => {
     </tr>
   );
 };
+
+const SortingArrows = () => {
+  return(
+    <div className="inline-block ms-[10px] mb-[-4px]">
+      <BiSolidUpArrow className="h-[9px] cursor-pointer" />
+      <BiSolidDownArrow className="h-[9px] cursor-pointer" />
+    </div>
+  )
+}
+

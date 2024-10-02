@@ -17,6 +17,7 @@ import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { FaHandHoldingDollar } from "react-icons/fa6";
 import { SiBetfair } from "react-icons/si";
+import SignupModal from "./SignupModal";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Navbar = () => {
   const pageNav = useSelector((state: any) => state.navPage);
   const authentication = useSelector((state: any) => state.authentication);
   const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
   const [accountDropdown, setAccountDropdown] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [username, setUsername] = useState("");
@@ -51,7 +53,7 @@ const Navbar = () => {
           </Link>
         </div>
         {/* web menus */}
-        <div className="hidden md:flex gap-[25px]">
+        <div className="hidden md:flex gap-[10px]">
           <ul className="menus flex items-center gap-[15px] font-[600] text-[15px]">
             <Link to={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
               <GiNetworkBars className="w-[17px] h-[17px] text-gray-600" />
@@ -82,9 +84,14 @@ const Navbar = () => {
               <FaUser />
             </button>
           ) : (
-            <button className="navbar-btn" onClick={() => setLoginModal(true)}>
-              Login
-            </button>
+            <>
+              <button className="navbar-signup-btn" onClick={() => setSignupModal(true)}>
+                Signup
+              </button>
+              <button className="navbar-btn" onClick={() => setLoginModal(true)}>
+                Login
+              </button>
+            </>
           )}
         </div>
         {/* mobile menu btn */}
@@ -107,9 +114,8 @@ const Navbar = () => {
         </div>
         {/* mobile menu */}
         <div
-          className={`absolute transition-all flex z-[9999] justify-center duration-700 bg-[#000000c0] w-full min-h-[100vh] top-0 py-[11px] px-[20px] ${
-            mobileMenu ? "left-0" : "left-[-100vw]"
-          }`}
+          className={`absolute transition-all flex z-[9999] justify-center duration-700 bg-[#000000c0] w-full min-h-[100vh] top-0 py-[11px] px-[20px] ${mobileMenu ? "left-0" : "left-[-100vw]"
+            }`}
         >
           <div className="flex justify-end absolute right-[20px]">
             <div
@@ -122,27 +128,24 @@ const Navbar = () => {
           <ul className="menus flex flex-col text-white justify-center gap-[15px] font-[600] text-[15px] w-full">
             <Link
               to={"/"}
-              className={`menu w-[max-content] ${
-                pageNav === "home" && "border-b"
-              }`}
+              className={`menu w-[max-content] ${pageNav === "home" && "border-b"
+                }`}
               style={{ borderColor: "white" }}
             >
               My Markets
             </Link>
             <Link
               to={"/all-sports"}
-              className={`menu w-[max-content] ${
-                pageNav === "sports" && "border-b"
-              }`}
+              className={`menu w-[max-content] ${pageNav === "sports" && "border-b"
+                }`}
               style={{ borderColor: "white" }}
             >
               Sports
             </Link>
             <Link
               to={"/in-play"}
-              className={`menu w-[max-content] ${
-                pageNav === "inplay" && "border-b"
-              }`}
+              className={`menu w-[max-content] ${pageNav === "inplay" && "border-b"
+                }`}
               style={{ borderColor: "white" }}
             >
               In-Play
@@ -283,6 +286,7 @@ const Navbar = () => {
           </button>
         </form>
       </Modal>
+      <SignupModal signupModal={signupModal} setSignupModal={setSignupModal} />
     </>
   );
 };

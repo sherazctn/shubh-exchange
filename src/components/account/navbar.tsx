@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { IoIosNotifications, IoMdSettings } from "react-icons/io";
 import { IoMoon, IoSunnySharp } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { updateColorScheme, updateDarkTheme } from "../../features/features";
+import { useDispatch } from "react-redux";
+import { updateDarkTheme } from "../../features/features";
+// import { updateColorScheme } from "../../features/features";
 
 const Navbar = ({ pageName, darkTheme, colors }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const colorScheme = useSelector((state: any) => state.colorScheme);
+  // const colorScheme = useSelector((state: any) => state.colorScheme);
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <>
@@ -66,7 +67,7 @@ const Navbar = ({ pageName, darkTheme, colors }: any) => {
         open={openDrawer}
         style={{ fontFamily: "Roboto" }}
       >
-        <p className="text-[15px] font-[600]">Select Theme</p>
+        {/* <p className="text-[15px] font-[600]">Select Theme</p>
         <div className="mt-[10px] flex gap-[10px]">
           <div
             className={`w-[30px] h-[30px] rounded-full cursor-pointer ${
@@ -83,7 +84,7 @@ const Navbar = ({ pageName, darkTheme, colors }: any) => {
             onClick={() => dispatch(updateColorScheme("color2"))}
           ></div>
         </div>
-        <hr className="my-[20px]" />
+        <hr className="my-[20px]" /> */}
         <p className="text-[15px] font-[600]">Account Info</p>
         <div className="mt-[10px]">
           <div className="flex h-[22px]">

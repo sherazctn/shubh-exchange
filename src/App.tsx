@@ -7,6 +7,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
+import BetSlip from "./components/BetSlip/BetSlip";
 
 import Home from "./pages/home/page";
 import Sports from "./pages/sports/page";
@@ -39,6 +40,7 @@ function App() {
   return (
     <>
       {!isAccountPage && <Navbar />}
+      {!isAccountPage && <BetSlip />}
       <div className="main-section">
         {!isAccountPage && <Sidebar />}
         <div>
