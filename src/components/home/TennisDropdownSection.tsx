@@ -28,7 +28,7 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub1(!sub1)}
-              className="bg-[--main-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
             >
               <p>Country Champianship</p>
               <div className="flex items-center gap-[10px]">
@@ -49,13 +49,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -106,13 +106,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -162,13 +162,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -219,13 +219,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -276,7 +276,7 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub2(!sub2)}
-              className="bg-[--main-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="bg-[--main-color] h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
             >
               <p>International Twenty20 Matches</p>
               <div className="flex items-center gap-[10px]">
@@ -297,13 +297,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -354,13 +354,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -410,13 +410,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -467,13 +467,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -524,7 +524,7 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub3(!sub3)}
-              className="bg-[--main-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="bg-[--main-color] h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
             >
               <p>Womens One Day International</p>
               <div className="flex items-center gap-[10px]">
@@ -545,13 +545,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -602,13 +602,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -658,13 +658,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
@@ -715,13 +715,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
                     </div>

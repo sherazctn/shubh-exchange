@@ -14,7 +14,7 @@ const BetSlip = () => {
     return (
         <div className={`bet-slip-main w-full sm:w-[350px] sm:right-[50px] h-[500px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-455px]" : bettingSlip === "hide" ? "bottom-[-500px]" : "bottom-0"}`}>
             <div
-                className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px]"
+                className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color]"
                 onClick={() => dispatch(updateBettingSlip(bettingSlip === "close" ? "open" : "close"))}
             >
                 <p className="font-[600]">Betting Slip</p>
@@ -195,7 +195,7 @@ const BetSlipTab = () => {
                     </div>
                 </div>
             </div>
-            <button className="w-full min-h-[43px] bg-[--main-color] font-[600] rounded-[5px] text-[15px]">
+            <button className="w-full min-h-[43px] bg-[--main-color] font-[600] rounded-[5px] text-[15px] text-[--text-color]">
                 Place Bets
             </button>
             <button className="w-full min-h-[43px] border-[2px] border-[--main-color] bg-gray-200 font-[600] rounded-[5px] text-[15px]">

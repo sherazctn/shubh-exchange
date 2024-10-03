@@ -92,7 +92,7 @@ const List = () => {
   return (
     <div className="border-b p-[7px] flex flex-col lg:flex-row gap-[10px] items-center justify-between cursor-pointer">
       <div className="flex gap-[10px] w-full lg:w-auto">
-        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] sm:h-[55px] bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center">
+        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] text-[--text-color] sm:h-[55px] bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center">
           <p className="text-[11px] sm:text-[13px] font-[500]">20:30</p>
           <p className="text-[11px] sm:text-[13px] font-[500]">Today</p>
         </div>
@@ -100,7 +100,7 @@ const List = () => {
           <p className="text-[11px] sm:text-[13px] font-[500]">
             Northern Raiders VS Stellenbosh Kings
           </p>
-          <p className="text-[10px] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] bg-[--main-color] w-[max-content]">
+          <p className="text-[10px] text-[--text-color] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] bg-[--main-color] w-[max-content]">
             Live
           </p>
         </div>
@@ -168,7 +168,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
@@ -190,7 +190,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -214,7 +214,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -246,7 +246,7 @@ const SoccerTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Indonesia Liga 1
@@ -279,7 +279,7 @@ const TennisTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Dobrish Challenger 2024
@@ -303,7 +303,7 @@ const TennisTab = () => {
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             WTA Guadalajara 2024

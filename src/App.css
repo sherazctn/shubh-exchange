@@ -1,11 +1,13 @@
 :root {
   --sidebar-bg: rgb(236, 236, 236);
   /* --sidebar-bg: rgb(232, 232, 252); */
-  --main-color: #ffb80c;
+  /* --main-color: #ffb80c; */
   /* --main-color: rgb(192, 192, 255); */
   /* --main-color: rgb(232, 232, 252); */
   /* --main-color: rgb(61, 61, 158); */
-  --main-color-light: #ffb60c59;
+  --main-color: #ff4444;
+  /* --main-color-light: #ffb60c59; */
+  --main-color-light: #ff4444a6;
   --red: #d9517847;
   --blue: #008efb24;
   --cashout: #bbf7d0;
@@ -14,6 +16,7 @@
   --navy-dark: rgb(61, 61, 158);
   --dashboard-bg-light: rgb(243, 244, 246);
   --dashboard-bg-dark: #202020;
+  --text-color: #ffffff;
 }
 
 .main-section {
@@ -37,38 +40,39 @@
 }
 
 .navbar-btn {
-  background-color: black;
+  background-color: var(--text-color);
   height: 38px;
   width: 80px;
   border-radius: 5px;
-  color: white;
+  color: var(--main-color);
   font-size: 15px;
   font-weight: 600;
   transition: transform 0.1s;
 }
 
 .navbar-signup-btn {
-  border: 2px solid black;
+  border: 2px solid var(--text-color);
   height: 38px;
   width: 80px;
   border-radius: 5px;
   color: text;
   font-size: 15px;
   font-weight: 600;
+  color: var(--text-color);
   transition: transform 0.1s;
 }
 
 .navbar-profile {
-  background-color: black;
+  background-color: var(--text-color);
   height: 38px;
   width: 38px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50px;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   padding: 0 10px;
-  color: white;
+  color: var(--main-color);
   font-size: 15px;
   font-weight: 600;
   transition: transform 0.1s;
@@ -110,7 +114,7 @@
 }
 
 .navbar .menus .menu:hover {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--text-color);
   margin-top: 2px;
 }
 

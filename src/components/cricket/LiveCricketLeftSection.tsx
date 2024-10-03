@@ -18,7 +18,7 @@ const LiveCricketLeftSection = () => {
       className="w-[100%] lg:me-[15px] overflow-auto pt-[15px]"
       style={{ maxHeight: divHeight }}
     >
-      <div className="min-h-[120px] bg-[--main-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center">
+      <div className="min-h-[120px] bg-[--main-color] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center">
         <p className="text-[23px] text-center">One Day Internationals</p>
         <p className="text-[22px] text-center">England VS Australia</p>
         <button className="live-match-btn">IN-PLAY</button>
@@ -27,7 +27,7 @@ const LiveCricketLeftSection = () => {
       <div className="flex gap-[10px] overflow-auto mb-[10px]">
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${
-            tabs === "all" ? "bg-[--main-color]" : "bg-white"
+            tabs === "all" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
           }`}
           onClick={() => setTabs("all")}
         >
@@ -35,7 +35,7 @@ const LiveCricketLeftSection = () => {
         </div>
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${
-            tabs === "match-odd" ? "bg-[--main-color]" : "bg-white"
+            tabs === "match-odd" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
           }`}
           onClick={() => setTabs("match-odd")}
         >
@@ -43,7 +43,7 @@ const LiveCricketLeftSection = () => {
         </div>
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${
-            tabs === "bookmaker" ? "bg-[--main-color]" : "bg-white"
+            tabs === "bookmaker" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
           }`}
           onClick={() => setTabs("bookmaker")}
         >
@@ -51,7 +51,7 @@ const LiveCricketLeftSection = () => {
         </div>
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${
-            tabs === "line" ? "bg-[--main-color]" : "bg-white"
+            tabs === "line" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
           }`}
           onClick={() => setTabs("line")}
         >
@@ -59,7 +59,7 @@ const LiveCricketLeftSection = () => {
         </div>
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${
-            tabs === "fancy" ? "bg-[--main-color]" : "bg-white"
+            tabs === "fancy" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
           }`}
           onClick={() => setTabs("fancy")}
         >
@@ -89,7 +89,7 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
         className="h-[47px] flex justify-between border-b cursor-pointer"
         onClick={() => setMatchOdds(!matchOdds)}
       >
-        <div className="bg-[--main-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
+        <div className="bg-[--main-color] text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
           Match Odds
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">
@@ -212,7 +212,7 @@ const TiedMatch = ({ tiedMatch, setTiedMatch }: any) => {
         className="h-[47px] flex justify-between border-b cursor-pointer"
         onClick={() => setTiedMatch(!tiedMatch)}
       >
-        <div className="bg-[--main-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
+        <div className="bg-[--main-color] text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
           Tied Match
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">

@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { Modal } from "antd";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  authenticate,
-  updateMobileMenu,
-  updateMobileSidebar,
-} from "../../features/features";
-
-import { IoMenuSharp } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
-import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
-import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
-import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
-import { GiNetworkBars, GiNotebook } from "react-icons/gi";
-import { FaHandHoldingDollar } from "react-icons/fa6";
-import { SiBetfair } from "react-icons/si";
+import Loader from "../Loader";
 import SignupModal from "./SignupModal";
+import { SignInApi } from "../../api/api";
+import { authenticate, updateMobileMenu, updateMobileSidebar } from "../../features/features";
+
+import { SlLogout } from "react-icons/sl";
+import { SiBetfair } from "react-icons/si";
+import { RxCross2 } from "react-icons/rx";
+import { IoMenuSharp } from "react-icons/io5";
+import { FaHandHoldingDollar } from "react-icons/fa6";
+import { GiNetworkBars, GiNotebook } from "react-icons/gi";
+import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
+import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
+import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -31,49 +32,73 @@ const Navbar = () => {
   const [passwordType, setPasswordType] = useState("password");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loader, setLoader] = useState(false);
+
   const handleMobileLogin = () => {
     dispatch(updateMobileMenu(false));
     setLoginModal(true);
   };
-  const fn_submit = (e: any) => {
+
+  const fn_submit = async (e: any) => {
     e.preventDefault();
-    setUsername("");
-    setPassword("");
-    setPasswordType("password");
-    setLoginModal(false);
-    dispatch(authenticate(true));
+    const data = {
+      username, password
+    }
+    setLoader(true);
+    const response = await SignInApi(data);
+    if (response?.status) {
+      setUsername("");
+      setPassword("");
+      setPasswordType("password");
+      dispatch(authenticate(true));
+      setLoginModal(false);
+      setLoader(false);
+      return toast.success(response?.message)
+    } else {
+      setLoader(false);
+      dispatch(authenticate(false));
+      return toast.error(response?.message)
+    }
   };
+
+  const fn_logout = () => {
+    Cookies.remove('token');
+    dispatch(authenticate(false));
+    return toast.success("Logout Successfullty");
+  }
+
   return (
     <>
       <div className="navbar shadow-md">
         {/* company name */}
         <div>
-          <Link to={"/"} className="text-[28px] font-[700]">
-            Betting App
+          <Link to={"/"} className="text-[28px] font-[700] text-[--text-color]">
+            Shubh Exchange
           </Link>
         </div>
         {/* web menus */}
         <div className="hidden md:flex gap-[10px]">
-          <ul className="menus flex items-center gap-[15px] font-[600] text-[15px]">
+          <ul className="menus flex items-center gap-[15px] font-[600] text-[15px] text-[--text-color]">
             <Link to={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
-              <GiNetworkBars className="w-[17px] h-[17px] text-gray-600" />
+              <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
               My Markets
             </Link>
             <Link
               to={"/all-sports"}
               className={`menu ${pageNav === "sports" && "active"} flex items-center gap-[4px]`}
             >
-              <MdOutlineSportsBaseball className="w-[17px] h-[17px] text-gray-600" />
+              <MdOutlineSportsBaseball className="w-[17px] h-[17px] text-[--text-color]" />
               Sports
             </Link>
             <Link
               to={"/in-play"}
               className={`menu ${pageNav === "inplay" && "active"} flex items-center gap-[4px]`}
             >
-              <MdOutlineSportsScore className="w-[17px] h-[17px] text-gray-600" />
+              <MdOutlineSportsScore className="w-[17px] h-[17px] text-[--text-color]" />
               In-Play
             </Link>
-            <li className="menu flex items-center gap-[4px]"><MdOutlineCasino className="w-[17px] h-[17px] text-gray-600" /> Casino</li>
+            <li className="menu flex items-center gap-[4px]"><MdOutlineCasino className="w-[17px] h-[17px] text-[--text-color]" /> Casino</li>
           </ul>
           {authentication ? (
             <button
@@ -96,9 +121,9 @@ const Navbar = () => {
         </div>
         {/* mobile menu btn */}
         <div className="flex gap-[10px] md:hidden">
-          <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-black cursor-pointer">
+          <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-[--text-color] cursor-pointer">
             <IoMenuSharp
-              className="text-white text-[25px]"
+              className="text-[--main-color] text-[25px]"
               onClick={() => dispatch(updateMobileMenu(true))}
             />
           </div>
@@ -159,7 +184,7 @@ const Navbar = () => {
             {!authentication && (
               <button
                 className="navbar-btn"
-                style={{ backgroundColor: "var(--main-color)" }}
+                style={{ backgroundColor: "var(--main-color)", color: "var(--text-color)" }}
                 onClick={handleMobileLogin}
               >
                 Login
@@ -223,6 +248,13 @@ const Navbar = () => {
               <MdOutlineHistory />
               Login History
             </Link>
+            <div
+              onClick={fn_logout}
+              className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
+            >
+              <SlLogout />
+              Logout
+            </div>
           </div>
         )}
       </div>
@@ -281,8 +313,10 @@ const Navbar = () => {
               />
             )}
           </div>
-          <button className="bg-[--main-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px]">
-            Login
+          <button className="bg-[--main-color] text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center">
+            {!loader ? "Login" :
+              <Loader color="var(--text-color)" size={20} />
+            }
           </button>
         </form>
       </Modal>

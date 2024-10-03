@@ -1,28 +1,50 @@
 import { Modal } from "antd"
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+
+import { SignUpApi } from "../../api/api";
+import { authenticate } from "../../features/features";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { SignUpApi } from "../../api/api";
+import Loader from "../Loader";
 
 const SignupModal = ({ signupModal, setSignupModal }: any) => {
+    const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordType, setPasswordType] = useState("password");
     const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+    const [loader, setLoader] = useState(false);
 
-    const fn_submit = async(e:any) => {
+    const fn_submit = async (e: any) => {
         e.preventDefault();
-        if(password !== confirmPassword){
+        if (password !== confirmPassword) {
             return toast.error("Password not Matched")
         }
         const data = {
             username, email, password
         }
+        setLoader(true);
         const response = await SignUpApi(data);
-        console.log(response);
+        if (response?.status) {
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            setPasswordType("password");
+            setConfirmPasswordType("password");
+            dispatch(authenticate(true));
+            setSignupModal(false);
+            setLoader(false);
+            return toast.success(response?.message)
+        } else {
+            setLoader(false);
+            dispatch(authenticate(false));
+            return toast.error(response?.message)
+        }
     }
 
     return (
@@ -123,9 +145,12 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
                         />
                     )}
                 </div>
-                <button className="bg-[--main-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px]">
-                    Signup
+                <button className={`relative text-[--text-color] bg-[--main-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${loader ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                    {!loader ? "Signup" :
+                        <Loader color="var(--text-color)" size={20} />
+                    }
                 </button>
+
             </form>
         </Modal>
     )

@@ -12,7 +12,7 @@ const RightSection = () => {
     <div className="hidden lg:block w-[350px] xl:w-[450px] min-w-[350px] xl:min-w-[450px] pt-[13px] pb-[20px] overflow-auto" style={{ maxHeight: divHeight }}>
       <div className="rounded-[7px] p-[7px] bg-white">
         <button
-          className={`sports-right-top-btn ${showCasino && "mb-[7px]"}`}
+          className={`sports-right-top-btn text-[--text-color] ${showCasino && "mb-[7px]"}`}
           onClick={() => setShowCasino(!showCasino)}
         >
           Live Casino Games
@@ -21,7 +21,7 @@ const RightSection = () => {
       </div>
       <div className="rounded-[7px] p-[7px] bg-white mt-[7px]">
         <button
-          className={`sports-right-top-btn ${popularEvents && "mb-[7px]"}`}
+          className={`sports-right-top-btn text-[--text-color] ${popularEvents && "mb-[7px]"}`}
           onClick={() => setPopularEvents(!popularEvents)}
         >
           Popular Events

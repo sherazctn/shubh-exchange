@@ -10,6 +10,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Toaster } from "react-hot-toast";
+import AuthCheck from "./components/AuthCheck/AuthCheck";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,7 +20,9 @@ root.render(
     <BrowserRouter>
       <Provider store={store}>
         <Toaster />
-        <App />
+        <AuthCheck>
+          <App />
+        </AuthCheck>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

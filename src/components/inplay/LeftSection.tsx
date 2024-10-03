@@ -134,13 +134,13 @@ const List = ({ value }: any) => {
         <p className="text-[14px]">
           Durham <span className="font-[600]">vs</span> Lanchire
         </p>
-        <div className="flex md:hidden bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+        <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
           Live
           <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
       </div>
       <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-        <div className="hidden md:flex bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+        <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
           Live
           <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
@@ -196,7 +196,7 @@ const AllTabs = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
@@ -217,7 +217,7 @@ const AllTabs = () => {
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -242,7 +242,7 @@ const AllTabs = () => {
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -276,7 +276,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
@@ -297,7 +297,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -322,7 +322,7 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -354,7 +354,7 @@ const SoccerTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Indonesia Liga 1
@@ -387,7 +387,7 @@ const TennisTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Dobrish Challenger 2024
@@ -411,7 +411,7 @@ const TennisTab = () => {
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             WTA Guadalajara 2024

@@ -5,6 +5,7 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 
 import img1 from "../../assets/slide-img-1.png";
+import img2 from "../../assets/slide-img-2.png";
 
 const HeroSection = () => {
   return (
@@ -22,14 +23,14 @@ const HeroSection = () => {
         spaceBetween={50}
         slidesPerView={1}
       >
-        <SwiperSlide
+        {/* <SwiperSlide
           style={{
             backgroundImage: `url(https://media.cybernews.com/images/featured-big/2022/06/Best-VPNs-for-Betfair.jpg)`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover"
           }}
-        ></SwiperSlide>
+        ></SwiperSlide> */}
         <SwiperSlide
           style={{
             backgroundImage: `url(${img1})`,
@@ -40,12 +41,20 @@ const HeroSection = () => {
         ></SwiperSlide>
         <SwiperSlide
           style={{
-            backgroundImage: `url(https://assets.cdnppb.net/lac/2023/06/27/f86c9e67b53c_ds107934_bingo_v1.jpg)`,
+            backgroundImage: `url(${img2})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover"
           }}
         ></SwiperSlide>
+        {/* <SwiperSlide
+          style={{
+            backgroundImage: `url(https://assets.cdnppb.net/lac/2023/06/27/f86c9e67b53c_ds107934_bingo_v1.jpg)`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover"
+          }}
+        ></SwiperSlide> */}
       </Swiper>
     </div>
   );

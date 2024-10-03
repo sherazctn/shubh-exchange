@@ -40,7 +40,7 @@ const Sidebar = () => {
             <p className="uppercase font-[700] text-[14px]">Sports</p>
           )}
           <div
-            className="bg-black hidden lg:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            className="bg-[--main-color] hidden lg:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
             onClick={() => dispatch(updateSidebar(!showSidebar))}
           >
             {showSidebar ? (

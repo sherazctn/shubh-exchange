@@ -15,7 +15,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
           {/* header */}
           <div
             onClick={() => setSub1(!sub1)}
-            className="bg-[--main-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] md:text-[15px] justify-between cursor-pointer"
+            className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] md:text-[15px] justify-between cursor-pointer"
           >
             <p>Country Champianship</p>
             <div className="flex items-center gap-[10px]">
@@ -32,7 +32,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
             <div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
@@ -85,7 +85,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
               </div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
@@ -138,7 +138,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
               </div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
@@ -196,7 +196,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
           {/* header */}
           <div
             onClick={() => setSub2(!sub2)}
-            className="bg-[--main-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] md:text-[15px] justify-between cursor-pointer"
+            className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] md:text-[15px] justify-between cursor-pointer"
           >
             <p>International T20 League</p>
             <div className="flex items-center gap-[10px]">
@@ -213,7 +213,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
             <div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
@@ -266,7 +266,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
               </div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
@@ -319,7 +319,7 @@ const UpcomingSoccerMatches = ({ text }: any) => {
               </div>
               <div className="min-h-[60px] border-b flex flex-col md:flex-row gap-[10px] items-center justify-between px-[11px] cursor-pointer">
                 <div className="flex items-center gap-4 w-full md:w-auto mt-[10px] md:mt-0">
-                  <div className="bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
+                  <div className="bg-[--main-color] text-[--text-color] rounded-[7px] flex flex-col justify-center items-center h-[47px] w-[80px] gap-[4px]">
                     <p className="font-[500] text-[13px] leading-[13px]">
                       20:45
                     </p>
