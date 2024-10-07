@@ -11,6 +11,9 @@ import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-ico
 import cricketBall from "../../assets/cricket-ball.png";
 import soccerBall from "../../assets/soccer-ball.png";
 import tennisBall from "../../assets/tennis-ball.png";
+import casinoIcon from "../../assets/casino.png";
+import AviatorIcon from "../../assets/aviator-icon.png";
+import ESportIcon from "../../assets/eSports-icon.png";
 
 // options
 import { CricketOptions, SoccerOptions, TennisOptions } from "../../assets/data";
@@ -23,14 +26,16 @@ const Sidebar = () => {
   const [openCricketOptions, setOpenCricketOptions] = useState(false);
   const [openSoccerOptions, setOpenSoccerOptions] = useState(false);
   const [openTennisOptions, setOpenTennisOptions] = useState(false);
+  const [openCasinoOptions, setOpenCasinoOptions] = useState(false);
+  const [openAviatorOptions, setOpenAviatorOptions] = useState(false);
+  const [openeSportsOptions, setOpeneSportsOptions] = useState(false);
   useEffect(() => {
     aos.init({ once: true });
   }, []);
   return (
     <div
-      className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${
-        showSidebar ? "w-[270px]" : "w-[67px] ms-2"
-      } ${mobileSidebar ? "left-0" : "left-[-270px] lg:left-0"}`}
+      className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${showSidebar ? "w-[270px]" : "w-[67px] ms-2"
+        } ${mobileSidebar ? "left-0" : "left-[-270px] lg:left-0"}`}
       style={{ height: screenHeight }}
     >
       {/* button-control-sidebar */}
@@ -93,6 +98,21 @@ const Sidebar = () => {
           openTennisOptions={openTennisOptions}
           setOpenTennisOptions={setOpenTennisOptions}
         />
+        <CasinoOption
+          showSidebar={showSidebar}
+          openCasinoOptions={openCasinoOptions}
+          setOpenCasinoOptions={setOpenCasinoOptions}
+        />
+        <AviatorOption
+          showSidebar={showSidebar}
+          openAviatorOptions={openAviatorOptions}
+          setOpenAviatorOptions={setOpenAviatorOptions}
+        />
+        <ESportsOption
+          showSidebar={showSidebar}
+          openeSportsOptions={openeSportsOptions}
+          setOpeneSportsOptions={setOpeneSportsOptions}
+        />
       </div>
     </div>
   );
@@ -109,15 +129,13 @@ const CricketOption = ({
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
       {/* header */}
       <div
-        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${
-          !openCricketOptions
-            ? "hover:scale-[1.02]"
-            : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
-        } ${
-          showSidebar
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openCricketOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
             ? "justify-between"
             : "justify-center border-none rounded-b-[7px]"
-        }`}
+          }`}
         onClick={() => setOpenCricketOptions(!openCricketOptions)}
       >
         <div className="flex items-center gap-2.5">
@@ -165,15 +183,13 @@ const SoccerOption = ({
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="250">
       {/* header */}
       <div
-        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${
-          !openSoccerOptions
-            ? "hover:scale-[1.02]"
-            : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
-        } ${
-          showSidebar
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openSoccerOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
             ? "justify-between"
             : "justify-center border-none rounded-b-[7px]"
-        }`}
+          }`}
         onClick={() => setOpenSoccerOptions(!openSoccerOptions)}
       >
         <div className="flex items-center gap-2.5">
@@ -221,15 +237,13 @@ const TennisOption = ({
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="500">
       {/* header */}
       <div
-        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${
-          !openTennisOptions
-            ? "hover:scale-[1.02]"
-            : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
-        } ${
-          showSidebar
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openTennisOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
             ? "justify-between"
             : "justify-center border-none rounded-b-[7px]"
-        }`}
+          }`}
         onClick={() => setOpenTennisOptions(!openTennisOptions)}
       >
         <div className="flex items-center gap-2.5">
@@ -252,6 +266,168 @@ const TennisOption = ({
       </div>
       {/* options */}
       {showSidebar && openTennisOptions && (
+        <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
+          {TennisOptions.map((item) => (
+            <div
+              key={item.id}
+              className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
+            >
+              <p className="text-[13px] font-[500]">{item?.name}</p>
+              <IoIosArrowDown />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CasinoOption = ({
+  showSidebar,
+  openCasinoOptions,
+  setOpenCasinoOptions,
+}: any) => {
+  return (
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="750">
+      {/* header */}
+      <div
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openCasinoOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
+            ? "justify-between"
+            : "justify-center border-none rounded-b-[7px]"
+          }`}
+        onClick={() => setOpenCasinoOptions(!openCasinoOptions)}
+      >
+        <div className="flex items-center gap-2.5">
+          <img
+            alt="cricket-ball"
+            src={casinoIcon}
+            className="w-[20px] h-[20px]"
+            style={{ imageRendering: "crisp-edges" }}
+          />
+          {showSidebar && <p className="font-[600] text-[15px]">Casino</p>}
+        </div>
+        {showSidebar && (
+          <div className="flex items-center gap-2.5">
+            <div className="px-1.5 min-w-[32px] rounded-[4px] pt-[2px] h-[22px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
+              75
+            </div>
+            {!openCasinoOptions ? <IoIosArrowDown /> : <IoIosArrowUp />}
+          </div>
+        )}
+      </div>
+      {/* options */}
+      {showSidebar && openCasinoOptions && (
+        <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
+          {TennisOptions.map((item) => (
+            <div
+              key={item.id}
+              className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
+            >
+              <p className="text-[13px] font-[500]">{item?.name}</p>
+              <IoIosArrowDown />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AviatorOption = ({
+  showSidebar,
+  openAviatorOptions,
+  setOpenAviatorOptions,
+}: any) => {
+  return (
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="900">
+      {/* header */}
+      <div
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openAviatorOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
+            ? "justify-between"
+            : "justify-center border-none rounded-b-[7px]"
+          }`}
+        onClick={() => setOpenAviatorOptions(!openAviatorOptions)}
+      >
+        <div className="flex items-center gap-2.5">
+          <img
+            alt="cricket-ball"
+            src={AviatorIcon}
+            className="w-[20px] h-[20px]"
+            style={{ imageRendering: "crisp-edges" }}
+          />
+          {showSidebar && <p className="font-[600] text-[15px]">Aviator</p>}
+        </div>
+        {showSidebar && (
+          <div className="flex items-center gap-2.5">
+            <div className="px-1.5 min-w-[32px] rounded-[4px] pt-[2px] h-[22px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
+              98
+            </div>
+            {!openAviatorOptions ? <IoIosArrowDown /> : <IoIosArrowUp />}
+          </div>
+        )}
+      </div>
+      {/* options */}
+      {showSidebar && openAviatorOptions && (
+        <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
+          {TennisOptions.map((item) => (
+            <div
+              key={item.id}
+              className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
+            >
+              <p className="text-[13px] font-[500]">{item?.name}</p>
+              <IoIosArrowDown />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ESportsOption = ({
+  showSidebar,
+  openeSportsOptions,
+  setOpeneSportsOptions,
+}: any) => {
+  return (
+    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500" data-aos-delay="1150">
+      {/* header */}
+      <div
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!openeSportsOptions
+          ? "hover:scale-[1.02]"
+          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
+          } ${showSidebar
+            ? "justify-between"
+            : "justify-center border-none rounded-b-[7px]"
+          }`}
+        onClick={() => setOpeneSportsOptions(!openeSportsOptions)}
+      >
+        <div className="flex items-center gap-2.5">
+          <img
+            alt="cricket-ball"
+            src={ESportIcon}
+            className="w-[20px] h-[20px]"
+            style={{ imageRendering: "crisp-edges" }}
+          />
+          {showSidebar && <p className="font-[600] text-[15px]">eSports</p>}
+        </div>
+        {showSidebar && (
+          <div className="flex items-center gap-2.5">
+            <div className="px-1.5 min-w-[32px] rounded-[4px] pt-[2px] h-[22px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
+              103
+            </div>
+            {!openeSportsOptions ? <IoIosArrowDown /> : <IoIosArrowUp />}
+          </div>
+        )}
+      </div>
+      {/* options */}
+      {showSidebar && openeSportsOptions && (
         <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
           {TennisOptions.map((item) => (
             <div

@@ -40,6 +40,11 @@ const Navbar = () => {
     setLoginModal(true);
   };
 
+  const handleMobileSignup = () => {
+    dispatch(updateMobileMenu(false));
+    setSignupModal(true);
+  };
+
   const fn_submit = async (e: any) => {
     e.preventDefault();
     const data = {
@@ -65,6 +70,7 @@ const Navbar = () => {
   const fn_logout = () => {
     Cookies.remove('token');
     dispatch(authenticate(false));
+    setAccountDropdown(false);
     return toast.success("Logout Successfullty");
   }
 
@@ -127,15 +133,17 @@ const Navbar = () => {
               onClick={() => dispatch(updateMobileMenu(true))}
             />
           </div>
-          <div>
-            <button
-              className="navbar-profile"
-              onMouseEnter={() => setAccountDropdown(true)}
-              onMouseLeave={() => setAccountDropdown(false)}
-            >
-              <FaUser />
-            </button>
-          </div>
+          {authentication && (
+            <div>
+              <button
+                className="navbar-profile"
+                onMouseEnter={() => setAccountDropdown(true)}
+                onMouseLeave={() => setAccountDropdown(false)}
+              >
+                <FaUser />
+              </button>
+            </div>
+          )}
         </div>
         {/* mobile menu */}
         <div
@@ -188,6 +196,15 @@ const Navbar = () => {
                 onClick={handleMobileLogin}
               >
                 Login
+              </button>
+            )}
+            {!authentication && (
+              <button
+                className="navbar-btn"
+                style={{ color: "var(--main-color)", backgroundColor: "var(--text-color)" }}
+                onClick={handleMobileSignup}
+              >
+                Signup
               </button>
             )}
           </ul>

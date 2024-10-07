@@ -1,8 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-// const URL = "https://bet-backend-ashen.vercel.app";
-const URL = "http://localhost:8000";
+const URL = "http://62.72.57.126:5000";
 
 export const SignUpApi = async (data: any) => {
     try {
