@@ -89,7 +89,7 @@ const BetSlipTab = () => {
                             <button onClick={() => setInput1(500000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
                         </div>
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
-                            <div className="flex-1 border-e border-gray-200 px-[5px]">
+                            <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
                                 <p className="text-center text-[15px] font-[600] text-green-600">
                                     After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
@@ -181,7 +181,7 @@ const BetSlipTab = () => {
                             <button onClick={() => setInput2(500000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
                         </div>
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
-                            <div className="flex-1 border-e border-gray-200 px-[5px]">
+                            <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
                                 <p className="text-center text-[15px] font-[600] text-green-600">
                                     After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>

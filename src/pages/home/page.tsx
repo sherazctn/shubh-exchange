@@ -11,6 +11,8 @@ import TennisDropdownsSection from "../../components/home/TennisDropdownSection"
 // upcoming matches
 import UpcomingCricketMatches from "../../components/home/UpcomingCricketMatches";
 import UpcomingSoccerMatches from "../../components/home/UpcomingSoccerMatches";
+
+import CasinoSlider from "../../components/home/CasinoSlider";
 // footer
 import Footer from "../../components/footer/page";
 
@@ -39,6 +41,8 @@ const Home = () => {
       <UpcomingCricketMatches text={"Cricket"} />
       <UpcomingSoccerMatches text={"Soccer"} />
       <UpcomingSoccerMatches text={"Tennis"} />
+      {/* casino slider */}
+      <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />
       <Footer />
     </div>
