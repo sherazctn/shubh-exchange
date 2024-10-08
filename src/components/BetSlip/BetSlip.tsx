@@ -15,7 +15,7 @@ const BetSlip = () => {
     const bettingSlip = useSelector((state: any) => state.bettingSlip);
     const [tabs, setTabs] = useState("slip");
     return (
-        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[660px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-615px]" : bettingSlip === "hide" ? "bottom-[-660px]" : "bottom-0"}`}>
+        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[670px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-625px]" : bettingSlip === "hide" ? "bottom-[-670px]" : "bottom-0"}`}>
             <div
                 className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color]"
                 onClick={() => dispatch(updateBettingSlip(bettingSlip === "close" ? "open" : "close"))}
@@ -49,17 +49,17 @@ const BetSlipTab = () => {
     const [view1, setView1] = useState<boolean>(true);
     const [view2, setView2] = useState<boolean>(true);
     return (
-        <div className="flex bg-white p-[5px] flex-col justify-between gap-[7px] h-[560px]">
+        <div className="flex flex-col justify-between gap-[7px] h-[570px]">
             {/* bets */}
-            <div className="flex flex-1 flex-col gap-[7px] overflow-auto">
+            <div className="flex flex-1 flex-col gap-[5px] overflow-auto">
                 {view1 && (
-                    <div>
+                    <div className="px-[5px] pb-[5px] pt-[7px] bg-white">
                         <div className="flex justify-between items-center">
-                            <p className="flex items-center gap-[4px]">
+                            <p className="flex items-center gap-[4px] mb-[5px]">
                                 <GoDotFill className="text-[15px]" />
                                 <span className="text-[15px] font-[600]">Namibia vs USA</span>
                             </p>
-                            <ImCross className="text-[red] text-[10px] cursor-pointer" onClick={() => setView1(false)} />
+                            <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => setView1(false)} />
                         </div>
                         <div className="flex gap-[10px]">
                             <input
@@ -90,7 +90,7 @@ const BetSlipTab = () => {
                         </div>
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-green-600">
+                                <p className="text-center text-[15px] font-[600] text-green-600 pt-[5px] pb-[7px]">
                                     After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
@@ -115,8 +115,8 @@ const BetSlipTab = () => {
                                     </span>
                                 </p>
                             </div>
-                            <div className="flex-1 border-e border-gray-200 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-red-500">
+                            <div className="flex-1 px-[5px]">
+                                <p className="text-center text-[15px] font-[600] text-red-500 pt-[5px] pb-[7px]">
                                     After Lossing<BsGraphDownArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
@@ -145,13 +145,13 @@ const BetSlipTab = () => {
                     </div>
                 )}
                 {view2 && (
-                    <div>
+                    <div className="px-[5px] pb-[5px] pt-[7px] bg-white">
                         <div className="flex justify-between items-center">
-                            <p className="flex items-center gap-[4px]">
+                            <p className="flex items-center gap-[4px] mb-[5px]">
                                 <GoDotFill className="text-[15px]" />
                                 <span className="text-[15px] font-[600]">Namibia vs USA</span>
                             </p>
-                            <ImCross className="text-[red] text-[10px] cursor-pointer" onClick={() => setView2(false)} />
+                            <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => setView2(false)} />
                         </div>
                         <div className="flex gap-[10px]">
                             <input
@@ -182,7 +182,7 @@ const BetSlipTab = () => {
                         </div>
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-green-600">
+                                <p className="text-center text-[15px] font-[600] text-green-600 pt-[5px] pb-[7px]">
                                     After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
@@ -207,8 +207,8 @@ const BetSlipTab = () => {
                                     </span>
                                 </p>
                             </div>
-                            <div className="flex-1 border-e border-gray-200 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-red-500">
+                            <div className="flex-1 px-[5px]">
+                                <p className="text-center text-[15px] font-[600] text-red-500 pt-[5px] pb-[7px]">
                                     After Lossing<BsGraphDownArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
@@ -242,7 +242,7 @@ const BetSlipTab = () => {
                 <button className="w-full min-h-[43px] bg-[--main-color] font-[600] rounded-[5px] text-[15px] text-[--text-color]">
                     Place Bets
                 </button>
-                <button className="w-full mt-[7px] min-h-[43px] border-[2px] border-[--main-color] bg-gray-200 font-[600] rounded-[5px] text-[15px]">
+                <button className="w-full mt-[7px] min-h-[43px] border-[2px] border-[--main-color] text-[--main-color] bg-gray-200 font-[600] rounded-[5px] text-[15px]">
                     Cancel
                 </button>
             </div>
@@ -252,7 +252,7 @@ const BetSlipTab = () => {
 
 const OpenBet = () => {
     return (
-        <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[560px]">
+        <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[570px]">
             <p className="text-[13px] text-gray-600">You have no matched or unmatched bets.</p>
         </div>
     )

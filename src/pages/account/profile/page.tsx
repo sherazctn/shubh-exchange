@@ -7,11 +7,11 @@ import useColorScheme from "../../../hooks/useColorScheme";
 import Table1 from "../../../components/account/Dashboard/Table1";
 import Table1Pagination from "../../../components/account/Dashboard/Table1Pagination";
 
-import { FaDollarSign } from "react-icons/fa";
 import { MdOutlineBarChart } from "react-icons/md";
 import { SiBetfair } from "react-icons/si";
 import { useEffect } from "react";
 import { BsGraphDownArrow, BsGraphUpArrow } from "react-icons/bs";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const Profile = ({ darkTheme }: any) => {
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
@@ -47,13 +47,13 @@ const Profile = ({ darkTheme }: any) => {
               colors={colors}
               sub="Monthly Revenue Avg."
               main="$1050.5"
-              icon={<FaDollarSign />}
+              icon={<FaIndianRupeeSign className="pt-[2px]" />}
             />
             <Boxes
               colors={colors}
               sub="Earning this month"
               main="$540"
-              icon={<FaDollarSign />}
+              icon={<FaIndianRupeeSign className="pt-[2px]" />}
             />
             <Boxes
               colors={colors}
