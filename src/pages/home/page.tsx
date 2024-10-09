@@ -34,7 +34,7 @@ const Home = () => {
       <HeroSection />
       <CardsSection />
       {/* live matches */}
-      <CricketDropdownsSection text={"Live Cricket"} />
+      <CricketDropdownsSection text={"Live Cricket Match"} />
       <SoccerDropdownsSection text={"Live Soccer"} />
       <TennisDropdownsSection text={"Live Tennis"} />
       {/* upcoming matches */}

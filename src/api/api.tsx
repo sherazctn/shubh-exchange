@@ -13,7 +13,7 @@ export const SignUpApi = async (data: any) => {
     } catch (error: any) {
         if (error?.status === 409) {
             return { status: false, message: error?.response?.data?.message };
-        }else{
+        } else {
             return { status: false, message: "Network Error" }
         }
     }
@@ -29,7 +29,25 @@ export const SignInApi = async (data: any) => {
     } catch (error: any) {
         if (error?.status === 401) {
             return { status: false, message: error?.response?.data?.message };
-        }else{
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const AuthCheckApi = async (token: string) => {
+    try {
+        const response = await axios.post(`${URL}/user/check`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response;
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
             return { status: false, message: "Network Error" }
         }
     }

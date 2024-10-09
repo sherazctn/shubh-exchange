@@ -8,6 +8,8 @@ import { authenticate } from "../../features/features";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
+import { RxCross2 } from "react-icons/rx";
+import { TiTick } from "react-icons/ti";
 
 const SignupModal = ({ signupModal, setSignupModal }: any) => {
     const dispatch = useDispatch();
@@ -18,9 +20,29 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
     const [passwordType, setPasswordType] = useState("password");
     const [confirmPasswordType, setConfirmPasswordType] = useState("password");
     const [loader, setLoader] = useState(false);
+    const [lengthError, setLengthError] = useState(true);
+    const [characterError, setCharacterError] = useState(true);
+
+    const fn_setPassword = (value: any) => {
+        setPassword(value);
+        if (value.length > 6) {
+            setLengthError(false);
+        } else {
+            setLengthError(true);
+        }
+        const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
+        if (specialCharacterRegex.test(value)) {
+            setCharacterError(false);
+        } else {
+            setCharacterError(true);
+        }
+    }
 
     const fn_submit = async (e: any) => {
         e.preventDefault();
+        if(lengthError || characterError){
+            return toast.error("Write strong password");
+        }
         if (password !== confirmPassword) {
             return toast.error("Password not Matched")
         }
@@ -104,19 +126,29 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
                         id="password"
                         required
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => fn_setPassword(e.target.value)}
                     />
                     {passwordType === "password" ? (
                         <FaRegEyeSlash
                             onClick={() => setPasswordType("text")}
-                            className="cursor-pointer absolute right-[10px] bottom-[13px]"
+                            className="cursor-pointer absolute right-[10px] bottom-[37px]"
                         />
                     ) : (
                         <FaRegEye
                             onClick={() => setPasswordType("password")}
-                            className="cursor-pointer absolute right-[10px] bottom-[13px]"
+                            className="cursor-pointer absolute right-[10px] bottom-[37px]"
                         />
                     )}
+                    <div className="text-[13px] flex items-center gap-[30px]">
+                        <p className={`flex items-center ${lengthError ? "text-[red]" : "text-[green]"}`}>
+                            {lengthError ? <RxCross2 className={`me-[5px]`} /> : <TiTick className={`me-[5px] scale-[1.2]`} />}
+                            Length greater then 6 letter
+                        </p>
+                        <p className={`flex items-center ${characterError ? "text-[red]" : "text-[green]"}`}>
+                            {characterError ? <RxCross2 className={`me-[5px]`} /> : <TiTick className={`me-[5px] scale-[1.2]`} />}
+                            <span className="mt-[1px]">Use special character</span>
+                        </p>
+                    </div>
                 </div>
                 <div className="relative flex flex-col gap-[3px]">
                     <label
