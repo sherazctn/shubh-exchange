@@ -52,3 +52,20 @@ export const AuthCheckApi = async (token: string) => {
         }
     }
 }
+
+export const getAvailableGames = async () => {
+    try {
+        const response = await axios.get(`${URL}/game/available`);
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export default URL;

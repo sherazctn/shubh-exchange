@@ -1,4 +1,5 @@
 import { Drawer } from "antd";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -117,7 +118,10 @@ const Navbar = ({ pageName, darkTheme, colors }: any) => {
           </div>
         </div>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => {
+            navigate("/");
+            Cookies.remove('token');
+          }}
           className="w-full bg-gray-300 rounded-[4px] h-[35px] my-[15px] text-[15px] font-[500]"
         >
           Logout
