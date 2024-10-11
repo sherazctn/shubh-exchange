@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
@@ -30,7 +31,7 @@ const Navbar = () => {
   const [signupModal, setSignupModal] = useState(false);
   const [accountDropdown, setAccountDropdown] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
-  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
   const [loader, setLoader] = useState(false);
@@ -47,13 +48,16 @@ const Navbar = () => {
 
   const fn_submit = async (e: any) => {
     e.preventDefault();
+    if (phone.length < 5) {
+      return toast.error("Write Correct Phone Number")
+    }
     const data = {
-      username, password
+      phone, password
     }
     setLoader(true);
     const response = await SignInApi(data);
     if (response?.status) {
-      setUsername("");
+      setPhone("");
       setPassword("");
       setPasswordType("password");
       dispatch(authenticate(true));
@@ -290,17 +294,21 @@ const Navbar = () => {
         <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
           <div className="flex flex-col gap-[3px]">
             <label
-              htmlFor="username"
               className="font-[600] text-[16px] sm:text-[18px]"
             >
-              Username
+              Phone Number
             </label>
-            <input
-              className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
-              id="username"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+            <PhoneInput
+              country={'in'}
+              value={phone}
+              onChange={(e) => setPhone(e)}
+              inputStyle={{
+                width: "100%",
+                borderColor: "#e5e7eb"
+              }}
+              inputProps={{
+                required: true,
+              }}
             />
           </div>
           <div className="relative flex flex-col gap-[3px]">

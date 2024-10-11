@@ -2,6 +2,8 @@ import { Modal } from "antd"
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css';
 
 import { SignUpApi } from "../../api/api";
 import { authenticate } from "../../features/features";
@@ -14,7 +16,7 @@ import { TiTick } from "react-icons/ti";
 const SignupModal = ({ signupModal, setSignupModal }: any) => {
     const dispatch = useDispatch();
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordType, setPasswordType] = useState("password");
@@ -40,20 +42,23 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
 
     const fn_submit = async (e: any) => {
         e.preventDefault();
-        if(lengthError || characterError){
+        if (phone.length < 5) {
+            return toast.error("Write Correct Phone Number")
+        }
+        if (lengthError || characterError) {
             return toast.error("Write strong password");
         }
         if (password !== confirmPassword) {
             return toast.error("Password not Matched")
         }
         const data = {
-            username, email, password
+            username, phone, password
         }
         setLoader(true);
         const response = await SignUpApi(data);
         if (response?.status) {
             setUsername("");
-            setEmail("");
+            setPhone("");
             setPassword("");
             setConfirmPassword("");
             setPasswordType("password");
@@ -61,6 +66,8 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
             dispatch(authenticate(true));
             setSignupModal(false);
             setLoader(false);
+            setLengthError(true);
+            setCharacterError(true);
             return toast.success(response?.message)
         } else {
             setLoader(false);
@@ -99,18 +106,21 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
                     />
                 </div>
                 <div className="flex flex-col gap-[3px]">
-                    <label
-                        htmlFor="email"
-                        className="font-[600] text-[16px] sm:text-[18px]"
-                    >
-                        Email
+                    <label className="font-[600] text-[16px] sm:text-[18px]">
+                        Phone Number
                     </label>
-                    <input
-                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
-                        id="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                    <PhoneInput
+                        country={'in'}
+                        value={phone}
+                        onChange={(e) => setPhone(e)}
+                        inputStyle={{
+                            width: "100%",
+                            borderColor: "#e5e7eb"
+                        }}
+                        inputProps={{
+                            required: true,
+
+                        }}
                     />
                 </div>
                 <div className="relative flex flex-col gap-[3px]">

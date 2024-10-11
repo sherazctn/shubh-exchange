@@ -1,18 +1,19 @@
 import aos from "aos";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import Loader from "../Loader";
+import URL, { getAvailableGames } from "../../api/api";
 import { updateMobileSidebar, updateSidebar } from "../../features/features";
 
 import { FiSearch } from "react-icons/fi";
+import { BsFillExclamationCircleFill } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 // options
 import { CricketOptions } from "../../assets/data";
-import URL, { getAvailableGames } from "../../api/api";
-import Loader from "../Loader";
-import { BsFillExclamationCircleFill } from "react-icons/bs";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -116,6 +117,7 @@ const CricketOption = ({
   setOpenOption,
   game
 }: any) => {
+  const navigate = useNavigate();
   const [option, setOption] = useState(false);
   useEffect(() => {
     setOption(openOptions.find((id: string) => id === game?._id) ? true : false);
@@ -164,9 +166,10 @@ const CricketOption = ({
             <div
               key={item.id}
               className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
+              onClick={() => navigate("/cricket/live")}
             >
               <p className="text-[13px] font-[500]">{item?.name}</p>
-              <IoIosArrowDown />
+              {/* <IoIosArrowDown /> */}
             </div>
           ))}
         </div>
