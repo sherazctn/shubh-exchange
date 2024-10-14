@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import card1 from "../../../assets/card-1.png";
 import card2 from "../../../assets/card-2.png";
@@ -7,6 +8,9 @@ const DepositMoney = ({ colors }: any) => {
   const [tab, setTab] = useState("Card");
   const [selectedCard, setSelectedCard] = useState("card1");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
 
   const fn_selectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,7 +28,7 @@ const DepositMoney = ({ colors }: any) => {
       className="w-full xl:w-[60%] min-h-[100px] rounded-[15px] p-[15px]"
       style={{ backgroundColor: colors.dark }}
     >
-      <p className="text-[18px] font-[500]" style={{ color: colors.text }}>
+      <p className="text-[18px] font-[500]" style={{ color: panelSecColor }}>
         Deposit Money
       </p>
       {/* tabs */}
@@ -34,12 +38,16 @@ const DepositMoney = ({ colors }: any) => {
           title={"Card"}
           tab={tab}
           setTab={setTab}
+          panelMainColor={panelMainColor}
+          panelSecColor={panelSecColor}
         />
         <Tabs
           colors={colors}
           title={"Wallet"}
           tab={tab}
           setTab={setTab}
+          panelMainColor={panelMainColor}
+          panelSecColor={panelSecColor}
         />
       </div>
       {/* cards */}
@@ -142,7 +150,7 @@ const DepositMoney = ({ colors }: any) => {
       <div className="mt-[15px]">
         <label
           className="font-[500] text-[14px]"
-          style={{ color: colors.text }}
+          style={{ color: panelSecColor }}
         >
           Amount to Deposit&nbsp;<span className="text-[red]">*</span>
         </label>
@@ -164,12 +172,12 @@ const DepositMoney = ({ colors }: any) => {
       </div>
       {/* buttons */}
       <div className="flex gap-[10px] flex-wrap mt-[15px]">
-        <Button colors={colors} text={"+ 100.00"} />
-        <Button colors={colors} text={"+ 500.00"} />
-        <Button colors={colors} text={"+ 1,000.00"} />
-        <Button colors={colors} text={"+ 5,000.00"} />
-        <Button colors={colors} text={"+ 10,000.00"} />
-        <Button colors={colors} text={"+ 50,000.00"} />
+        <Button colors={colors} text={"+ 100.00"} panelMainColor={panelMainColor} />
+        <Button colors={colors} text={"+ 500.00"} panelMainColor={panelMainColor} />
+        <Button colors={colors} text={"+ 1,000.00"} panelMainColor={panelMainColor} />
+        <Button colors={colors} text={"+ 5,000.00"} panelMainColor={panelMainColor} />
+        <Button colors={colors} text={"+ 10,000.00"} panelMainColor={panelMainColor} />
+        <Button colors={colors} text={"+ 50,000.00"} panelMainColor={panelMainColor} />
       </div>
 
       {/* apply code */}
@@ -195,7 +203,7 @@ const DepositMoney = ({ colors }: any) => {
       <div className="mt-[15px]">
         <label
           className="font-[500] text-[14px]"
-          style={{ color: colors.text }}
+          style={{ color: panelSecColor }}
         >
           Unique Transaction Reference&nbsp;<span className="text-[red]">*</span>
         </label>
@@ -214,12 +222,12 @@ const DepositMoney = ({ colors }: any) => {
         <div className="flex flex-col gap-[5px]">
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Upload and Scan UTR from Receipt&nbsp;
             <span className="text-[red]">*</span>
           </label>
-          <input type="file" style={{ color: colors.text }} onChange={fn_selectImage} />
+          <input type="file" style={{ color: panelSecColor }} onChange={fn_selectImage} />
         </div>
         {selectedImage && (
           <img
@@ -231,7 +239,7 @@ const DepositMoney = ({ colors }: any) => {
       </div>
       <button
         className="text-[14px] h-[35px] rounded-[4px] w-full mt-[15px]"
-        style={{ backgroundColor: colors.text, color: colors.light }}
+        style={{ backgroundColor: panelSecColor, color: panelMainColor }}
       >
         Deposit
       </button>
@@ -241,24 +249,24 @@ const DepositMoney = ({ colors }: any) => {
 
 export default DepositMoney;
 
-const Button = ({ colors, text }: any) => {
+const Button = ({ colors, text, panelMainColor }: any) => {
   return (
     <button
       className="h-[35px] w-[100px] sm:w-[115px] text-[13px] pt-[1px] font-[500] rounded-[4px]"
-      style={{ backgroundColor: colors.light, color: colors.subText }}
+      style={{ backgroundColor: panelMainColor, color: colors.subText }}
     >
       {text}
     </button>
   );
 };
 
-const Tabs = ({ colors, title, tab, setTab }: any) => {
+const Tabs = ({ colors, title, tab, setTab , panelMainColor, panelSecColor }: any) => {
   return (
     <button
       className="h-[35px] px-[13px] min-w-[100px] rounded-[7px] shadow-sm font-[500] pt-[1px] text-[15px]"
       style={{
-        backgroundColor: tab === title ? colors.text : colors.light,
-        color: tab === title ? colors.light : colors.text,
+        backgroundColor: tab === title ? panelSecColor : panelMainColor,
+        color: tab === title ? colors.light : panelSecColor,
       }}
       onClick={() => setTab(title)}
     >

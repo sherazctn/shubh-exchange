@@ -5,59 +5,61 @@ import { useNavigate } from "react-router-dom";
 
 import { FaUser } from "react-icons/fa";
 import { IoIosNotifications, IoMdSettings } from "react-icons/io";
-import { IoMoon, IoSunnySharp } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { updateDarkTheme } from "../../features/features";
+// import { IoMoon, IoSunnySharp } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+// import { updateDarkTheme } from "../../features/features";
 // import { updateColorScheme } from "../../features/features";
 
 const Navbar = ({ pageName, darkTheme, colors }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const colorScheme = useSelector((state: any) => state.colorScheme);
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <>
       <div className="mt-[20px] mx-[10px] sm:mx-[20px] flex flex-col-reverse sm:flex-row gap-[5px] items-center justify-between">
         <p
           className={`font-[600] text-[18px] sm:text-[20px] md:text-[25px] capitalize`}
-          style={{ color: colors.text }}
+          style={{ color: panelSecColor }}
         >
           {pageName}
         </p>
         <div
           className="w-[max-content] h-[60px] rounded-full  flex items-center px-[20px]"
-          style={{ backgroundColor: colors.light }}
+          style={{ backgroundColor: panelMainColor }}
         >
           <div className="flex items-center gap-[10px]">
             <div
               className={`w-[30px] h-[30px] rounded-full cursor-pointer flex items-center justify-center`}
               style={{ backgroundColor: colors.dark }}
             >
-              <IoIosNotifications style={{ color: colors.text }} />
+              <IoIosNotifications style={{ color: panelSecColor }} />
             </div>
             <div
               className={`w-[30px] h-[30px] rounded-full cursor-pointer flex items-center justify-center`}
               onClick={() => setOpenDrawer(!openDrawer)}
               style={{ backgroundColor: colors.dark }}
             >
-              <IoMdSettings style={{ color: colors.text }} />
+              <IoMdSettings style={{ color: panelSecColor }} />
             </div>
-            <div
+            {/* <div
               className={`w-[30px] h-[30px] rounded-full cursor-pointer flex items-center justify-center`}
               onClick={() => dispatch(updateDarkTheme(!darkTheme))}
               style={{ backgroundColor: colors.dark }}
             >
               {darkTheme ? (
-                <IoSunnySharp style={{ color: colors.text }} />
+                <IoSunnySharp style={{ color: panelSecColor }} />
               ) : (
-                <IoMoon style={{ color: colors.text }} />
+                <IoMoon style={{ color: panelSecColor }} />
               )}
-            </div>
+            </div> */}
             <div
               className={`w-[40px] h-[40px] rounded-full cursor-pointer flex items-center justify-center`}
               style={{ backgroundColor: colors.dark }}
             >
-              <FaUser style={{ color: colors.text }} />
+              <FaUser style={{ color: panelSecColor }} />
             </div>
           </div>
         </div>

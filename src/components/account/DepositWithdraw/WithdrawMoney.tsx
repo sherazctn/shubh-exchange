@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import card1 from "../../../assets/card-1.png";
 import card2 from "../../../assets/card-2.png";
 
 const WithdrawMoney = ({ colors }: any) => {
   const [accountSelection, setAccountSelection] = useState("");
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <div
       className="w-full xl:w-[40%] h-[max-content] rounded-[15px] p-[15px]"
       style={{ backgroundColor: colors.dark }}
     >
-      <p className="text-[18px] font-[500]" style={{ color: colors.text }}>
+      <p className="text-[18px] font-[500]" style={{ color: panelSecColor }}>
         Withdraw Money
       </p>
       <div className="mt-[15px] flex flex-col gap-[10px]">
@@ -18,7 +21,7 @@ const WithdrawMoney = ({ colors }: any) => {
         <div>
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Amount to withdraw&nbsp;<span className="text-[red]">*</span>
           </label>
@@ -42,7 +45,7 @@ const WithdrawMoney = ({ colors }: any) => {
         <div>
           <div
             className="flex gap-[10px] font-[500] text-[15px] cursor-pointer"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
             onClick={() => setAccountSelection("savedAccounts")}
           >
             <input
@@ -57,7 +60,7 @@ const WithdrawMoney = ({ colors }: any) => {
           </div>
           <div
             className="flex gap-[10px] font-[500] text-[15px] cursor-pointer"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
             onClick={() => setAccountSelection("newOne")}
           >
             <input
@@ -71,13 +74,13 @@ const WithdrawMoney = ({ colors }: any) => {
             </label>
           </div>
         </div>
-        {accountSelection === "newOne" && <NewAccount colors={colors} />}
+        {accountSelection === "newOne" && <NewAccount colors={colors} panelSecColor={panelSecColor} />}
         {accountSelection === "savedAccounts" && (
           <SavedAccount />
         )}
         <button
           className="text-[14px] h-[35px] rounded-[4px] w-full mt-[5px]"
-          style={{ backgroundColor: colors.text, color: colors.light }}
+          style={{ backgroundColor: panelSecColor, color: panelMainColor }}
         >
           Withdraw
         </button>
@@ -88,7 +91,7 @@ const WithdrawMoney = ({ colors }: any) => {
 
 export default WithdrawMoney;
 
-const NewAccount = ({ colors }: any) => {
+const NewAccount = ({ colors, panelSecColor }: any) => {
   return (
     <>
       {/* Account Number */}
@@ -96,7 +99,7 @@ const NewAccount = ({ colors }: any) => {
         <div className="flex justify-between items-end">
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Account Number&nbsp;<span className="text-[red]">*</span>
           </label>
@@ -119,7 +122,7 @@ const NewAccount = ({ colors }: any) => {
         <div className="flex justify-between items-end">
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             IFSC&nbsp;<span className="text-[red]">*</span>
           </label>
@@ -142,7 +145,7 @@ const NewAccount = ({ colors }: any) => {
         <div className="flex justify-between items-end">
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Bank Name&nbsp;<span className="text-[red]">*</span>
           </label>
@@ -165,7 +168,7 @@ const NewAccount = ({ colors }: any) => {
         <div className="flex justify-between items-end">
           <label
             className="font-[500] text-[14px]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Account Holder Name&nbsp;<span className="text-[red]">*</span>
           </label>

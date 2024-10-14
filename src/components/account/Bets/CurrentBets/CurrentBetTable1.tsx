@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 
 const CurrentBetTable1 = ({ colors }: any) => {
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <>
       {/* table */}
@@ -9,7 +12,7 @@ const CurrentBetTable1 = ({ colors }: any) => {
           <thead>
             <tr
               className="leading-[40px] font-[600] text-[15px]"
-              style={{ color: colors.text, backgroundColor: colors.light }}
+              style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
               <td className="ps-[5px] w-[90px]">BetId<SortingArrows /></td>
               <td className="min-w-[280px]">Market Name</td>

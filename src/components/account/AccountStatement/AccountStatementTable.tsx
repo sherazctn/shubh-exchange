@@ -1,6 +1,9 @@
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 const AccountStatementTable = ({ colors }: any) => {
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <>
       {/* table */}
@@ -9,7 +12,7 @@ const AccountStatementTable = ({ colors }: any) => {
           <thead>
             <tr
               className="leading-[40px] font-[600] text-[15px]"
-              style={{ color: colors.text, backgroundColor: colors.light }}
+              style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
               <td className="w-[150px] ps-[5px]">Date</td>
               <td>Description</td>
@@ -33,7 +36,7 @@ const AccountStatementTable = ({ colors }: any) => {
         </table>
       </div>
       {/* pagination */}
-      <div className="mt-[10px] flex justify-center">
+      {/* <div className="mt-[10px] flex justify-center">
         <p
           className="leading-[32px] text-[13px] font-[500] w-[70px] text-center rounded-s-full border cursor-pointer"
           style={{
@@ -84,7 +87,7 @@ const AccountStatementTable = ({ colors }: any) => {
         >
           Next
         </p>
-      </div>
+      </div> */}
     </>
   );
 };

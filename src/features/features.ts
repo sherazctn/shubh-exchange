@@ -9,7 +9,10 @@ const initialState = {
   dashboardDarkTheme: false,
   colorScheme: "color1",
   smallSidebar: false,
-  bettingSlip: "hide"
+  bettingSlip: "hide",
+  websiteColor: "",
+  panelMainColor: "",
+  panelSecColor: "",
 };
 
 export const featuresSlice = createSlice({
@@ -43,6 +46,15 @@ export const featuresSlice = createSlice({
     updateBettingSlip: (state, action) => {
       state.bettingSlip = action.payload;
     },
+    updateWebsiteColor: (state, action) => {
+      state.websiteColor = action.payload;
+    },
+    updatePanelMainColor: (state, action) => {
+      state.panelMainColor = action.payload;
+    },
+    updatePanelSecColor: (state, action) => {
+      state.panelSecColor = action.payload;
+    },
   },
 });
 
@@ -55,6 +67,9 @@ export const {
   updateDarkTheme,
   updateColorScheme,
   updateSmallsidebar,
-  updateBettingSlip
+  updateBettingSlip,
+  updateWebsiteColor,
+  updatePanelMainColor,
+  updatePanelSecColor
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

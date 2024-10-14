@@ -16,6 +16,9 @@ const Wallet = ({ darkTheme }: any) => {
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
+
   useEffect(() => {
     Aos.init({ once: true });
   }, []);
@@ -32,13 +35,13 @@ const Wallet = ({ darkTheme }: any) => {
         <div className="mt-[15px] px-[10px] sm:px-[20px]">
           <p
             className="text-center text-[20px] sm:text-[25px] font-[700]"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             Available Balance
           </p>
           <p
             className="text-center text-[30px] sm:text-[40px] font-[700] mt-[10px] flex items-center justify-center"
-            style={{ color: colors.text }}
+            style={{ color: panelSecColor }}
           >
             <FaIndianRupeeSign />14000
           </p>

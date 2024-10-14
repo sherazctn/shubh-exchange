@@ -1,4 +1,5 @@
 import AOS from "aos";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { IoIosArrowUp } from "react-icons/io";
@@ -12,6 +13,7 @@ const LeftSection = () => {
   const [tab, setTab] = useState("");
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const webColor = useSelector((state: any) => state.websiteColor);
   useEffect(() => {
     AOS.init({ once: true });
     fn_getGames();
@@ -57,7 +59,7 @@ const LeftSection = () => {
             <div className="p-[18px]"><Loader color="var(--main-color)" size={25} /></div>
           )}
       </div>
-      {!loader ? data?.length > 0 && <CricketTab /> : (<div className="flex justify-center py-[20px]"><Loader color="var(--main-color)" size={25} /></div>)}
+      {!loader ? data?.length > 0 && <CricketTab webColor={webColor} /> : (<div className="flex justify-center py-[20px]"><Loader color="var(--main-color)" size={25} /></div>)}
       <br />
       <Footer />
     </div>
@@ -66,11 +68,11 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const List = () => {
+const List = ({ webColor }: { webColor: string }) => {
   return (
     <div className="border-b p-[7px] flex flex-col lg:flex-row gap-[10px] items-center justify-between cursor-pointer">
       <div className="flex gap-[10px] w-full lg:w-auto">
-        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] text-[--text-color] sm:h-[55px] bg-[--main-color] rounded-[7px] flex flex-col justify-center items-center">
+        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] text-[--text-color] sm:h-[55px] rounded-[7px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
           <p className="text-[11px] sm:text-[13px] font-[500]">20:30</p>
           <p className="text-[11px] sm:text-[13px] font-[500]">Today</p>
         </div>
@@ -78,7 +80,7 @@ const List = () => {
           <p className="text-[11px] sm:text-[13px] font-[500]">
             Northern Raiders VS Stellenbosh Kings
           </p>
-          <p className="text-[10px] text-[--text-color] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] bg-[--main-color] w-[max-content]">
+          <p className="text-[10px] text-[--text-color] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] w-[max-content]" style={{ backgroundColor: webColor }}>
             Live
           </p>
         </div>
@@ -137,7 +139,7 @@ const List = () => {
   );
 };
 
-const CricketTab = () => {
+const CricketTab = ({ webColor }: { webColor: string }) => {
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
@@ -146,7 +148,8 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
@@ -159,15 +162,16 @@ const CricketTab = () => {
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List webColor={webColor} />
+            <List webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -182,15 +186,16 @@ const CricketTab = () => {
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List webColor={webColor} />
+            <List webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -205,8 +210,8 @@ const CricketTab = () => {
         </div>
         {sub3 && (
           <div className="bg-white rounded-b-[7px]">
-            <List />
-            <List />
+            <List webColor={webColor} />
+            <List webColor={webColor} />
           </div>
         )}
       </div>

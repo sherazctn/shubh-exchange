@@ -14,8 +14,11 @@ const BetSlip = () => {
     const dispatch = useDispatch();
     const bettingSlip = useSelector((state: any) => state.bettingSlip);
     const [tabs, setTabs] = useState("slip");
+
+    const webColor = useSelector((state: any) => state.websiteColor);
+
     return (
-        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[670px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-625px]" : bettingSlip === "hide" ? "bottom-[-670px]" : "bottom-0"}`}>
+        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[670px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-625px]" : bettingSlip === "hide" ? "bottom-[-670px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
             <div
                 className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color]"
                 onClick={() => dispatch(updateBettingSlip(bettingSlip === "close" ? "open" : "close"))}
@@ -34,7 +37,7 @@ const BetSlip = () => {
                         onClick={() => setTabs("open")}
                     >Open Bet</button>
                 </div>
-                {tabs === "slip" && <BetSlipTab />}
+                {tabs === "slip" && <BetSlipTab webColor={webColor} />}
                 {tabs === "open" && <OpenBet />}
             </div>
         </div>
@@ -43,7 +46,7 @@ const BetSlip = () => {
 
 export default BetSlip;
 
-const BetSlipTab = () => {
+const BetSlipTab = ({ webColor }: { webColor: string }) => {
     const [input1, setInput1] = useState<any>();
     const [input2, setInput2] = useState<any>();
     const [view1, setView1] = useState<boolean>(true);
@@ -239,10 +242,10 @@ const BetSlipTab = () => {
             </div>
             {/* buttons */}
             <div>
-                <button className="w-full min-h-[43px] bg-[--main-color] font-[600] rounded-[5px] text-[15px] text-[--text-color]">
+                <button className="w-full min-h-[43px] font-[600] rounded-[5px] text-[15px] text-[--text-color]" style={{ backgroundColor: webColor }}>
                     Place Bets
                 </button>
-                <button className="w-full mt-[7px] min-h-[43px] border-[2px] border-[--main-color] text-[--main-color] bg-gray-200 font-[600] rounded-[5px] text-[15px]">
+                <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{borderColor: webColor, color: webColor}}>
                     Cancel
                 </button>
             </div>

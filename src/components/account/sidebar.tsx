@@ -16,24 +16,24 @@ import { updateSmallsidebar } from "../../features/features";
 const Sidebar = ({ colors, path }: any) => {
   const dispatch = useDispatch();
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <div
-      className={`fixed min-h-[100vh] z-[9] shadow-lg lg:shadow-none transition-all duration-500 ${
-        smallSidebar ? "w-[50px]" : "w-[250px]"
-      }`}
-      style={{ backgroundColor: colors.light }}
+      className={`fixed min-h-[100vh] z-[9] shadow-lg lg:shadow-none transition-all duration-500 ${smallSidebar ? "w-[50px]" : "w-[250px]"
+        }`}
+      style={{ backgroundColor: panelMainColor }}
     >
       <RiArrowLeftDoubleLine
-        className={`text-[18px] absolute top-[10px] cursor-pointer transition-all duration-300 ${
-          smallSidebar ? "-rotate-180 right-[15px]" : "right-[10px]"
-        }`}
+        className={`text-[18px] absolute top-[10px] cursor-pointer transition-all duration-300 ${smallSidebar ? "-rotate-180 right-[15px]" : "right-[10px]"
+          }`}
         onClick={() => dispatch(updateSmallsidebar(!smallSidebar))}
-        style={{ color: colors.text }}
+        style={{ color: panelSecColor }}
       />
       {!smallSidebar && (
         <p
           className="text-[25px] text-center font-[500] mt-[40px]"
-          style={{ color: colors.text }}
+          style={{ color: panelSecColor }}
         >
           Shubh Exchange
         </p>
@@ -47,6 +47,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/dashboard"}
           icon={<LuLayoutDashboard className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
         <Menus
           title={"Bets"}
@@ -56,6 +57,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/bets"}
           icon={<SiBetfair className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
         <Menus
           title={"My Wallet"}
@@ -65,6 +67,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/wallet"}
           icon={<LuWallet2 className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
         <Menus
           title={"Deposit/Withdraw"}
@@ -74,6 +77,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/deposit-withdraw"}
           icon={<BsBank className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
         <Menus
           title={"Account Statement"}
@@ -83,6 +87,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/account-statement"}
           icon={<GiNotebook className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
         <Menus
           title={"Bonus Statement"}
@@ -92,8 +97,9 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/bonus-statement"}
           icon={<FaHandHoldingDollar className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
-        <Menus
+        {/* <Menus
           title={"Payment Information"}
           colors={colors}
           pathEquals={"payment"}
@@ -101,7 +107,8 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/payment-info"}
           icon={<ImCreditCard className="text-[20px]" />}
           smallSidebar={smallSidebar}
-        />
+          panelSecColor={panelSecColor}
+        /> */}
         <Menus
           title={"Login History"}
           colors={colors}
@@ -110,6 +117,7 @@ const Sidebar = ({ colors, path }: any) => {
           url={"/account/login-history"}
           icon={<MdOutlineHistory className="text-[20px]" />}
           smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
         />
       </div>
     </div>
@@ -126,13 +134,14 @@ const Menus = ({
   url,
   icon,
   smallSidebar,
+  panelSecColor
 }: any) => {
   return (
     <Link
       to={url}
       className="account-sidebar-menu"
       style={{
-        color: colors.text,
+        color: panelSecColor,
         backgroundColor: path === pathEquals && colors.dark,
       }}
     >

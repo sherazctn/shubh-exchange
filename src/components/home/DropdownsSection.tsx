@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
@@ -11,10 +11,11 @@ import { updateBettingSlip } from "../../features/features";
 const CricketDropdownsSection = ({ text }: any) => {
   const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
+  const webColor = useSelector((state: any) => state.websiteColor);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
-  const handleBetClicked = (e:any) => {
+  const handleBetClicked = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     dispatch(updateBettingSlip("open"));
@@ -37,7 +38,8 @@ const CricketDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub1(!sub1)}
-              className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>Country Champianship</p>
               <div className="flex items-center gap-[10px]">
@@ -60,13 +62,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -123,13 +125,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -182,13 +184,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -242,13 +244,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -299,7 +301,8 @@ const CricketDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub2(!sub2)}
-              className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>International Twenty20 Matches</p>
               <div className="flex items-center gap-[10px]">
@@ -319,13 +322,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -376,13 +379,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -432,13 +435,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -489,13 +492,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -546,7 +549,8 @@ const CricketDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub3(!sub3)}
-              className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>Womens One Day International</p>
               <div className="flex items-center gap-[10px]">
@@ -566,13 +570,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -623,13 +627,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -679,13 +683,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -736,13 +740,13 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>

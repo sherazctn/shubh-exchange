@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -8,6 +9,7 @@ import img1 from "../../assets/slide-img-1.png";
 import img2 from "../../assets/slide-img-2.png";
 
 const HeroSection = () => {
+  const webColor = useSelector((state: any) => state.websiteColor);
   return (
     <div>
       <Swiper
@@ -33,6 +35,7 @@ const HeroSection = () => {
         ></SwiperSlide> */}
         <SwiperSlide
           style={{
+            backgroundColor: webColor,
             backgroundImage: `url(${img1})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -41,6 +44,7 @@ const HeroSection = () => {
         ></SwiperSlide>
         <SwiperSlide
           style={{
+            backgroundColor: webColor,
             backgroundImage: `url(${img2})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",

@@ -7,6 +7,8 @@ import cashoutImg from "../../assets/cashout.png";
 import { IoIosArrowUp } from "react-icons/io";
 import { BsGraphUp } from "react-icons/bs";
 import { HiMiniInformationCircle } from "react-icons/hi2";
+import { useDispatch } from "react-redux";
+import { updateBettingSlip } from "../../features/features";
 
 const LiveCricketLeftSection = () => {
   const divHeight = `${window.innerHeight - 60}px`;
@@ -82,6 +84,12 @@ const LiveCricketLeftSection = () => {
 export default LiveCricketLeftSection;
 
 const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
+  const dispatch = useDispatch();
+  const handleBetClicked = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(updateBettingSlip("open"));
+  }
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
@@ -111,7 +119,7 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
               <p className="text-[15px] font-[500]">England</p>
             </div>
             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                   620
                 </p>
@@ -119,31 +127,31 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
@@ -157,7 +165,7 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
               <p className="text-[15px] font-[500]">Australia</p>
             </div>
             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                   620
                 </p>
@@ -165,31 +173,31 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k
                 </p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
                 <p className="font-[800] text-center text-[15px]">620</p>
                 <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                   3.35k

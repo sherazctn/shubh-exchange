@@ -23,6 +23,7 @@ const Sidebar = () => {
   const [openOptions, setOpenOption] = useState<any>([]);
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const webColor = useSelector((state: any) => state.websiteColor);
   useEffect(() => {
     aos.init({ once: true });
     fn_getGames();
@@ -50,7 +51,8 @@ const Sidebar = () => {
             <p className="uppercase font-[700] text-[14px]">Sports</p>
           )}
           <div
-            className="bg-[--main-color] hidden lg:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            className="hidden lg:flex w-[30px] min-w-[30px] h-[30px] rounded-full text-white justify-center items-center cursor-pointer"
+            style={{ backgroundColor: webColor }}
             onClick={() => dispatch(updateSidebar(!showSidebar))}
           >
             {showSidebar ? (

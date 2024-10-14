@@ -3,9 +3,11 @@ import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 
 import crciketBall from "../../assets/tennis-ball.png";
+import { useSelector } from "react-redux";
 
 const TennisDropdownsSection = ({ text }: any) => {
   const [dropdown, setDropdown] = useState(true);
+  const webColor = useSelector((state: any) => state.websiteColor);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
@@ -17,9 +19,8 @@ const TennisDropdownsSection = ({ text }: any) => {
       >
         <p className="text-[18px] font-[500]">{text}</p>
         <IoIosArrowUp
-          className={`text-[20px] transition-all duration-300 ${
-            dropdown ? "-rotate-180" : ""
-          }`}
+          className={`text-[20px] transition-all duration-300 ${dropdown ? "-rotate-180" : ""
+            }`}
         />
       </div>
       {dropdown && (
@@ -28,15 +29,15 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub1(!sub1)}
-              className="bg-[--main-color] text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="text-[--text-color] h-[40px] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>Country Champianship</p>
               <div className="flex items-center gap-[10px]">
                 <p>10</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub1 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub1 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>
@@ -49,13 +50,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -106,13 +107,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -162,13 +163,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -219,13 +220,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -276,15 +277,15 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub2(!sub2)}
-              className="bg-[--main-color] h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>International Twenty20 Matches</p>
               <div className="flex items-center gap-[10px]">
                 <p>10</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub2 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub2 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>
@@ -297,13 +298,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -354,13 +355,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -410,13 +411,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -467,13 +468,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -524,15 +525,15 @@ const TennisDropdownsSection = ({ text }: any) => {
             {/* header */}
             <div
               onClick={() => setSub3(!sub3)}
-              className="bg-[--main-color] h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              className="h-[40px] text-[--text-color] rounded-t-[7px] flex items-center px-[20px] font-[500] text-[13px] sm:text-[15px] justify-between cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <p>Womens One Day International</p>
               <div className="flex items-center gap-[10px]">
                 <p>10</p>
                 <IoIosArrowUp
-                  className={`${
-                    !sub3 ? "-rotate-180" : ""
-                  } transition-all duration-300`}
+                  className={`${!sub3 ? "-rotate-180" : ""
+                    } transition-all duration-300`}
                 />
               </div>
             </div>
@@ -545,13 +546,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Durham <span className="font-[600]">vs</span> Lanchire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -602,13 +603,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Essex <span className="font-[600]">vs</span>{" "}
                       Nottinghamshire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -658,13 +659,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                     <p className="text-[14px]">
                       Kent <span className="font-[600]">vs</span> Hamphire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
@@ -715,13 +716,13 @@ const TennisDropdownsSection = ({ text }: any) => {
                       Middlesex <span className="font-[600]">vs</span>{" "}
                       Gloucestershire
                     </p>
-                    <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-                    <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+                    <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>

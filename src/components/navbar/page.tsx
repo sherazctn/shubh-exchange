@@ -1,13 +1,14 @@
-import { useState } from "react";
 import { Modal } from "antd";
+import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
-import { SignInApi } from "../../api/api";
+import { SignInApi, webNameApi } from "../../api/api";
 import { authenticate, updateMobileMenu, updateMobileSidebar } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
@@ -19,7 +20,6 @@ import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
-import Cookies from "js-cookie";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -36,6 +36,13 @@ const Navbar = () => {
 
   const [loader, setLoader] = useState(false);
 
+  const [webName, setWebName] = useState("");
+  const webColor = useSelector((state: any) => state.websiteColor);
+
+  useEffect(() => {
+    fn_webName();
+  }, [])
+
   const handleMobileLogin = () => {
     dispatch(updateMobileMenu(false));
     setLoginModal(true);
@@ -44,6 +51,11 @@ const Navbar = () => {
   const handleMobileSignup = () => {
     dispatch(updateMobileMenu(false));
     setSignupModal(true);
+  };
+
+  const fn_webName = async () => {
+    const response = await webNameApi();
+    setWebName(response?.data[0].name)
   };
 
   const fn_submit = async (e: any) => {
@@ -80,11 +92,11 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar shadow-md">
+      <div className="navbar shadow-md" style={{ backgroundColor: webColor }}>
         {/* company name */}
         <div>
           <Link to={"/"} className="text-[28px] font-[700] text-[--text-color]">
-            Shubh Exchange
+            {webName}
           </Link>
         </div>
         {/* web menus */}
@@ -113,6 +125,7 @@ const Navbar = () => {
           {authentication ? (
             <button
               className="navbar-profile"
+              style={{ color: webColor }}
               onMouseEnter={() => setAccountDropdown(true)}
               onMouseLeave={() => setAccountDropdown(false)}
             >
@@ -123,7 +136,7 @@ const Navbar = () => {
               <button className="navbar-signup-btn" onClick={() => setSignupModal(true)}>
                 Signup
               </button>
-              <button className="navbar-btn" onClick={() => setLoginModal(true)}>
+              <button className="navbar-btn" style={{ color: webColor }} onClick={() => setLoginModal(true)}>
                 Login
               </button>
             </>
@@ -133,7 +146,8 @@ const Navbar = () => {
         <div className="flex gap-[10px] md:hidden">
           <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-[--text-color] cursor-pointer">
             <IoMenuSharp
-              className="text-[--main-color] text-[25px]"
+              className="text-[25px]"
+              style={{ color: webColor }}
               onClick={() => dispatch(updateMobileMenu(true))}
             />
           </div>
@@ -141,6 +155,7 @@ const Navbar = () => {
             <div>
               <button
                 className="navbar-profile"
+                style={{ color: webColor }}
                 onMouseEnter={() => setAccountDropdown(true)}
                 onMouseLeave={() => setAccountDropdown(false)}
               >
@@ -157,7 +172,8 @@ const Navbar = () => {
           <div className="flex justify-end absolute right-[20px]">
             <div
               onClick={() => dispatch(updateMobileMenu(false))}
-              className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-[--main-color] cursor-pointer"
+              className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] cursor-pointer"
+              style={{ backgroundColor: webColor }}
             >
               <RxCross2 className="text-white text-[25px]" />
             </div>
@@ -196,7 +212,7 @@ const Navbar = () => {
             {!authentication && (
               <button
                 className="navbar-btn"
-                style={{ backgroundColor: "var(--main-color)", color: "var(--text-color)" }}
+                style={{ backgroundColor: webColor, color: "var(--text-color)" }}
                 onClick={handleMobileLogin}
               >
                 Login
@@ -205,7 +221,7 @@ const Navbar = () => {
             {!authentication && (
               <button
                 className="navbar-btn"
-                style={{ color: "var(--main-color)", backgroundColor: "var(--text-color)" }}
+                style={{ color: webColor, backgroundColor: "var(--text-color)" }}
                 onClick={handleMobileSignup}
               >
                 Signup
@@ -289,7 +305,7 @@ const Navbar = () => {
         style={{ fontFamily: "Roboto" }}
       >
         <div className="flex justify-center font-[800] text-[30px] sm:text-[35px] gap-[8px]">
-          Shubh<span className="text-[--main-color]">Exchange</span>
+          {webName}
         </div>
         <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
           <div className="flex flex-col gap-[3px]">
@@ -338,14 +354,14 @@ const Navbar = () => {
               />
             )}
           </div>
-          <button className="bg-[--main-color] text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center">
+          <button className="text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center" style={{ backgroundColor: webColor }}>
             {!loader ? "Login" :
               <Loader color="var(--text-color)" size={20} />
             }
           </button>
         </form>
       </Modal>
-      <SignupModal signupModal={signupModal} setSignupModal={setSignupModal} />
+      <SignupModal signupModal={signupModal} setSignupModal={setSignupModal} webName={webName} webColor={webColor} />
     </>
   );
 };

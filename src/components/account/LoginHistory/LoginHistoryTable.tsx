@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
+
 const LoginHistoryTable = ({ colors }: any) => {
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <>
       {/* table */}
@@ -7,7 +11,7 @@ const LoginHistoryTable = ({ colors }: any) => {
           <thead>
             <tr
               className="leading-[40px] font-[600] text-[15px]"
-              style={{ color: colors.text, backgroundColor: colors.light }}
+              style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
               <td className="ps-[5px]">Login Date & Time</td>
               <td>Logout Date & Time</td>

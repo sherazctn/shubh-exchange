@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import aos from "aos";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import allTabsImg from "../../assets/inplay.png";
 import cricketBall from "../../assets/cricket-ball.png";
@@ -16,6 +17,7 @@ const LeftSection = () => {
   const [cricketTab, setCricketTab] = useState(false);
   const [soccerTab, setSoccerTab] = useState(false);
   const [tennisTab, setTennisTab] = useState(false);
+  const webColor = useSelector((state: any) => state.websiteColor);
   useEffect(() => {
     aos.refresh();
   }, [cricketTab, soccerTab, tennisTab]);
@@ -50,11 +52,10 @@ const LeftSection = () => {
       {/* tabs */}
       <div className="h-[67px] flex gap-[8px] sm:gap-[15px] overflow-auto">
         <div
-          className={`sports-left-top-tabs shadow-sm ${
-            allTabs
-              ? "bg-[#f3f3f3] border border-[--main-color-light]"
-              : " bg-white"
-          }`}
+          className={`sports-left-top-tabs shadow-sm ${allTabs
+            ? "bg-[#f3f3f3] border border-[--main-color-light]"
+            : " bg-white"
+            }`}
           onClick={() => fn_controlTabs("allTabs")}
           data-aos="zoom-in"
           data-aos-duration="500"
@@ -63,11 +64,10 @@ const LeftSection = () => {
           <p className="font-[500] text-[14px]">All</p>
         </div>
         <div
-          className={`sports-left-top-tabs shadow-sm ${
-            cricketTab
-              ? "bg-[#f3f3f3] border border-[--main-color-light]"
-              : " bg-white"
-          }`}
+          className={`sports-left-top-tabs shadow-sm ${cricketTab
+            ? "bg-[#f3f3f3] border border-[--main-color-light]"
+            : " bg-white"
+            }`}
           onClick={() => fn_controlTabs("cricket")}
           data-aos="zoom-in"
           data-aos-duration="500"
@@ -77,11 +77,10 @@ const LeftSection = () => {
           <p className="font-[500] text-[14px]">Cricket</p>
         </div>
         <div
-          className={`sports-left-top-tabs shadow-sm ${
-            soccerTab
-              ? "bg-[#f3f3f3] border border-[--main-color-light]"
-              : " bg-white"
-          }`}
+          className={`sports-left-top-tabs shadow-sm ${soccerTab
+            ? "bg-[#f3f3f3] border border-[--main-color-light]"
+            : " bg-white"
+            }`}
           onClick={() => fn_controlTabs("soccer")}
           data-aos="zoom-in"
           data-aos-duration="500"
@@ -91,11 +90,10 @@ const LeftSection = () => {
           <p className="font-[500] text-[14px]">Soccer</p>
         </div>
         <div
-          className={`sports-left-top-tabs shadow-sm ${
-            tennisTab
-              ? "bg-[#f3f3f3] border border-[--main-color-light]"
-              : " bg-white"
-          }`}
+          className={`sports-left-top-tabs shadow-sm ${tennisTab
+            ? "bg-[#f3f3f3] border border-[--main-color-light]"
+            : " bg-white"
+            }`}
           onClick={() => fn_controlTabs("tennis")}
           data-aos="zoom-in"
           data-aos-duration="500"
@@ -105,10 +103,10 @@ const LeftSection = () => {
           <p className="font-[500] text-[14px]">Tennis</p>
         </div>
       </div>
-      {allTabs && <AllTabs />}
-      {cricketTab && <CricketTab />}
-      {soccerTab && <SoccerTab />}
-      {tennisTab && <TennisTab />}
+      {allTabs && <AllTabs webColor={webColor} />}
+      {cricketTab && <CricketTab webColor={webColor} />}
+      {soccerTab && <SoccerTab webColor={webColor} />}
+      {tennisTab && <TennisTab webColor={webColor} />}
       <Footer />
     </div>
   );
@@ -116,7 +114,7 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const List = ({ value }: any) => {
+const List = ({ value, webColor }: any) => {
   return (
     <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
@@ -125,8 +123,8 @@ const List = ({ value }: any) => {
             value === "cricket"
               ? cricketBall
               : value === "soccer"
-              ? soccerBall
-              : tennisBall
+                ? soccerBall
+                : tennisBall
           }
           alt="img"
           className="w-[21px]"
@@ -134,13 +132,13 @@ const List = ({ value }: any) => {
         <p className="text-[14px]">
           Durham <span className="font-[600]">vs</span> Lanchire
         </p>
-        <div className="flex md:hidden text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+        <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
           Live
           <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
       </div>
       <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-        <div className="hidden md:flex text-[--text-color] bg-[--main-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative">
+        <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
           Live
           <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
@@ -187,7 +185,7 @@ const List = ({ value }: any) => {
   );
 };
 
-const AllTabs = () => {
+const AllTabs = ({ webColor }: { webColor: string }) => {
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
@@ -196,28 +194,29 @@ const AllTabs = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub1 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" />
+            <List value="cricket" webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -225,24 +224,24 @@ const AllTabs = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub2 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub2 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="soccer" />
-            <List value="soccer" />
-            <List value="soccer" />
+            <List value="soccer" webColor={webColor} />
+            <List value="soccer" webColor={webColor} />
+            <List value="soccer" webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -250,16 +249,15 @@ const AllTabs = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub3 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub3 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub3 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" />
-            <List value="tennis" />
+            <List value="tennis" webColor={webColor} />
+            <List value="tennis" webColor={webColor} />
           </div>
         )}
       </div>
@@ -267,7 +265,7 @@ const AllTabs = () => {
   );
 };
 
-const CricketTab = () => {
+const CricketTab = ({ webColor }: { webColor: string }) => {
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
@@ -276,28 +274,29 @@ const CricketTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub1 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" />
+            <List value="cricket" webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Mens T20 International
@@ -305,24 +304,24 @@ const CricketTab = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub2 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub2 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" />
-            <List value="cricket" />
-            <List value="cricket" />
+            <List value="cricket" webColor={webColor} />
+            <List value="cricket" webColor={webColor} />
+            <List value="cricket" webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub3(!sub3)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Bangladesh Premium League
@@ -330,16 +329,15 @@ const CricketTab = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub3 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub3 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub3 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" />
-            <List value="cricket" />
+            <List value="cricket" webColor={webColor} />
+            <List value="cricket" webColor={webColor} />
           </div>
         )}
       </div>
@@ -347,14 +345,15 @@ const CricketTab = () => {
   );
 };
 
-const SoccerTab = () => {
+const SoccerTab = ({ webColor }: { webColor: string }) => {
   const [sub1, setSub1] = useState(true);
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Indonesia Liga 1
@@ -362,16 +361,15 @@ const SoccerTab = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub1 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="soccer" />
-            <List value="soccer" />
+            <List value="soccer" webColor={webColor} />
+            <List value="soccer" webColor={webColor} />
           </div>
         )}
       </div>
@@ -379,7 +377,7 @@ const SoccerTab = () => {
   );
 };
 
-const TennisTab = () => {
+const TennisTab = ({ webColor }: { webColor: string }) => {
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   return (
@@ -387,7 +385,8 @@ const TennisTab = () => {
       <div>
         <div
           onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             Dobrish Challenger 2024
@@ -395,23 +394,23 @@ const TennisTab = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub1 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub1 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" />
-            <List value="tennis" />
+            <List value="tennis" webColor={webColor} />
+            <List value="tennis" webColor={webColor} />
           </div>
         )}
       </div>
       <div>
         <div
           onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] bg-[--main-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+          style={{ backgroundColor: webColor }}
         >
           <p className="text-[13px] sm:text-[15px] font-[500]">
             WTA Guadalajara 2024
@@ -419,17 +418,16 @@ const TennisTab = () => {
           <div className="flex items-center gap-[10px]">
             <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
             <IoIosArrowUp
-              className={`transition-all duration-300 ${
-                sub2 ? "" : "-rotate-180"
-              }`}
+              className={`transition-all duration-300 ${sub2 ? "" : "-rotate-180"
+                }`}
             />
           </div>
         </div>
         {sub2 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" />
-            <List value="tennis" />
-            <List value="tennis" />
+            <List value="tennis" webColor={webColor} />
+            <List value="tennis" webColor={webColor} />
+            <List value="tennis" webColor={webColor} />
           </div>
         )}
       </div>

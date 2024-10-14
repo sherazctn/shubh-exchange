@@ -19,6 +19,9 @@ const Bets = ({ darkTheme }: any) => {
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
+
   useEffect(() => {
     Aos.init({ once: true });
     navigate(selectedTab);
@@ -48,6 +51,8 @@ const Bets = ({ darkTheme }: any) => {
               value={"current-bets"}
               setSelectedTab={() => handleNavigation("current-bets")}
               icon={<BsGraphUpArrow />}
+              panelMainColor={panelMainColor}
+              panelSecColor={panelSecColor}
             />
             <Button
               colors={colors}
@@ -56,6 +61,8 @@ const Bets = ({ darkTheme }: any) => {
               value={"bet-history"}
               setSelectedTab={() => handleNavigation("bet-history")}
               icon={<MdHistory className="scale-[1.1]" />}
+              panelMainColor={panelMainColor}
+              panelSecColor={panelSecColor}
             />
             <Button
               colors={colors}
@@ -64,6 +71,8 @@ const Bets = ({ darkTheme }: any) => {
               value={"profit-loss"}
               setSelectedTab={() => handleNavigation("profit-loss")}
               icon={<VscGraph className="scale-[1.1]" />}
+              panelMainColor={panelMainColor}
+              panelSecColor={panelSecColor}
             />
             <Button
               colors={colors}
@@ -72,6 +81,8 @@ const Bets = ({ darkTheme }: any) => {
               value={"fd-profitloss"}
               setSelectedTab={() => handleNavigation("fd-profitloss")}
               icon={<BsGraphUpArrow />}
+              panelMainColor={panelMainColor}
+              panelSecColor={panelSecColor}
             />
           </div>
           <Outlet />
@@ -83,13 +94,13 @@ const Bets = ({ darkTheme }: any) => {
 
 export default Bets;
 
-const Button = ({ colors, title, selectedTab, value, setSelectedTab, icon }: any) => {
+const Button = ({ colors, title, selectedTab, value, setSelectedTab, icon, panelMainColor, panelSecColor }: any) => {
   return (
     <button
       className="h-[35px] px-[13px] min-w-[140px] rounded-[7px] shadow-sm font-[500] pt-[1px] text-[15px] flex items-center gap-[10px]"
       style={{
-        backgroundColor: selectedTab === value ? colors.text : colors.light,
-        color: selectedTab === value ? colors.light : colors.text,
+        backgroundColor: selectedTab === value ? panelSecColor : panelMainColor,
+        color: selectedTab === value ? colors.light : panelSecColor,
       }}
       onClick={setSelectedTab}
     >

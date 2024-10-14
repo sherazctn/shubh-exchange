@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { IoIosFootball } from "react-icons/io";
 import { MdOutlineCasino, MdOutlineHowToVote, MdOutlineSportsTennis, MdSportsCricket } from "react-icons/md";
 import { SiSession } from "react-icons/si";
@@ -6,13 +7,15 @@ import { GiJumpingDog } from "react-icons/gi";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 
 const Table1 = ({ colors }: any) => {
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
     <div className="overflow-auto min-w-full">
       <table className="w-[950px] xl:w-full">
         <thead>
           <tr
             className="leading-[44px] font-[600] text-[15px]"
-            style={{ color: colors.text, backgroundColor: colors.light }}
+            style={{ color: panelSecColor, backgroundColor: panelMainColor }}
           >
             <td className="ps-[5px] w-[150px]">Game</td>
             <td className="text-center">

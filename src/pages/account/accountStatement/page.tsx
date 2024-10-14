@@ -19,6 +19,9 @@ const AccountStatement = ({ darkTheme }: any) => {
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
+  const panelMainColor = useSelector((state: any) => state.panelMainColor);
+  const panelSecColor = useSelector((state: any) => state.panelSecColor);
+
   useEffect(() => {
     Aos.init({ once: true });
   }, []);
@@ -51,41 +54,41 @@ const AccountStatement = ({ darkTheme }: any) => {
               onChange={onChangeStart}
               placeholder=""
               style={{
-                backgroundColor: colors.light,
+                backgroundColor: panelMainColor,
                 border: "none",
                 color: colors.text,
                 fontWeight: "500",
                 minWidth: "130px"
               }}
-              suffixIcon={<FaCalendarAlt style={{ color: colors.text }} />}
+              suffixIcon={<FaCalendarAlt style={{ color: panelSecColor }} />}
             />
             <DatePicker
               onChange={onChangeEnd}
               placeholder=""
               style={{
-                backgroundColor: colors.light,
+                backgroundColor: panelMainColor,
                 border: "none",
                 color: colors.text,
                 fontWeight: "500",
                 minWidth: "130px"
               }}
-              suffixIcon={<FaCalendarAlt style={{ color: colors.text }} />}
+              suffixIcon={<FaCalendarAlt style={{ color: panelSecColor }} />}
             />
             <button
               className="h-[35px] px-[13px] min-w-[max-content] rounded-[7px] shadow-sm pt-[1px] font-[500] text-[15px]"
               style={{
-                backgroundColor: colors.text,
-                color: colors.light,
+                backgroundColor: panelMainColor,
+                color: panelSecColor,
               }}
             >
               Get Statement
             </button>
           </div>
           <div className="mb-[15px] flex gap-[15px] overflow-auto">
-            <Button colors={colors} title={"Today"} />
-            <Button colors={colors} title={"From Yesterday"} />
-            <Button colors={colors} title={"Last 7 days"} />
-            <Button colors={colors} title={"Last 30 days"} />
+            <Button title={"Today"} panelMainColor={panelMainColor} panelSecColor={panelSecColor} />
+            <Button title={"From Yesterday"} panelMainColor={panelMainColor} panelSecColor={panelSecColor} />
+            <Button title={"Last 7 days"} panelMainColor={panelMainColor} panelSecColor={panelSecColor} />
+            <Button title={"Last 30 days"} panelMainColor={panelMainColor} panelSecColor={panelSecColor} />
           </div>
           <div
             className="rounded-[22px] pb-[10px] sm:p-[10px] md:px-[15px] mb-[15px]"
@@ -101,13 +104,13 @@ const AccountStatement = ({ darkTheme }: any) => {
 
 export default AccountStatement;
 
-const Button = ({ colors, title }: any) => {
+const Button = ({ title, panelMainColor, panelSecColor }: any) => {
   return (
     <button
       className="h-[35px] px-[13px] min-w-[max-content] rounded-[7px] shadow-sm font-[500] pt-[1px] text-[15px]"
       style={{
-        backgroundColor: colors.light,
-        color: colors.text,
+        backgroundColor: panelMainColor,
+        color: panelSecColor,
       }}
     >
       {title}

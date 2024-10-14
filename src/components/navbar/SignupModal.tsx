@@ -13,7 +13,7 @@ import Loader from "../Loader";
 import { RxCross2 } from "react-icons/rx";
 import { TiTick } from "react-icons/ti";
 
-const SignupModal = ({ signupModal, setSignupModal }: any) => {
+const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) => {
     const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [phone, setPhone] = useState("");
@@ -87,7 +87,7 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
             style={{ fontFamily: "Roboto" }}
         >
             <div className="flex justify-center font-[800] text-[30px] sm:text-[35px] gap-[8px]">
-                Shubh<span className="text-[--main-color]">Exchange</span>
+                {webName}
             </div>
             <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
                 <div className="flex flex-col gap-[3px]">
@@ -187,7 +187,7 @@ const SignupModal = ({ signupModal, setSignupModal }: any) => {
                         />
                     )}
                 </div>
-                <button className={`relative text-[--text-color] bg-[--main-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${loader ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                <button className={`relative text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${loader ? "cursor-not-allowed" : "cursor-pointer"}`} style={{ backgroundColor: webColor }}>
                     {!loader ? "Signup" :
                         <Loader color="var(--text-color)" size={20} />
                     }
