@@ -7,43 +7,39 @@ import cricketBall from "../../assets/cricket-ball.png";
 import soccerBall from "../../assets/soccer-ball.png";
 import tennisBall from "../../assets/tennis-ball.png";
 import { IoIosArrowUp } from "react-icons/io";
+import { GoDotFill } from "react-icons/go";
 
 import Footer from "../footer/page";
-import { GoDotFill } from "react-icons/go";
+import URL, { getAvailableGames } from "../../api/api";
+import Loader from "../Loader";
 
 const LeftSection = () => {
   const divHeight = `${window.innerHeight - 60}px`;
-  const [allTabs, setAllTabs] = useState(true);
-  const [cricketTab, setCricketTab] = useState(false);
-  const [soccerTab, setSoccerTab] = useState(false);
-  const [tennisTab, setTennisTab] = useState(false);
+  const [tab, setTab] = useState("");
+  const [data, setData] = useState([]);
+  const [loader, setLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
   useEffect(() => {
-    aos.refresh();
-  }, [cricketTab, soccerTab, tennisTab]);
-  const fn_controlTabs = (value: string) => {
-    if (value === "allTabs") {
-      setAllTabs(true);
-      setCricketTab(false);
-      setSoccerTab(false);
-      setTennisTab(false);
-    } else if (value === "cricket") {
-      setAllTabs(false);
-      setCricketTab(true);
-      setSoccerTab(false);
-      setTennisTab(false);
-    } else if (value === "soccer") {
-      setAllTabs(false);
-      setCricketTab(false);
-      setSoccerTab(true);
-      setTennisTab(false);
+    aos.init({ once: true });
+    fn_getGames();
+  }, []);
+
+  const fn_controlTabs = (id: string) => {
+    setTab(id)
+  };
+
+  const fn_getGames = async () => {
+    setLoader(true)
+    const response: any = await getAvailableGames();
+    if (response?.status) {
+      setLoader(false);
+      setData(response?.data);
+      setTab(response?.data[0]?._id)
     } else {
-      setAllTabs(false);
-      setCricketTab(false);
-      setSoccerTab(false);
-      setTennisTab(true);
+      setLoader(false);
     }
   };
+
   return (
     <div
       className="w-[100%] xl:me-[15px] overflow-auto pt-[15px]"
@@ -51,62 +47,26 @@ const LeftSection = () => {
     >
       {/* tabs */}
       <div className="h-[67px] flex gap-[8px] sm:gap-[15px] overflow-auto">
-        <div
-          className={`sports-left-top-tabs shadow-sm ${allTabs
-            ? "bg-[#f3f3f3] border border-[--main-color-light]"
-            : " bg-white"
-            }`}
-          onClick={() => fn_controlTabs("allTabs")}
-          data-aos="zoom-in"
-          data-aos-duration="500"
-        >
-          <img alt="img" src={allTabsImg} className="w-[21px] h-[21px]" />
-          <p className="font-[500] text-[14px]">All</p>
-        </div>
-        <div
-          className={`sports-left-top-tabs shadow-sm ${cricketTab
-            ? "bg-[#f3f3f3] border border-[--main-color-light]"
-            : " bg-white"
-            }`}
-          onClick={() => fn_controlTabs("cricket")}
-          data-aos="zoom-in"
-          data-aos-duration="500"
-          data-aos-delay="250"
-        >
-          <img alt="img" src={cricketBall} className="w-[21px] h-[21px]" />
-          <p className="font-[500] text-[14px]">Cricket</p>
-        </div>
-        <div
-          className={`sports-left-top-tabs shadow-sm ${soccerTab
-            ? "bg-[#f3f3f3] border border-[--main-color-light]"
-            : " bg-white"
-            }`}
-          onClick={() => fn_controlTabs("soccer")}
-          data-aos="zoom-in"
-          data-aos-duration="500"
-          data-aos-delay="500"
-        >
-          <img alt="img" src={soccerBall} className="w-[21px] h-[21px]" />
-          <p className="font-[500] text-[14px]">Soccer</p>
-        </div>
-        <div
-          className={`sports-left-top-tabs shadow-sm ${tennisTab
-            ? "bg-[#f3f3f3] border border-[--main-color-light]"
-            : " bg-white"
-            }`}
-          onClick={() => fn_controlTabs("tennis")}
-          data-aos="zoom-in"
-          data-aos-duration="500"
-          data-aos-delay="750"
-        >
-          <img alt="img" src={tennisBall} className="w-[21px] h-[21px]" />
-          <p className="font-[500] text-[14px]">Tennis</p>
-        </div>
+        {!loader ?
+          data?.length > 0 ? data?.map((item: any) => (
+            <div
+              className={`sports-left-top-tabs shadow-sm ${tab === item?._id
+                ? "bg-[#f3f3f3] border"
+                : " bg-white"
+                }`}
+              style={{ borderColor: webColor }}
+              onClick={() => fn_controlTabs(item?._id)}
+            >
+              <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" />
+              <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
+            </div>
+          )) : (
+            <p>No Game is Playing</p>
+          ) : (
+            <div className="p-[18px]"><Loader color="var(--main-color)" size={25} /></div>
+          )}
       </div>
-      {allTabs && <AllTabs webColor={webColor} />}
-      {cricketTab && <CricketTab webColor={webColor} />}
-      {soccerTab && <SoccerTab webColor={webColor} />}
-      {tennisTab && <TennisTab webColor={webColor} />}
+      <AllTabs webColor={webColor} />
       <Footer />
     </div>
   );
@@ -256,176 +216,6 @@ const AllTabs = ({ webColor }: { webColor: string }) => {
         </div>
         {sub3 && (
           <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" webColor={webColor} />
-            <List value="tennis" webColor={webColor} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const CricketTab = ({ webColor }: { webColor: string }) => {
-  const [sub1, setSub1] = useState(true);
-  const [sub2, setSub2] = useState(true);
-  const [sub3, setSub3] = useState(true);
-  return (
-    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
-      <div>
-        <div
-          onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">Boland T20</p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub1 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" webColor={webColor} />
-          </div>
-        )}
-      </div>
-      <div>
-        <div
-          onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">
-            Mens T20 International
-          </p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub2 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub2 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" webColor={webColor} />
-            <List value="cricket" webColor={webColor} />
-            <List value="cricket" webColor={webColor} />
-          </div>
-        )}
-      </div>
-      <div>
-        <div
-          onClick={() => setSub3(!sub3)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">
-            Bangladesh Premium League
-          </p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub3 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub3 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="cricket" webColor={webColor} />
-            <List value="cricket" webColor={webColor} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const SoccerTab = ({ webColor }: { webColor: string }) => {
-  const [sub1, setSub1] = useState(true);
-  return (
-    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
-      <div>
-        <div
-          onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">
-            Indonesia Liga 1
-          </p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub1 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="soccer" webColor={webColor} />
-            <List value="soccer" webColor={webColor} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const TennisTab = ({ webColor }: { webColor: string }) => {
-  const [sub1, setSub1] = useState(true);
-  const [sub2, setSub2] = useState(true);
-  return (
-    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
-      <div>
-        <div
-          onClick={() => setSub1(!sub1)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">
-            Dobrish Challenger 2024
-          </p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub1 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" webColor={webColor} />
-            <List value="tennis" webColor={webColor} />
-          </div>
-        )}
-      </div>
-      <div>
-        <div
-          onClick={() => setSub2(!sub2)}
-          className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-          style={{ backgroundColor: webColor }}
-        >
-          <p className="text-[13px] sm:text-[15px] font-[500]">
-            WTA Guadalajara 2024
-          </p>
-          <div className="flex items-center gap-[10px]">
-            <p className="text-[13px] sm:text-[15px] font-[500]">2</p>
-            <IoIosArrowUp
-              className={`transition-all duration-300 ${sub2 ? "" : "-rotate-180"
-                }`}
-            />
-          </div>
-        </div>
-        {sub2 && (
-          <div className="bg-white rounded-b-[7px]">
-            <List value="tennis" webColor={webColor} />
             <List value="tennis" webColor={webColor} />
             <List value="tennis" webColor={webColor} />
           </div>

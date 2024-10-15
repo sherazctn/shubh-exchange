@@ -48,6 +48,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<LuLayoutDashboard className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         <Menus
           title={"Bets"}
@@ -58,6 +59,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<SiBetfair className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         <Menus
           title={"My Wallet"}
@@ -68,6 +70,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<LuWallet2 className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         <Menus
           title={"Deposit/Withdraw"}
@@ -78,6 +81,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<BsBank className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         <Menus
           title={"Account Statement"}
@@ -88,6 +92,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<GiNotebook className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         <Menus
           title={"Bonus Statement"}
@@ -98,6 +103,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<FaHandHoldingDollar className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
         {/* <Menus
           title={"Payment Information"}
@@ -118,6 +124,7 @@ const Sidebar = ({ colors, path }: any) => {
           icon={<MdOutlineHistory className="text-[20px]" />}
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
         />
       </div>
     </div>
@@ -134,14 +141,15 @@ const Menus = ({
   url,
   icon,
   smallSidebar,
-  panelSecColor
+  panelSecColor,
+  panelMainColor
 }: any) => {
   return (
     <Link
       to={url}
       className="account-sidebar-menu"
       style={{
-        color: panelSecColor,
+        color: path === pathEquals ? "black" : panelSecColor,
         backgroundColor: path === pathEquals && colors.dark,
       }}
     >

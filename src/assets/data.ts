@@ -1,3 +1,9 @@
+import casinoImg1 from "../assets/casino-1.png"
+import casinoImg2 from "../assets/casino-2.png"
+import casinoImg3 from "../assets/casino-3.png"
+import casinoImg4 from "../assets/casino-4.png"
+import casinoImg5 from "../assets/casino-5.png"
+
 export const CricketOptions = [
   {
     id: 1,
@@ -94,3 +100,156 @@ export const TennisOptions = [
     name: "ITF Santarem",
   },
 ];
+
+export const CasinoBoxes = [
+  {
+    id: 1,
+    label: "Worli Matka(500004)",
+    img: casinoImg1,
+    hover: false
+  },
+  {
+    id: 2,
+    label: "Teen Patti(500001)",
+    img: casinoImg2,
+    hover: false
+  },
+  {
+    id: 3,
+    label: "Baccarat(500002)",
+    img: casinoImg3,
+    hover: false
+  },
+  {
+    id: 4,
+    label: "Baccarat(500003)",
+    img: casinoImg4,
+    hover: false
+  },
+  {
+    id: 5,
+    label: "Roulette(500011)",
+    img: casinoImg5,
+    hover: false
+  },
+  {
+    id: 6,
+    label: "Worli Matka(500004)",
+    img: casinoImg1,
+    hover: false
+  },
+  {
+    id: 7,
+    label: "Teen Patti(500001)",
+    img: casinoImg2,
+    hover: false
+  },
+  {
+    id: 8,
+    label: "Baccarat(500002)",
+    img: casinoImg3,
+    hover: false
+  },
+  {
+    id: 9,
+    label: "Baccarat(500003)",
+    img: casinoImg4,
+    hover: false
+  },
+  {
+    id: 10,
+    label: "Roulette(500011)",
+    img: casinoImg5,
+    hover: false
+  },
+  {
+    id: 11,
+    label: "Worli Matka(500004)",
+    img: casinoImg1,
+    hover: false
+  },
+  {
+    id: 12,
+    label: "Teen Patti(500001)",
+    img: casinoImg2,
+    hover: false
+  },
+  {
+    id: 13,
+    label: "Baccarat(500002)",
+    img: casinoImg3,
+    hover: false
+  },
+  {
+    id: 14,
+    label: "Baccarat(500003)",
+    img: casinoImg4,
+    hover: false
+  },
+  {
+    id: 15,
+    label: "Roulette(500011)",
+    img: casinoImg5,
+    hover: false
+  },
+  {
+    id: 16,
+    label: "Worli Matka(500004)",
+    img: casinoImg1,
+    hover: false
+  },
+  {
+    id: 17,
+    label: "Teen Patti(500001)",
+    img: casinoImg2,
+    hover: false
+  },
+  {
+    id: 18,
+    label: "Baccarat(500002)",
+    img: casinoImg3,
+    hover: false
+  },
+  {
+    id: 19,
+    label: "Baccarat(500003)",
+    img: casinoImg4,
+    hover: false
+  },
+  {
+    id: 20,
+    label: "Roulette(500011)",
+    img: casinoImg5,
+    hover: false
+  },
+  {
+    id: 21,
+    label: "Worli Matka(500004)",
+    img: casinoImg1,
+    hover: false
+  },
+  {
+    id: 22,
+    label: "Teen Patti(500001)",
+    img: casinoImg2,
+    hover: false
+  },
+  {
+    id: 23,
+    label: "Baccarat(500002)",
+    img: casinoImg3,
+    hover: false
+  },
+  {
+    id: 24,
+    label: "Baccarat(500003)",
+    img: casinoImg4,
+    hover: false
+  },
+  {
+    id: 25,
+    label: "Roulette(500011)",
+    img: casinoImg5,
+    hover: false
+  },
+]

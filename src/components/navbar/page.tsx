@@ -120,7 +120,13 @@ const Navbar = () => {
               <MdOutlineSportsScore className="w-[17px] h-[17px] text-[--text-color]" />
               In-Play
             </Link>
-            <li className="menu flex items-center gap-[4px]"><MdOutlineCasino className="w-[17px] h-[17px] text-[--text-color]" /> Casino</li>
+            <Link
+              to={"/casino"}
+              className={`menu ${pageNav === "casino" && "active"} flex items-center gap-[4px]`}
+            >
+              <MdOutlineCasino className="w-[17px] h-[17px] text-[--text-color]" />
+              Casino
+            </Link>
           </ul>
           {authentication ? (
             <button
@@ -336,7 +342,8 @@ const Navbar = () => {
             </label>
             <input
               type={passwordType}
-              className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
+              className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+              style={{outlineColor: webColor}}
               id="password"
               required
               value={password}

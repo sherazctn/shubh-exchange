@@ -43,15 +43,14 @@ const LeftSection = () => {
           data?.length > 0 ? data?.map((item: any) => (
             <div
               className={`sports-left-top-tabs shadow-sm ${tab === item?._id
-                ? "bg-[#f3f3f3] border border-[--main-color-light]"
+                ? "bg-[#f3f3f3] border"
                 : " bg-white"
                 }`}
+              style={{borderColor: webColor}}
               onClick={() => fn_controlTabs(item?._id)}
-            // data-aos="zoom-in" data-aos-duration="500"
             >
               <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" />
               <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
-              {/* <p className="count">29</p> */}
             </div>
           )) : (
             <p>No Game is Playing</p>

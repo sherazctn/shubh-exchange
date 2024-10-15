@@ -228,7 +228,7 @@
 
 .sports-right-top-btn {
   height: 45px;
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   width: 100%;
   border-radius: 7px;
   font-weight: 500;

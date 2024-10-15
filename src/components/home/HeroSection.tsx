@@ -21,7 +21,7 @@ const HeroSection = () => {
           disableOnInteraction: false,
         }}
         modules={[Pagination, Autoplay]}
-        className="home-hero-section-swiper h-[170px] sm:h-[350px]"
+        className="home-hero-section-swiper h-[170px] sm:h-[350px] xl:h-[380px]"
         spaceBetween={50}
         slidesPerView={1}
       >

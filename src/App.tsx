@@ -12,6 +12,7 @@ import BetSlip from "./components/BetSlip/BetSlip";
 import Home from "./pages/home/page";
 import Sports from "./pages/sports/page";
 import Inplay from "./pages/inplay/page";
+import Casino from "./pages/casino/page";
 import LiveCricket from "./pages/cricket/LiveCricket";
 
 import Profile from "./pages/account/profile/page";
@@ -49,6 +50,7 @@ function App() {
             <Route path="/all-sports" element={<Sports />} />
             <Route path="/in-play" element={<Inplay />} />
             <Route path="/cricket/live" element={<LiveCricket />} />
+            <Route path="/casino" element={<Casino />} />
             {/* accounts pages */}
             <Route path="/account/dashboard" element={<Profile darkTheme={darkTheme} />} />
             <Route path="/account/wallet" element={<Wallet darkTheme={darkTheme} />} />

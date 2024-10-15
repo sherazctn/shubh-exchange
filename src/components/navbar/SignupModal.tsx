@@ -98,7 +98,8 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                         Username
                     </label>
                     <input
-                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
+                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+                        style={{ outlineColor: webColor }}
                         id="username"
                         required
                         value={username}
@@ -132,7 +133,8 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                     </label>
                     <input
                         type={passwordType}
-                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
+                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+                        style={{ outlineColor: webColor }}
                         id="password"
                         required
                         value={password}
@@ -169,7 +171,8 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                     </label>
                     <input
                         type={confirmPasswordType}
-                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px] outline-[--main-color]"
+                        className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+                        style={{ outlineColor: webColor }}
                         id="confirmpassword"
                         required
                         value={confirmPassword}

@@ -7,7 +7,7 @@ import cashoutImg from "../../assets/cashout.png";
 import { IoIosArrowUp } from "react-icons/io";
 import { BsGraphUp } from "react-icons/bs";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateBettingSlip } from "../../features/features";
 
 const LiveCricketLeftSection = () => {
@@ -16,12 +16,15 @@ const LiveCricketLeftSection = () => {
   const [matchOdds, setMatchOdds] = useState(true);
   const [tiedMatch, setTiedMatch] = useState(true);
   const [fancyMatch, setFancyMatch] = useState(true);
+
+  const webColor = useSelector((state: any) => state.websiteColor);
+
   return (
     <div
       className="w-[100%] lg:me-[15px] overflow-auto pt-[15px]"
       style={{ maxHeight: divHeight }}
     >
-      <div className="min-h-[120px] bg-[--main-color] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center">
+      <div className="min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
         <p className="text-[23px] text-center">One Day Internationals</p>
         <p className="text-[22px] text-center">England VS Australia</p>
         <button className="live-match-btn">IN-PLAY</button>
@@ -29,36 +32,41 @@ const LiveCricketLeftSection = () => {
       {/* tabs */}
       <div className="flex gap-[10px] overflow-auto mb-[10px]">
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "all" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "all" ? `text-[--text-color]` : ""
             }`}
+          style={{ backgroundColor: tabs === "all" ? webColor : "white" }}
           onClick={() => setTabs("all")}
         >
           All
         </div>
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "match-odd" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "match-odd" ? "text-[--text-color]" : ""
             }`}
+          style={{ backgroundColor: tabs === "match-odd" ? webColor : "white" }}
           onClick={() => setTabs("match-odd")}
         >
           Match Odd
         </div>
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "bookmaker" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "bookmaker" ? "text-[--text-color]" : ""
             }`}
+          style={{ backgroundColor: tabs === "bookmaker" ? webColor : "white" }}
           onClick={() => setTabs("bookmaker")}
         >
           Bookmaker
         </div>
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "line" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "line" ? "text-[--text-color]" : ""
             }`}
+          style={{ backgroundColor: tabs === "line" ? webColor : "white" }}
           onClick={() => setTabs("line")}
         >
           Line
         </div>
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "fancy" ? "bg-[--main-color] text-[--text-color]" : "bg-white"
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "fancy" ? "text-[--text-color]" : ""
             }`}
+          style={{ backgroundColor: tabs === "fancy" ? webColor : "white" }}
           onClick={() => setTabs("fancy")}
         >
           Fancy
@@ -66,13 +74,13 @@ const LiveCricketLeftSection = () => {
       </div>
       <div className="flex flex-col gap-[10px]">
         {(tabs === "all" || tabs === "match-odd") && (
-          <MatchOdds matchOdds={matchOdds} setMatchOdds={setMatchOdds} />
+          <MatchOdds matchOdds={matchOdds} setMatchOdds={setMatchOdds} webColor={webColor} />
         )}
         {tabs === "all" && (
-          <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} />
+          <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} webColor={webColor} />
         )}
         {(tabs === "all" || tabs === "fancy") && (
-          <FancyMatch fancyMatch={fancyMatch} setFancyMatch={setFancyMatch} tabs={tabs} setTabs={setTabs} />
+          <FancyMatch fancyMatch={fancyMatch} setFancyMatch={setFancyMatch} tabs={tabs} setTabs={setTabs} webColor={webColor} />
         )}
       </div>
       <br />
@@ -83,7 +91,7 @@ const LiveCricketLeftSection = () => {
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
+const MatchOdds = ({ matchOdds, setMatchOdds, webColor }: any) => {
   const dispatch = useDispatch();
   const handleBetClicked = (e: any) => {
     e.preventDefault();
@@ -96,7 +104,7 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
         className="h-[47px] flex justify-between border-b cursor-pointer"
         onClick={() => setMatchOdds(!matchOdds)}
       >
-        <div className="bg-[--main-color] text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
+        <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
           Match Odds
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">
@@ -211,14 +219,14 @@ const MatchOdds = ({ matchOdds, setMatchOdds }: any) => {
   );
 };
 
-const TiedMatch = ({ tiedMatch, setTiedMatch }: any) => {
+const TiedMatch = ({ tiedMatch, setTiedMatch, webColor }: any) => {
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
         className="h-[47px] flex justify-between border-b cursor-pointer"
         onClick={() => setTiedMatch(!tiedMatch)}
       >
-        <div className="bg-[--main-color] text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
+        <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
           Tied Match
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">
@@ -333,14 +341,14 @@ const TiedMatch = ({ tiedMatch, setTiedMatch }: any) => {
   );
 };
 
-const FancyMatch = ({ fancyMatch, setFancyMatch, tabs, setTabs }: any) => {
+const FancyMatch = ({ fancyMatch, setFancyMatch, tabs, setTabs, webColor }: any) => {
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
         className="h-[47px] flex justify-between border-b cursor-pointer"
         onClick={() => setFancyMatch(!fancyMatch)}
       >
-        <div className="bg-[--main-color] text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]">
+        <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
           Fancy Market
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">
