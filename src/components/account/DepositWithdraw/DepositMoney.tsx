@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import card1 from "../../../assets/card-1.png";
-import card2 from "../../../assets/card-2.png";
+import bankOfIndia from "../../../assets/bank-of-India.png";
+import bankOfMaharashtra from "../../../assets/bank-of-maharashtra.png";
+import axisBank from "../../../assets/axis-bank.png";
+import ucoBank from "../../../assets/uco-bank.jpg";
+import bandhanBank from "../../../assets/bandhan-bank.png";
+import { getAllBanksApi } from "../../../api/api";
 
 const DepositMoney = ({ colors }: any) => {
-  const [tab, setTab] = useState("Card");
-  const [selectedCard, setSelectedCard] = useState("card1");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+
+  const [depositeAmount, setDepositeAmount] = useState<any>();
+
+  const [banks, setBanks] = useState([]);
+  const [selectedBank, setSelectedBank] = useState<any>({});
+
+  useEffect(() => {
+    fn_getBanks();
+  }, []);
 
   const fn_selectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -23,69 +34,57 @@ const DepositMoney = ({ colors }: any) => {
     }
   };
 
+  const fn_getBanks = async () => {
+    const response = await getAllBanksApi();
+    if (response?.status) {
+      setBanks(response?.data)
+    } else {
+      setBanks([]);
+    }
+  }
+
   return (
     <div
-      className="w-full xl:w-[60%] min-h-[100px] rounded-[15px] p-[15px]"
+      className="w-full xl:w-[60%] h-[max-content] rounded-[15px] p-[15px]"
       style={{ backgroundColor: colors.dark }}
     >
       <p className="text-[18px] font-[500]" style={{ color: panelSecColor }}>
         Deposit Money
       </p>
-      {/* tabs */}
-      <div className="flex gap-[10px] overflow-auto mt-[15px]">
-        <Tabs
-          colors={colors}
-          title={"Card"}
-          tab={tab}
-          setTab={setTab}
-          panelMainColor={panelMainColor}
-          panelSecColor={panelSecColor}
-        />
-        <Tabs
-          colors={colors}
-          title={"Wallet"}
-          tab={tab}
-          setTab={setTab}
-          panelMainColor={panelMainColor}
-          panelSecColor={panelSecColor}
-        />
+      {/* account images */}
+      <p
+        className="font-[500] text-[14px] mt-[15px]"
+        style={{ color: panelSecColor }}
+      >
+        Select Bank&nbsp;<span className="text-[red]">*</span>
+      </p>
+      <div className="flex gap-[15px] flex-wrap mt-[5px]">
+        {banks.map((item: any) => {
+          const bankImg: any = item?.bank === "Bank of India" ? bankOfIndia : item?.bank === "Bank of Maharashtra" ? bankOfMaharashtra : item?.bank === "UCO Bank" ? ucoBank : item?.bank === "Axis Bank" ? axisBank : item?.bank === "Bandhan Bank" ? bandhanBank : null
+          return (
+            <div key={item?._id} onClick={() => setSelectedBank(item)} className={`border cursor-pointer rounded-[10px] p-[5px] w-[100px] h-[100px] flex justify-center items-center ${selectedBank?._id === item?._id ? "border-gray-700" : "border-gray-200"}`}>
+              <img src={bankImg} alt="" className="w-full h-full object-contain" />
+            </div>
+          )
+        })}
       </div>
-      {/* cards */}
-      {tab === "Card" && (
-        <div className="flex flex-col sm:flex-row gap-[15px] mt-[10px]">
-          <div className="relative w-[max-content]">
-            <img
-              alt="card-1"
-              src={card1}
-              className="cursor-pointer h-[120px] w-[220px] rounded-[10px]"
-              onClick={() => setSelectedCard("card1")}
-            />
-            <input
-              type="radio"
-              checked={selectedCard === "card1"}
-              className="absolute bottom-[10px] right-[10px] scale-[1.5] cursor-pointer"
-              onChange={() => setSelectedCard("card1")}
-            />
-          </div>
-          <div className="relative w-[max-content]">
-            <img
-              alt="card-2"
-              src={card2}
-              className="cursor-pointer h-[120px] w-[220px] rounded-[10px]"
-              onClick={() => setSelectedCard("card2")}
-            />
-            <input
-              type="radio"
-              checked={selectedCard === "card2"}
-              className="absolute bottom-[10px] right-[10px] scale-[1.5] cursor-pointer"
-              onChange={() => setSelectedCard("card2")}
-            />
-          </div>
-        </div>
-      )}
-      {/* cards info */}
-      {tab === "Card" && (
+      {/* bank details */}
+      {Object.keys(selectedBank).length > 0 && (
         <table className="w-full mt-[20px]">
+          <tr>
+            <td
+              className="border text-[14px] font-[600] ps-[7px] w-[180px]"
+              style={{ borderColor: colors.line, color: colors.subText }}
+            >
+              Bank Name
+            </td>
+            <td
+              className="border text-[15px] ps-[7px] py-[2px]"
+              style={{ borderColor: colors.line, color: colors.subText }}
+            >
+              {selectedBank?.bank}
+            </td>
+          </tr>
           <tr>
             <td
               className="border text-[14px] font-[600] ps-[7px] w-[180px]"
@@ -97,7 +96,7 @@ const DepositMoney = ({ colors }: any) => {
               className="border text-[15px] ps-[7px] py-[2px]"
               style={{ borderColor: colors.line, color: colors.subText }}
             >
-              {selectedCard === "card1" ? "1566020000000497" : "2000111942104041"}
+              {selectedBank?.accountNo}
             </td>
           </tr>
           <tr>
@@ -105,13 +104,13 @@ const DepositMoney = ({ colors }: any) => {
               className="border text-[14px] font-[600] ps-[7px]"
               style={{ borderColor: colors.line, color: colors.subText }}
             >
-              Account Holder
+              Account Holder Name
             </td>
             <td
               className="border text-[15px] ps-[7px] py-[2px]"
               style={{ borderColor: colors.line, color: colors.subText }}
             >
-              {selectedCard === "card1" ? "GULZAR AHMED" : "ASHOK KUMAR SAHNI"}
+              {selectedBank?.name}
             </td>
           </tr>
           <tr>
@@ -119,42 +118,37 @@ const DepositMoney = ({ colors }: any) => {
               className="border text-[14px] font-[600] ps-[7px]"
               style={{ borderColor: colors.line, color: colors.subText }}
             >
-              IFSC
+              IBN No.
             </td>
             <td
               className="border text-[15px] ps-[7px] py-[2px]"
               style={{ borderColor: colors.line, color: colors.subText }}
             >
-              UTKS0001566
-            </td>
-          </tr>
-          <tr>
-            <td
-              className="border text-[14px] font-[600] ps-[7px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              Bank Name
-            </td>
-            <td
-              className="border text-[15px] ps-[7px] py-[2px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              {selectedCard === "card1"
-                ? "UTKARSH SMALL FINANCE BANK"
-                : "Canara South Indian Bank"}
+              {selectedBank?.ibn}
             </td>
           </tr>
         </table>
       )}
       {/* deposit form */}
-      <div className="mt-[15px]">
-        <label
-          className="font-[500] text-[14px]"
-          style={{ color: panelSecColor }}
-        >
-          Amount to Deposit&nbsp;<span className="text-[red]">*</span>
-        </label>
+      <div className="mt-[25px]">
+        <div className="flex justify-between">
+          <p
+            className="font-[500] text-[14px]"
+            style={{ color: panelSecColor }}
+          >
+            Amount to Deposit&nbsp;<span className="text-[red]">*</span>
+          </p>
+          <p
+            className="mt-[4px] text-[12px] text-end"
+            style={{ color: colors.subText }}
+          >
+            Min. 100 || Max. 500,000
+          </p>
+        </div>
         <input
+          type="number"
+          value={depositeAmount}
+          onChange={(e: any) => setDepositeAmount(e.target.value)}
           className="h-[35px] rounded-[5px] w-full border mt-[5px] px-[10px] text-[14px] font-[500] focus:outline-none"
           placeholder="Amount"
           style={{
@@ -163,44 +157,18 @@ const DepositMoney = ({ colors }: any) => {
             color: colors.text,
           }}
         />
-        <p
-          className="mt-[2px] text-[13px] text-end"
-          style={{ color: colors.subText }}
-        >
-          Min. 100 || Max. 500,000
-        </p>
       </div>
       {/* buttons */}
-      <div className="flex gap-[10px] flex-wrap mt-[15px]">
-        <Button colors={colors} text={"+ 100.00"} panelMainColor={panelMainColor} />
-        <Button colors={colors} text={"+ 500.00"} panelMainColor={panelMainColor} />
-        <Button colors={colors} text={"+ 1,000.00"} panelMainColor={panelMainColor} />
-        <Button colors={colors} text={"+ 5,000.00"} panelMainColor={panelMainColor} />
-        <Button colors={colors} text={"+ 10,000.00"} panelMainColor={panelMainColor} />
-        <Button colors={colors} text={"+ 50,000.00"} panelMainColor={panelMainColor} />
+      <div className="flex gap-[10px] flex-wrap mt-[8px]">
+        <Button colors={colors} text={"+ 100.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={100} />
+        <Button colors={colors} text={"+ 500.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={500} />
+        <Button colors={colors} text={"+ 1,000.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={1000} />
+        <Button colors={colors} text={"+ 5,000.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={5000} />
+        <Button colors={colors} text={"+ 10,000.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={10000} />
+        <Button colors={colors} text={"+ 50,000.00"} panelMainColor={panelMainColor} setDepositeAmount={setDepositeAmount} value={50000} />
       </div>
-
-      {/* apply code */}
-      {/* <div className="mt-[15px]">
-        <label
-          className="font-[500] text-[14px]"
-          style={{ color: colors.text }}
-        >
-          Select & Apply Offer&nbsp;<span className="text-[red]">*</span>
-        </label>
-        <input
-          className="h-[35px] rounded-[5px] w-full border mt-[5px] px-[10px] text-[14px] font-[500] focus:outline-none"
-          placeholder="Apply code"
-          style={{
-            borderColor: colors.line,
-            backgroundColor: colors.dark,
-            color: colors.text,
-          }}
-        />
-      </div> */}
-
       {/* transaction ID */}
-      <div className="mt-[15px]">
+      <div className="mt-[25px]">
         <label
           className="font-[500] text-[14px]"
           style={{ color: panelSecColor }}
@@ -218,7 +186,7 @@ const DepositMoney = ({ colors }: any) => {
         />
       </div>
       {/* upload UTR */}
-      <div className="mt-[15px] flex flex-col md:flex-row justify-between">
+      <div className="mt-[25px] flex flex-col md:flex-row justify-between">
         <div className="flex flex-col gap-[5px]">
           <label
             className="font-[500] text-[14px]"
@@ -238,7 +206,7 @@ const DepositMoney = ({ colors }: any) => {
         )}
       </div>
       <button
-        className="text-[14px] h-[35px] rounded-[4px] w-full mt-[15px]"
+        className="text-[14px] h-[35px] rounded-[4px] w-full mt-[25px]"
         style={{ backgroundColor: panelSecColor, color: panelMainColor }}
       >
         Deposit
@@ -249,28 +217,14 @@ const DepositMoney = ({ colors }: any) => {
 
 export default DepositMoney;
 
-const Button = ({ colors, text, panelMainColor }: any) => {
+const Button = ({ colors, text, panelMainColor, setDepositeAmount, value }: any) => {
   return (
     <button
       className="h-[35px] w-[100px] sm:w-[115px] text-[13px] pt-[1px] font-[500] rounded-[4px]"
       style={{ backgroundColor: panelMainColor, color: colors.subText }}
+      onClick={() => setDepositeAmount((prev: any) => prev === "" || prev === null || prev === undefined ? 0 + value : parseInt(prev) + value)}
     >
       {text}
-    </button>
-  );
-};
-
-const Tabs = ({ colors, title, tab, setTab , panelMainColor, panelSecColor }: any) => {
-  return (
-    <button
-      className="h-[35px] px-[13px] min-w-[100px] rounded-[7px] shadow-sm font-[500] pt-[1px] text-[15px]"
-      style={{
-        backgroundColor: tab === title ? panelSecColor : panelMainColor,
-        color: tab === title ? colors.light : panelSecColor,
-      }}
-      onClick={() => setTab(title)}
-    >
-      {title}
     </button>
   );
 };
