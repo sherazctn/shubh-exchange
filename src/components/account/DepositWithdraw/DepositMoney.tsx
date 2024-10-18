@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import bankOfIndia from "../../../assets/bank-of-India.png";
-import bankOfMaharashtra from "../../../assets/bank-of-maharashtra.png";
-import axisBank from "../../../assets/axis-bank.png";
-import ucoBank from "../../../assets/uco-bank.jpg";
-import bandhanBank from "../../../assets/bandhan-bank.png";
 import { getAllBanksApi } from "../../../api/api";
+import { Banks } from "../../../json-data/bank";
 
 const DepositMoney = ({ colors }: any) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -37,7 +33,7 @@ const DepositMoney = ({ colors }: any) => {
   const fn_getBanks = async () => {
     const response = await getAllBanksApi();
     if (response?.status) {
-      setBanks(response?.data)
+      setBanks(response?.data?.reverse())
     } else {
       setBanks([]);
     }
@@ -58,12 +54,12 @@ const DepositMoney = ({ colors }: any) => {
       >
         Select Bank&nbsp;<span className="text-[red]">*</span>
       </p>
-      <div className="flex gap-[15px] flex-wrap mt-[5px]">
+      <div className="flex gap-[15px] flex-nowrap mt-[5px] w-full overflow-auto">
         {banks.map((item: any) => {
-          const bankImg: any = item?.bank === "Bank of India" ? bankOfIndia : item?.bank === "Bank of Maharashtra" ? bankOfMaharashtra : item?.bank === "UCO Bank" ? ucoBank : item?.bank === "Axis Bank" ? axisBank : item?.bank === "Bandhan Bank" ? bandhanBank : null
+          const bankImg: any = Banks.find((i) => i.title === item.bank)?.img;
           return (
-            <div key={item?._id} onClick={() => setSelectedBank(item)} className={`border cursor-pointer rounded-[10px] p-[5px] w-[100px] h-[100px] flex justify-center items-center ${selectedBank?._id === item?._id ? "border-gray-700" : "border-gray-200"}`}>
-              <img src={bankImg} alt="" className="w-full h-full object-contain" />
+            <div key={item?._id} onClick={() => setSelectedBank(item)} className={`border cursor-pointer rounded-[10px] p-[5px] min-w-[100px] min-h-[100px] sm:min-w-[150px] sm:min-h-[150px] flex justify-center items-center ${selectedBank?._id === item?._id ? "border-gray-700" : "border-gray-200"}`}>
+              <img src={bankImg} alt="" className="w-full max-w-[100px] sm:max-w-[150px] h-full object-contain" />
             </div>
           )
         })}
@@ -113,20 +109,22 @@ const DepositMoney = ({ colors }: any) => {
               {selectedBank?.name}
             </td>
           </tr>
-          <tr>
-            <td
-              className="border text-[14px] font-[600] ps-[7px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              IBN No.
-            </td>
-            <td
-              className="border text-[15px] ps-[7px] py-[2px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              {selectedBank?.ibn}
-            </td>
-          </tr>
+          {selectedBank.bank !== "UPI Payment" && (
+            <tr>
+              <td
+                className="border text-[14px] font-[600] ps-[7px]"
+                style={{ borderColor: colors.line, color: colors.subText }}
+              >
+                IBN No.
+              </td>
+              <td
+                className="border text-[15px] ps-[7px] py-[2px]"
+                style={{ borderColor: colors.line, color: colors.subText }}
+              >
+                {selectedBank?.ibn}
+              </td>
+            </tr>
+          )}
         </table>
       )}
       {/* deposit form */}

@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
 import { RxCross2 } from "react-icons/rx";
 import { IoMenuSharp } from "react-icons/io5";
+import { PiHandDeposit } from "react-icons/pi";
 import { FaHandHoldingDollar } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
@@ -23,6 +24,7 @@ import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlin
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   const pageNav = useSelector((state: any) => state.navPage);
@@ -90,6 +92,14 @@ const Navbar = () => {
     return toast.success("Logout Successfullty");
   }
 
+  const fn_depositClicked = () => {
+    if (!authentication) {
+      return toast.error("Login Yourself")
+    }else{
+      navigate("/account/deposit-withdraw")
+    }
+  }
+
   return (
     <>
       <div className="navbar shadow-md" style={{ backgroundColor: webColor }}>
@@ -102,6 +112,10 @@ const Navbar = () => {
         {/* web menus */}
         <div className="hidden md:flex gap-[10px]">
           <ul className="menus flex items-center gap-[15px] font-[600] text-[15px] text-[--text-color]">
+            <p style={{ color: webColor }} className="flex items-center justify-center gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
+              <PiHandDeposit className="w-[19px] h-[19px]" />
+              <span className="me-[5px]">Deposit</span>
+            </p>
             <Link to={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
               <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
               My Markets
@@ -343,7 +357,7 @@ const Navbar = () => {
             <input
               type={passwordType}
               className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
-              style={{outlineColor: webColor}}
+              style={{ outlineColor: webColor }}
               id="password"
               required
               value={password}

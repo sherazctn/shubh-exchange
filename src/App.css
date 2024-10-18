@@ -410,3 +410,26 @@
   scale: 0.5;
   margin-right: -10px;
 }
+
+@keyframes scaleUpDown {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.scale-up-down {
+  animation: scaleUpDown 0.8s infinite;
+  transition: all 0.3s ease;
+}
+
+.scale-up-down:hover {
+  animation: none;
+  cursor: pointer;
+}
+
+.scale-up-down:active {
+  scale: 0.93;
+}

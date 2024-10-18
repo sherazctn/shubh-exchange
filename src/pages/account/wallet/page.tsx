@@ -16,7 +16,6 @@ const Wallet = ({ darkTheme }: any) => {
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
-  const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
 
   useEffect(() => {

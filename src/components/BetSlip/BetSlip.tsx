@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
 import { GoDotFill } from "react-icons/go"
@@ -14,8 +14,15 @@ const BetSlip = () => {
     const dispatch = useDispatch();
     const bettingSlip = useSelector((state: any) => state.bettingSlip);
     const [tabs, setTabs] = useState("slip");
+    const inputRef = useRef<any>(null);
 
     const webColor = useSelector((state: any) => state.websiteColor);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [bettingSlip, tabs]);
 
     return (
         <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[670px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-625px]" : bettingSlip === "hide" ? "bottom-[-670px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
@@ -37,7 +44,7 @@ const BetSlip = () => {
                         onClick={() => setTabs("open")}
                     >Open Bet</button>
                 </div>
-                {tabs === "slip" && <BetSlipTab webColor={webColor} />}
+                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} />}
                 {tabs === "open" && <OpenBet />}
             </div>
         </div>
@@ -46,11 +53,64 @@ const BetSlip = () => {
 
 export default BetSlip;
 
-const BetSlipTab = ({ webColor }: { webColor: string }) => {
+const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any }) => {
     const [input1, setInput1] = useState<any>();
     const [input2, setInput2] = useState<any>();
     const [view1, setView1] = useState<boolean>(true);
     const [view2, setView2] = useState<boolean>(true);
+
+    const fn_keyDown = (e: any) => {
+        e.preventDefault();
+        if (e.key === '1') {
+            setInput1('1000');
+        } else if (e.key === '2') {
+            setInput1('2000');
+        } else if (e.key === '3') {
+            setInput1('3000');
+        } else if (e.key === '4') {
+            setInput1('4000');
+        } else if (e.key === '5') {
+            setInput1('5000');
+        } else if (e.key === 'ArrowUp') {
+            setInput1((prev: any) => {
+                const newValue = (parseInt(prev, 10) || 0) + 1;
+                return newValue.toString();
+            });
+            e.preventDefault();
+        } else if (e.key === 'ArrowDown') {
+            setInput1((prev: any) => {
+                const newValue = (parseInt(prev, 10) || 0) - 1;
+                return newValue.toString();
+            });
+            e.preventDefault();
+        }
+    }
+    const fn_keyDown2 = (e: any) => {
+        e.preventDefault();
+        if (e.key === '1') {
+            setInput2('1000');
+        } else if (e.key === '2') {
+            setInput2('2000');
+        } else if (e.key === '3') {
+            setInput2('3000');
+        } else if (e.key === '4') {
+            setInput2('4000');
+        } else if (e.key === '5') {
+            setInput2('5000');
+        } else if (e.key === 'ArrowUp') {
+            setInput2((prev: any) => {
+                const newValue = (parseInt(prev, 10) || 0) + 1;
+                return newValue.toString();
+            });
+            e.preventDefault();
+        } else if (e.key === 'ArrowDown') {
+            setInput2((prev: any) => {
+                const newValue = (parseInt(prev, 10) || 0) - 1;
+                return newValue.toString();
+            });
+            e.preventDefault();
+        }
+    }
     return (
         <div className="flex flex-col justify-between gap-[7px] h-[570px]">
             {/* bets */}
@@ -68,13 +128,15 @@ const BetSlipTab = ({ webColor }: { webColor: string }) => {
                             <input
                                 min={1}
                                 type="number"
-                                value={input1}
-                                onChange={(e) => setInput1(e.target.value)}
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                             <input
+                                ref={inputRef}
                                 min={1}
                                 type="number"
+                                value={input1}
+                                onKeyDown={fn_keyDown}
+                                onChange={(e) => setInput1(e.target.value)}
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                         </div>
@@ -160,13 +222,14 @@ const BetSlipTab = ({ webColor }: { webColor: string }) => {
                             <input
                                 min={1}
                                 type="number"
-                                value={input2}
-                                onChange={(e) => setInput2(e.target.value)}
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                             <input
                                 min={1}
                                 type="number"
+                                value={input2}
+                                onChange={(e) => setInput2(e.target.value)}
+                                onKeyDown={fn_keyDown2}
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                         </div>
@@ -245,7 +308,7 @@ const BetSlipTab = ({ webColor }: { webColor: string }) => {
                 <button className="w-full min-h-[43px] font-[600] rounded-[5px] text-[15px] text-[--text-color]" style={{ backgroundColor: webColor }}>
                     Place Bets
                 </button>
-                <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{borderColor: webColor, color: webColor}}>
+                <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{ borderColor: webColor, color: webColor }}>
                     Cancel
                 </button>
             </div>

@@ -5,12 +5,8 @@ import { useSelector } from "react-redux";
 import Loader from "../../Loader";
 import { createBankApi, deleteBankByIdApi, getUserBankApi } from "../../../api/api";
 
-import bankOfIndia from "../../../assets/bank-of-India.png";
-import bankOfMaharashtra from "../../../assets/bank-of-maharashtra.png";
-import ucoBank from "../../../assets/uco-bank.jpg";
-import axisBank from "../../../assets/axis-bank.png";
-import bandhanBank from "../../../assets/bandhan-bank.png";
 import { MdDelete } from "react-icons/md";
+import { Banks } from "../../../json-data/bank";
 
 const WithdrawMoney = ({ colors }: any) => {
   const [accountSelection, setAccountSelection] = useState("");
@@ -29,13 +25,14 @@ const WithdrawMoney = ({ colors }: any) => {
     accountNo: "",
     bank: "",
     name: "",
-    ibn: ""
+    ibn: "",
+    upi: "",
   });
 
   const fn_getUserBanks = async () => {
     const response = await getUserBankApi();
     if (response?.status) {
-      setUserBanks(response?.data)
+      setUserBanks(response?.data?.reverse())
     } else {
       setUserBanks([]);
     }
@@ -46,16 +43,24 @@ const WithdrawMoney = ({ colors }: any) => {
       return toast.error("Select Saved or New Account")
     }
     if (accountSelection === "savedAccounts") return;
-    if (state.accountNo === "" || state.bank === "" || state.ibn === "" || state.name === "") {
-      return toast.error("Fill all Fields");
+    if (state.bank !== "UPI Payment") {
+      if (state.accountNo === "" || state.bank === "" || state.ibn === "" || state.name === "") {
+        return toast.error("Fill all Fields");
+      }
+    } else {
+      if (state.accountNo === "" || state.name === "") {
+        return toast.error("Fill all Fields");
+      }
     }
     setWithdrawLoader(true);
-    const response = await createBankApi(state);
+    const response = await createBankApi({
+      bank: state.bank,
+      accountNo: state.accountNo,
+      name: state.name,
+      ibn: state.bank === "UPI Payment" ? "" : state.ibn,
+    });
     if (response?.status) {
-      setState((prev) => ({ ...prev, accountNo: "" }))
-      setState((prev) => ({ ...prev, bank: "" }))
-      setState((prev) => ({ ...prev, name: "" }))
-      setState((prev) => ({ ...prev, ibn: "" }))
+      setState((prev) => ({ ...prev, accountNo: "", bank: "", name: "", ibn: "" }))
       setWithdrawLoader(false);
       fn_getUserBanks();
       return toast.success(response.message)
@@ -153,6 +158,31 @@ export default WithdrawMoney;
 const NewAccount = ({ colors, panelSecColor, state, setState }: any) => {
   return (
     <>
+      {/* Bank Account */}
+      <div>
+        <div className="flex justify-between items-end">
+          <label
+            className="font-[500] text-[14px]"
+            style={{ color: panelSecColor }}
+          >
+            Bank Account&nbsp;<span className="text-[red]">*</span>
+          </label>
+        </div>
+        <select
+          className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
+          onChange={(e) => setState((prev: any) => ({ ...prev, bank: e.target.value }))}
+          style={{
+            borderColor: colors.line,
+            backgroundColor: colors.dark,
+            color: colors.text,
+          }}
+        >
+          <option value={""} selected disabled>---Select Bank---</option>
+          {Banks.map((item, index) => (
+            <option key={index} value={item?.title}>{item?.title}</option>
+          ))}
+        </select>
+      </div>
       {/* Account Number */}
       <div>
         <div className="flex justify-between items-end">
@@ -205,58 +235,33 @@ const NewAccount = ({ colors, panelSecColor, state, setState }: any) => {
         />
       </div>
       {/* IBN Number */}
-      <div>
-        <div className="flex justify-between items-end">
-          <label
-            className="font-[500] text-[14px]"
-            style={{ color: panelSecColor }}
-          >
-            IBN Number&nbsp;<span className="text-[red]">*</span>
-          </label>
-          <label className="text-[11px]" style={{ color: colors.subText }}>
-            (11-18 characters allowed)
-          </label>
+      {state.bank !== "UPI Payment" && (
+        < div >
+          <div className="flex justify-between items-end">
+            <label
+              className="font-[500] text-[14px]"
+              style={{ color: panelSecColor }}
+            >
+              IBN Number&nbsp;<span className="text-[red]">*</span>
+            </label>
+            <label className="text-[11px]" style={{ color: colors.subText }}>
+              (11-18 characters allowed)
+            </label>
+          </div>
+          <input
+            type="number"
+            className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
+            placeholder="IBN Number"
+            value={state.ibn}
+            onChange={(e) => setState((prev: any) => ({ ...prev, ibn: e.target.value }))}
+            style={{
+              borderColor: colors.line,
+              backgroundColor: colors.dark,
+              color: colors.text,
+            }}
+          />
         </div>
-        <input
-          type="number"
-          className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
-          placeholder="IBN Number"
-          value={state.ibn}
-          onChange={(e) => setState((prev: any) => ({ ...prev, ibn: e.target.value }))}
-          style={{
-            borderColor: colors.line,
-            backgroundColor: colors.dark,
-            color: colors.text,
-          }}
-        />
-      </div>
-      {/* Bank Account */}
-      <div>
-        <div className="flex justify-between items-end">
-          <label
-            className="font-[500] text-[14px]"
-            style={{ color: panelSecColor }}
-          >
-            Bank Account&nbsp;<span className="text-[red]">*</span>
-          </label>
-        </div>
-        <select
-          className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
-          onChange={(e) => setState((prev: any) => ({ ...prev, bank: e.target.value }))}
-          style={{
-            borderColor: colors.line,
-            backgroundColor: colors.dark,
-            color: colors.text,
-          }}
-        >
-          <option value={""} selected disabled>---Select Bank---</option>
-          <option value={"Bank of India"} >Bank of India</option>
-          <option value={"Bank of Maharashtra"}>Bank of Maharashtra</option>
-          <option value={"UCO Bank"}>UCO Bank</option>
-          <option value={"Axis Bank"}>Axis Bank</option>
-          <option value={"Bandhan Bank"}>Bandhan Bank</option>
-        </select>
-      </div>
+      )}
     </>
   );
 };
@@ -274,12 +279,12 @@ const SavedAccount = ({ data, setSelectedBank, selectedBank, fn_getUserBanks }: 
   }
   return (
     <div className="flex flex-col gap-[5px]">
-      <div className="flex flex-wrap gap-[10px]">
+      <div className="flex flex-nowrap gap-[10px] overflow-auto">
         {data.map((item: any) => {
-          const bankImg: any = item?.bank === "Bank of India" ? bankOfIndia : item?.bank === "Bank of Maharashtra" ? bankOfMaharashtra : item?.bank === "UCO Bank" ? ucoBank : item?.bank === "Axis Bank" ? axisBank : item?.bank === "Bandhan Bank" ? bandhanBank : null
+          const bankImg: any = Banks.find(i => i.title === item?.bank)?.img;
           return (
-            <div key={item?._id} onClick={() => setSelectedBank(item)} className={`relative border cursor-pointer rounded-[10px] p-[5px] w-[100px] h-[100px] flex justify-center items-center ${selectedBank?._id === item?._id ? "border-gray-700" : "border-gray-200"}`}>
-              <img src={bankImg} alt="" className="w-full h-full object-contain" />
+            <div key={item?._id} onClick={() => setSelectedBank(item)} className={`relative border cursor-pointer rounded-[10px] min-w-[100px] min-h-[100px] sm:min-w-[130px] sm:min-h-[130px] flex justify-center items-center ${selectedBank?._id === item?._id ? "border-gray-700" : "border-gray-200"}`}>
+              <img src={bankImg} alt="" className="w-full h-full max-w-[100px] object-contain" />
               <div className="absolute shadow-md top-[5px] right-[5px] bg-white rounded-full w-[20px] h-[20px] border flex justify-center items-center">
                 <MdDelete className="text-red-500 text-[14px]" onClick={() => fn_deleteBank(item._id)} />
               </div>
@@ -325,18 +330,20 @@ const SavedAccount = ({ data, setSelectedBank, selectedBank, fn_getUserBanks }: 
               {selectedBank?.name}
             </td>
           </tr>
-          <tr>
-            <td
-              className="border text-[14px] font-[600] ps-[7px]"
-            >
-              IBN No.
-            </td>
-            <td
-              className="border text-[15px] ps-[7px] py-[2px]"
-            >
-              {selectedBank?.ibn}
-            </td>
-          </tr>
+          {selectedBank?.bank !== "UPI Payment" && (
+            <tr>
+              <td
+                className="border text-[14px] font-[600] ps-[7px]"
+              >
+                IBN No.
+              </td>
+              <td
+                className="border text-[15px] ps-[7px] py-[2px]"
+              >
+                {selectedBank?.ibn}
+              </td>
+            </tr>
+          )}
         </table>
       )}
     </div>

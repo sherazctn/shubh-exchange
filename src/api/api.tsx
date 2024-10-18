@@ -116,7 +116,7 @@ export const panelColorApi = async () => {
 
 export const getAllBanksApi = async () => {
     try {
-        const response = await axios.get(`${URL}/bank/admin`);
+        const response = await axios.get(`${URL}/bank/admin/active`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }

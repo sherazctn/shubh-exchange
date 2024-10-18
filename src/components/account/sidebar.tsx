@@ -84,6 +84,17 @@ const Sidebar = ({ colors, path }: any) => {
           panelMainColor={panelMainColor}
         />
         <Menus
+          title={"Payment Information"}
+          colors={colors}
+          pathEquals={"paymentInformation"}
+          path={path}
+          url={"/account/payment-information"}
+          icon={<ImCreditCard className="text-[20px]" />}
+          smallSidebar={smallSidebar}
+          panelSecColor={panelSecColor}
+          panelMainColor={panelMainColor}
+        />
+        <Menus
           title={"Account Statement"}
           colors={colors}
           pathEquals={"accountStatement"}
