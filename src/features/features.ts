@@ -13,6 +13,7 @@ const initialState = {
   websiteColor: "",
   panelMainColor: "",
   panelSecColor: "",
+  wallet: 0
 };
 
 export const featuresSlice = createSlice({
@@ -55,6 +56,9 @@ export const featuresSlice = createSlice({
     updatePanelSecColor: (state, action) => {
       state.panelSecColor = action.payload;
     },
+    updateWallet: (state, action) => {
+      state.wallet = action.payload;
+    },
   },
 });
 
@@ -70,6 +74,7 @@ export const {
   updateBettingSlip,
   updateWebsiteColor,
   updatePanelMainColor,
-  updatePanelSecColor
+  updatePanelSecColor,
+  updateWallet
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

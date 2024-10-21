@@ -184,4 +184,42 @@ export const deleteBankByIdApi = async (id: string) => {
     }
 }
 
+export const createDepositApi = async (data: any) => {
+    try {
+        const response = await axios.post(`${URL}/deposit`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, message: "Deposited Request Sent Successfully" }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserDepositApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/deposit/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export default URL;

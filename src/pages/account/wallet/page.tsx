@@ -17,6 +17,7 @@ const Wallet = ({ darkTheme }: any) => {
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const wallet = useSelector((state: any) => state.wallet);
 
   useEffect(() => {
     Aos.init({ once: true });
@@ -26,9 +27,8 @@ const Wallet = ({ darkTheme }: any) => {
     <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>
       <Sidebar colors={colors} path={"wallet"} />
       <div
-        className={`relative p-[1px] transition-all duration-500 ${
-          smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
-        }`}
+        className={`relative p-[1px] transition-all duration-500 ${smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
+          }`}
       >
         <Navbar pageName={"My Wallet"} darkTheme={darkTheme} colors={colors} />
         <div className="mt-[15px] px-[10px] sm:px-[20px]">
@@ -42,7 +42,7 @@ const Wallet = ({ darkTheme }: any) => {
             className="text-center text-[30px] sm:text-[40px] font-[700] mt-[10px] flex items-center justify-center"
             style={{ color: panelSecColor }}
           >
-            <FaIndianRupeeSign />14000
+            <FaIndianRupeeSign />{wallet}
           </p>
           <div
             className="my-[10px] sm:my-[15px] rounded-[22px] pb-[10px] sm:p-[10px] md:px-[15px]"

@@ -1,19 +1,24 @@
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { getAllBanksApi } from "../../../api/api";
+import { createDepositApi, getAllBanksApi } from "../../../api/api";
 import { Banks } from "../../../json-data/bank";
+import toast from "react-hot-toast";
 
 const DepositMoney = ({ colors }: any) => {
+  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
 
-  const [depositeAmount, setDepositeAmount] = useState<any>();
+  const [depositeAmount, setDepositeAmount] = useState<any>(null);
 
   const [banks, setBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState<any>({});
+  const [transactionId, setTransactionId] = useState<number | null>(null);
+  const [image, setImage] = useState<any>(null);
 
   useEffect(() => {
     fn_getBanks();
@@ -26,6 +31,7 @@ const DepositMoney = ({ colors }: any) => {
       reader.onloadend = () => {
         setSelectedImage(reader.result as string);
       };
+      setImage(file);
       reader.readAsDataURL(file);
     }
   };
@@ -36,6 +42,37 @@ const DepositMoney = ({ colors }: any) => {
       setBanks(response?.data?.reverse())
     } else {
       setBanks([]);
+    }
+  };
+
+  const fn_submit = async () => {
+    if (Object.keys(selectedBank).length === 0) {
+      return toast.error("Please Select Bank");
+    }
+    if (!depositeAmount || depositeAmount === "" || depositeAmount === 0) {
+      return toast.error("Please Enter Deposited Amount");
+    }
+    if (depositeAmount < 100) {
+      return toast.error(`Minimum Deposit is ₹100`);
+    }
+    if (!transactionId) {
+      return toast.error("Please Enter Transaction Id");
+    }
+    if (!image) {
+      return toast.error("Please Select Image");
+    }
+    const data = new FormData();
+    data.append('bankId', selectedBank?._id);
+    data.append('image', image);
+    //@ts-ignore
+    data.append('transactionId', transactionId);
+    data.append('amount', depositeAmount);
+    const response = await createDepositApi(data);
+    if (response?.status) {
+      navigate("/account/payment-information");
+      return toast.success(response?.message);
+    } else {
+      return toast.error(response?.message);
     }
   }
 
@@ -174,8 +211,10 @@ const DepositMoney = ({ colors }: any) => {
           Unique Transaction Reference&nbsp;<span className="text-[red]">*</span>
         </label>
         <input
+          type="number"
           className="h-[35px] rounded-[5px] w-full border mt-[5px] px-[10px] text-[14px] font-[500] focus:outline-none"
           placeholder="Unique Transaction Reference"
+          onChange={(e) => setTransactionId(parseInt(e.target.value))}
           style={{
             borderColor: colors.line,
             backgroundColor: colors.dark,
@@ -204,6 +243,7 @@ const DepositMoney = ({ colors }: any) => {
         )}
       </div>
       <button
+        onClick={fn_submit}
         className="text-[14px] h-[35px] rounded-[4px] w-full mt-[25px]"
         style={{ backgroundColor: panelSecColor, color: panelMainColor }}
       >
