@@ -1,12 +1,13 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "http://62.72.57.126:5000";
+const URL = "http://62.72.57.126:8000";
 const token = Cookies.get('token');
 
 export const SignUpApi = async (data: any) => {
     try {
-        const response = await axios.post(`${URL}/user`, data);
+        const admin = localStorage.getItem('adminId')
+        const response = await axios.post(`${URL}/user`, { ...data, admin: admin || Cookies.get('token')  });
         if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Created Successfully" };
@@ -22,7 +23,8 @@ export const SignUpApi = async (data: any) => {
 
 export const SignInApi = async (data: any) => {
     try {
-        const response = await axios.post(`${URL}/user/login`, data);
+        const admin = localStorage.getItem('adminId')
+        const response = await axios.post(`${URL}/user/login`, { ...data, admin: admin || Cookies.get('token') });
         if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Logged In Successfully" };
@@ -116,7 +118,8 @@ export const panelColorApi = async () => {
 
 export const getAllBanksApi = async () => {
     try {
-        const response = await axios.get(`${URL}/bank/admin/active`);
+        const admin = localStorage.getItem('adminId')
+        const response = await axios.get(`${URL}/bank/active/${admin||Cookies.get('token')}`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -186,6 +189,8 @@ export const deleteBankByIdApi = async (id: string) => {
 
 export const createDepositApi = async (data: any) => {
     try {
+        const admin = localStorage.getItem('adminId')
+        data.append('admin', admin||Cookies.get('token'));
         const response = await axios.post(`${URL}/deposit`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,

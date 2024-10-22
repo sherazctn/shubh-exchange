@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Modal } from 'antd';
 import Loader from "../../Loader";
 
-const PaymentInformationTable = ({ colors }: any) => {
+const WithdrawTable = ({ colors }: any) => {
     const panelMainColor = useSelector((state: any) => state.panelMainColor);
     const panelSecColor = useSelector((state: any) => state.panelSecColor);
 
@@ -105,7 +105,7 @@ const PaymentInformationTable = ({ colors }: any) => {
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Status</p>
                             <p className="text-[22px] font-[600] mt-[5px]">
-                                {selectedItem?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[35px] rounded-full w-[100px] text-[14px] font-[600] text-[#2b872a] flex justify-center items-center">Approved</p>}
+                                {selectedItem?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[35px] rounded-full w-[100px] text-[14px] font-[600] text-[#2b872a] flex justify-center items-center">Verified</p>}
                                 {selectedItem?.status === "pending" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#fff7cf] h-[35px] rounded-full w-[100px] text-[14px] font-[600] text-[#b9ab25] flex justify-center items-center">Pending</p>}
                                 {selectedItem?.status === "decline" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#ffd6d6] h-[35px] rounded-full w-[100px] text-[14px] font-[600] text-[#fd3939] flex justify-center items-center">Decline</p>}
                             </p>
@@ -117,7 +117,7 @@ const PaymentInformationTable = ({ colors }: any) => {
     );
 };
 
-export default PaymentInformationTable;
+export default WithdrawTable;
 
 const TableRows = ({ colors, item, index, isModalOpen, setIsModalOpen, setSelectedItem }: any) => {
     return (
@@ -131,7 +131,7 @@ const TableRows = ({ colors, item, index, isModalOpen, setIsModalOpen, setSelect
             <td>{item?.createdAt}</td>
             <td><FaIndianRupeeSign className="inline-block" />{item?.amount}</td>
             <td>
-                {item?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#2b872a] flex justify-center items-center">Approved</p>}
+                {item?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#2b872a] flex justify-center items-center">Verified</p>}
                 {item?.status === "pending" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#fff7cf] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#b9ab25] flex justify-center items-center">Pending</p>}
                 {item?.status === "decline" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#ffd6d6] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#fd3939] flex justify-center items-center">Decline</p>}
             </td>

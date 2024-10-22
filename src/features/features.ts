@@ -13,7 +13,8 @@ const initialState = {
   websiteColor: "",
   panelMainColor: "",
   panelSecColor: "",
-  wallet: 0
+  wallet: 0,
+  adminId: "",
 };
 
 export const featuresSlice = createSlice({
@@ -59,6 +60,9 @@ export const featuresSlice = createSlice({
     updateWallet: (state, action) => {
       state.wallet = action.payload;
     },
+    updateAdminId: (state, action) => {
+      state.adminId = action.payload;
+    }
   },
 });
 
@@ -75,6 +79,7 @@ export const {
   updateWebsiteColor,
   updatePanelMainColor,
   updatePanelSecColor,
-  updateWallet
+  updateWallet,
+  updateAdminId
 } = featuresSlice.actions;
 export const featuresReducer = featuresSlice.reducer;

@@ -1,7 +1,7 @@
 import "./App.css";
 import "aos/dist/aos.css";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useColorScheme from "./hooks/useColorScheme";
 import { Route, Routes, useLocation } from "react-router-dom";
 
@@ -30,14 +30,26 @@ import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
 import PaymentInfo from "./pages/account/paymentInfo/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
+import { useEffect } from "react";
+import { updateAdminId } from "./features/features";
+import Cookies from "js-cookie";
 
 function App() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const darkTheme = useSelector((state: any) => state.dashboardDarkTheme);
   const colors = useColorScheme(darkTheme, colorScheme);
 
   const isAccountPage = location.pathname.startsWith("/account");
+
+  const adminId = "6705396844f7b6f72f7a7dbd";
+
+  useEffect(() => {
+    dispatch(updateAdminId(adminId));
+    Cookies.set('adminId', adminId);
+    localStorage.setItem("adminId", adminId);
+  }, [dispatch]);
 
   return (
     <>

@@ -65,8 +65,9 @@ const Navbar = () => {
     if (phone.length < 5) {
       return toast.error("Write Correct Phone Number")
     }
+    const phoneNumber = "+" + phone;
     const data = {
-      phone, password
+      phone: phoneNumber, password
     }
     setLoader(true);
     const response = await SignInApi(data);

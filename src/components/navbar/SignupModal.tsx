@@ -2,36 +2,33 @@ import { Modal } from "antd"
 import { useState } from "react";
 import toast from "react-hot-toast";
 import OtpInput from 'react-otp-input';
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
 // import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 
-// import { SignUpApi } from "../../api/api";
+import { SignUpApi } from "../../api/api";
 // import { auth } from "../../firebase.config";
-// import { authenticate } from "../../features/features";
+import { authenticate } from "../../features/features";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
 import { RxCross2 } from "react-icons/rx";
 import { TiTick } from "react-icons/ti";
-import axios from "axios";
 
 const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) => {
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordType, setPasswordType] = useState("password");
-    const [confirmPasswordType, setConfirmPasswordType] = useState("password");
     const [loader, setLoader] = useState(false);
     const [lengthError, setLengthError] = useState(true);
     const [characterError, setCharacterError] = useState(true);
 
     const [otp, setOtp] = useState("");
     const [otpForm, setOtpForm] = useState(false);
-    const [otpSession, setOtpSession] = useState("");
+    // const [otpSession, setOtpSession] = useState("");
     const [otpLoader, setOtpLoader] = useState(false);
 
     const fn_setPassword = (value: any) => {
@@ -57,29 +54,44 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
         if (lengthError || characterError) {
             return toast.error("Write strong password");
         }
-        if (password !== confirmPassword) {
-            return toast.error("Password not Matched")
-        }
         setLoader(true);
         const phoneNumber = "+" + phone;
-        try {
-            const response = await axios.post(`https://2factor.in/API/V1/b8909c0f-8bec-11ef-8b17-0200cd936042/SMS/${phoneNumber}/AUTOGEN/:otp_template_name`);
-            console.log("response for sending OTP ==> ", response);
-            if (response?.status === 200) {
-                if (response?.data?.Status === "Success") {
-                    setLoader(false);
-                    setOtpForm(true);
-                    setOtpSession(response?.data?.Details);
-                    return toast.success("OTP sent to your Phone Number");
-                }
-            } else {
-                return toast.error("Error sending OTP, Try Again!");
-            }
-        } catch (error: any) {
+        const response = await SignUpApi({
+            username, phone: phoneNumber, password
+        });
+        if (response?.status) {
+            setSignupModal(false);
+            setUsername("");
+            setPhone("");
+            setPassword("");
+            setPasswordType("password");
             setLoader(false);
-            console.log("error is sending OTP ==> ", error);
-            toast.error(error?.response?.data?.Details || "Try again Later")
+            setLengthError(true);
+            setCharacterError(true);
+            dispatch(authenticate(true));
+            return toast.success(response?.message)
+        } else {
+            setLoader(false);
+            return toast.error(response?.message)
         }
+        // try {
+        //     const response = await axios.post(`https://2factor.in/API/V1/b8909c0f-8bec-11ef-8b17-0200cd936042/SMS/${phoneNumber}/AUTOGEN/:otp_template_name`);
+        //     console.log("response for sending OTP ==> ", response);
+        //     if (response?.status === 200) {
+        //         if (response?.data?.Status === "Success") {
+        //             setLoader(false);
+        //             setOtpForm(true);
+        //             setOtpSession(response?.data?.Details);
+        //             return toast.success("OTP sent to your Phone Number");
+        //         }
+        //     } else {
+        //         return toast.error("Error sending OTP, Try Again!");
+        //     }
+        // } catch (error: any) {
+        //     setLoader(false);
+        //     console.log("error is sending OTP ==> ", error);
+        //     toast.error(error?.response?.data?.Details || "Try again Later")
+        // }
     }
 
     const fn_backtoSignUp = () => {
@@ -88,18 +100,18 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
         setOtpLoader(false);
     }
 
-    const fn_otpSubmit = async () => {
-        if (otp === "") {
-            setLoader(true);
-            return toast.error("Enter OTP");
-        }
-        if (otp.length !== 6) {
-            return toast.error("Enter Correct OTP");
-        }
-        setOtpLoader(true);
-        const response = await axios.post(`https://2factor.in/API/V1/b8909c0f-8bec-11ef-8b17-0200cd936042/SMS/VERIFY/${otpSession}/${otp}`);
-        console.log("Verify OTP ===> ", response);
-    }
+    // const fn_otpSubmit = async () => {
+    //     if (otp === "") {
+    //         setLoader(true);
+    //         return toast.error("Enter OTP");
+    //     }
+    //     if (otp.length !== 6) {
+    //         return toast.error("Enter Correct OTP");
+    //     }
+    //     setOtpLoader(true);
+    //     const response = await axios.post(`https://2factor.in/API/V1/b8909c0f-8bec-11ef-8b17-0200cd936042/SMS/VERIFY/${otpSession}/${otp}`);
+    //     console.log("Verify OTP ===> ", response);
+    // }
 
     return (
         <Modal
@@ -194,34 +206,6 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                             </p>
                         </div>
                     </div>
-                    <div className="relative flex flex-col gap-[3px]">
-                        <label
-                            htmlFor="confirmpassword"
-                            className="font-[600] text-[16px] sm:text-[18px]"
-                        >
-                            Confirm Password
-                        </label>
-                        <input
-                            type={confirmPasswordType}
-                            className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
-                            style={{ outlineColor: webColor }}
-                            id="confirmpassword"
-                            required
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                        {confirmPasswordType === "password" ? (
-                            <FaRegEyeSlash
-                                onClick={() => setConfirmPasswordType("text")}
-                                className="cursor-pointer absolute right-[10px] bottom-[13px]"
-                            />
-                        ) : (
-                            <FaRegEye
-                                onClick={() => setConfirmPasswordType("password")}
-                                className="cursor-pointer absolute right-[10px] bottom-[13px]"
-                            />
-                        )}
-                    </div>
                     <button className={`relative text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${loader ? "cursor-not-allowed" : "cursor-pointer"}`} style={{ backgroundColor: webColor }}>
                         {!loader ? "Signup" : <Loader color="var(--text-color)" size={20} />}
                     </button>
@@ -239,7 +223,7 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                             inputStyle={{ width: "50px", height: "50px", border: "1px solid gray", fontSize: "16px", fontWeight: "600", borderRadius: "8px" }}
                         />
                     </div>
-                    <button onClick={fn_otpSubmit} className={`relative w-full text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${otpLoader ? "cursor-not-allowed" : "cursor-pointer"}`} style={{ backgroundColor: webColor }}>
+                    <button className={`relative w-full text-[--text-color] h-[40px] rounded-[5px] text-[16px] font-[600] mt-[5px] flex justify-center items-center ${otpLoader ? "cursor-not-allowed" : "cursor-pointer"}`} style={{ backgroundColor: webColor }}>
                         {!otpLoader ? "Verify OTP" :
                             <Loader color="var(--text-color)" size={20} />
                         }

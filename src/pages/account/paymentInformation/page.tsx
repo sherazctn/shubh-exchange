@@ -56,7 +56,7 @@ const PaymentInformation = ({ darkTheme }: any) => {
                     </div>
                 </div>
                 <div className="mt-[30px] px-[10px] sm:px-[20px]">
-                    <PaymentInformationTable colors={colors} />
+                    {selectedTab === "deposit" && <PaymentInformationTable colors={colors} />}
                 </div>
             </div>
         </div>
