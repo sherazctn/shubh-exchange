@@ -100,7 +100,7 @@
 }
 
 .navbar .menus .active {
-  background-color: rgba(255, 255, 255, 0.37);
+  background-color: #ffffff5e;
   border-radius: 4px;
   height: 100%;
   display: flex;

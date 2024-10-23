@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 import Loader from "../../Loader";
-import { createBankApi, deleteBankByIdApi, getUserBankApi } from "../../../api/api";
+import { createBankApi, createWithdrawApi, deleteBankByIdApi, getUserBankApi } from "../../../api/api";
 
 import { MdDelete } from "react-icons/md";
 import { Banks } from "../../../json-data/bank";
@@ -12,10 +12,12 @@ const WithdrawMoney = ({ colors }: any) => {
   const [accountSelection, setAccountSelection] = useState("");
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const wallet = useSelector((state: any) => state.wallet);
 
+  const [withdraw, setWithdraw] = useState(500);
   const [withDrawLoader, setWithdrawLoader] = useState(false);
   const [userBanks, setUserBanks] = useState([]);
-  const [selectedBank, setSelectedBank] = useState({});
+  const [selectedBank, setSelectedBank] = useState<any>({});
 
   useEffect(() => {
     fn_getUserBanks();
@@ -39,10 +41,31 @@ const WithdrawMoney = ({ colors }: any) => {
   }
 
   const fn_submit = async () => {
+    if (withdraw < 500 || withdraw === null || withdraw === undefined) {
+      return toast.error("Enter Correct Amount")
+    }
     if (accountSelection === "") {
       return toast.error("Select Saved or New Account")
     }
-    if (accountSelection === "savedAccounts") return;
+    if (wallet < withdraw) {
+      return toast.error("No Enough Balance");
+    }
+    if (accountSelection === "savedAccounts") {
+      if (Object.keys(selectedBank)?.length === 0) return toast.error("Select Bank");
+      setWithdrawLoader(true);
+      const res: any = await createWithdrawApi({
+        bankId: selectedBank?._id,
+        amount: withdraw
+      })
+      if (res?.status) {
+        setWithdrawLoader(false);
+        setSelectedBank({});
+        return toast.success(res.message)
+      } else {
+        setWithdrawLoader(false);
+        return toast.error(res.message)
+      }
+    }
     if (state.bank !== "UPI Payment") {
       if (state.accountNo === "" || state.bank === "" || state.ibn === "" || state.name === "") {
         return toast.error("Fill all Fields");
@@ -54,16 +77,25 @@ const WithdrawMoney = ({ colors }: any) => {
     }
     setWithdrawLoader(true);
     const response = await createBankApi({
-      bank: state.bank,
       accountNo: state.accountNo,
-      name: state.name,
+      bank: state.bank,
       ibn: state.bank === "UPI Payment" ? "" : state.ibn,
+      name: state.name,
     });
     if (response?.status) {
-      setState((prev) => ({ ...prev, accountNo: "", bank: "", name: "", ibn: "" }))
-      setWithdrawLoader(false);
-      fn_getUserBanks();
-      return toast.success(response.message)
+      const res: any = await createWithdrawApi({
+        bankId: response?.data?._id,
+        amount: withdraw
+      });
+      if (res?.status) {
+        setState((prev) => ({ ...prev, accountNo: "", bank: "", name: "", ibn: "" }));
+        setWithdrawLoader(false);
+        fn_getUserBanks();
+        return toast.success(res.message)
+      } else {
+        setWithdrawLoader(false);
+        return toast.error(res.message)
+      }
     } else {
       setWithdrawLoader(false);
       return toast.error(response?.message)
@@ -91,6 +123,9 @@ const WithdrawMoney = ({ colors }: any) => {
             type="number"
             className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
             placeholder="Amount"
+            min={500}
+            value={withdraw}
+            onChange={(e) => setWithdraw(parseInt(e.target.value))}
             style={{
               borderColor: colors.line,
               backgroundColor: colors.dark,

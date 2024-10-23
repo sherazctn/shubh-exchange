@@ -6,20 +6,31 @@ import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 
 import crciketBall from "../../assets/cricket-ball.png";
-import { updateBettingSlip } from "../../features/features";
+import { updateBets, updateBettingSlip } from "../../features/features";
 
 const CricketDropdownsSection = ({ text }: any) => {
   const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
+  const wallet = useSelector((state: any) => state.wallet);
+  const bets = useSelector((state: any) => state.bets);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
-  const handleBetClicked = (e: any) => {
+
+  const handleBetClicked = (e: any, odd: any, gameName: any) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!odd) return;
+    if (!gameName) return;
+    const obj = {
+      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + 10, afterLoss: wallet - 10
+    }
+    const updatedBets = [obj, ...bets];
+    dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
+  
   return (
     <div className="mt-[15px]">
       <div
@@ -74,40 +85,40 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={handleBetClicked}
+                      onClick={(e) => handleBetClicked(e, 810, "Durham VS Lanchire")}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        620
+                        810
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, 770, "Durham VS Lanchire")} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                      <p className="font-[800] text-center text-[15px]">770</p>
+                      <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                        3.35k
+                      </p>
+                    </div>
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                      <p className="font-[800] text-center text-[15px]">620</p>
-                      <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                        3.35k
-                      </p>
-                    </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -135,7 +146,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -143,31 +154,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -194,7 +205,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -202,31 +213,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -254,7 +265,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -262,31 +273,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -297,6 +308,9 @@ const CricketDropdownsSection = ({ text }: any) => {
               </div>
             )}
           </div>
+
+
+
           <div className="bg-white mt-[5px] rounded-[7px]">
             {/* header */}
             <div
@@ -332,7 +346,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -340,31 +354,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -389,7 +403,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -397,31 +411,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -445,7 +459,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -453,31 +467,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
@@ -502,7 +516,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       Live
                       <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         620
                       </p>
@@ -510,31 +524,31 @@ const CricketDropdownsSection = ({ text }: any) => {
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={handleBetClicked} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, null, null)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">620</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k

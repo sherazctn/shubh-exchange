@@ -7,6 +7,7 @@ import Navbar from "../../../components/account/navbar";
 import useColorScheme from "../../../hooks/useColorScheme";
 import { PiHandDeposit, PiHandWithdraw } from "react-icons/pi";
 import PaymentInformationTable from "../../../components/account/PaymentInformation/PaymentInformationTable";
+import WithdrawTable from "../../../components/account/PaymentInformation/WithdrawTable";
 
 const PaymentInformation = ({ darkTheme }: any) => {
     const dashboardDarkTheme = useSelector((state: any) => state.dashboardDarkTheme);
@@ -57,6 +58,7 @@ const PaymentInformation = ({ darkTheme }: any) => {
                 </div>
                 <div className="mt-[30px] px-[10px] sm:px-[20px]">
                     {selectedTab === "deposit" && <PaymentInformationTable colors={colors} />}
+                    {selectedTab === "withdraw" && <WithdrawTable colors={colors} />}
                 </div>
             </div>
         </div>

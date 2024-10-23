@@ -16,7 +16,7 @@ import { SiBetfair } from "react-icons/si";
 import { RxCross2 } from "react-icons/rx";
 import { IoMenuSharp } from "react-icons/io5";
 import { PiHandDeposit } from "react-icons/pi";
-import { FaHandHoldingDollar } from "react-icons/fa6";
+import { FaHandHoldingDollar, FaIndianRupeeSign } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
@@ -40,6 +40,7 @@ const Navbar = () => {
 
   const [webName, setWebName] = useState("");
   const webColor = useSelector((state: any) => state.websiteColor);
+  const wallet = useSelector((state: any) => state.wallet);
 
   useEffect(() => {
     fn_webName();
@@ -57,7 +58,11 @@ const Navbar = () => {
 
   const fn_webName = async () => {
     const response = await webNameApi();
-    setWebName(response?.data[0].name)
+    if (response?.status) {
+      setWebName(response?.data[0].name)
+    } else {
+      setWebName("Shubh Exchange")
+    }
   };
 
   const fn_submit = async (e: any) => {
@@ -96,7 +101,7 @@ const Navbar = () => {
   const fn_depositClicked = () => {
     if (!authentication) {
       return toast.error("Login Yourself")
-    }else{
+    } else {
       navigate("/account/deposit-withdraw")
     }
   }
@@ -144,14 +149,20 @@ const Navbar = () => {
             </Link>
           </ul>
           {authentication ? (
-            <button
-              className="navbar-profile"
-              style={{ color: webColor }}
-              onMouseEnter={() => setAccountDropdown(true)}
-              onMouseLeave={() => setAccountDropdown(false)}
-            >
-              <FaUser />
-            </button>
+            <div className="w-[155px] bg-[#ffffff5e] rounded-full flex justify-between">
+              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
+                <span className="text-[11px] leading-[10px] font-[500]">Available Balance</span>
+                <span className="text-[14px] leading-[14px] font-[600]"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{wallet}</span>
+              </p>
+              <button
+                className="navbar-profile"
+                style={{ color: webColor }}
+                onMouseEnter={() => setAccountDropdown(true)}
+                onMouseLeave={() => setAccountDropdown(false)}
+              >
+                <FaUser />
+              </button>
+            </div>
           ) : (
             <>
               <button className="navbar-signup-btn" onClick={() => setSignupModal(true)}>

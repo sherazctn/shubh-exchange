@@ -43,7 +43,7 @@ function App() {
 
   const isAccountPage = location.pathname.startsWith("/account");
 
-  const adminId = "6705396844f7b6f72f7a7dbd";
+  const adminId = "6718fe844f76fae09f42a213";
 
   useEffect(() => {
     dispatch(updateAdminId(adminId));

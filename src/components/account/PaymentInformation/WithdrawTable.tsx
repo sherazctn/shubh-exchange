@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { FiEye } from "react-icons/fi";
-import URL, { getUserDepositApi } from "../../../api/api";
+import { formatDate, getUserWithdrawApi } from "../../../api/api";
 import { useEffect, useState } from "react";
 import { Modal } from 'antd';
 import Loader from "../../Loader";
@@ -17,11 +17,11 @@ const WithdrawTable = ({ colors }: any) => {
     const [loader, setLoader] = useState(true);
 
     useEffect(() => {
-        fn_getDeposit();
+        fn_getWithdraws();
     }, [])
 
-    const fn_getDeposit = async () => {
-        const response = await getUserDepositApi();
+    const fn_getWithdraws = async () => {
+        const response = await getUserWithdrawApi();
         if (response?.status) {
             setLoader(false);
             setData(response?.data?.reverse())
@@ -47,9 +47,9 @@ const WithdrawTable = ({ colors }: any) => {
                             style={{ color: panelSecColor, backgroundColor: panelMainColor }}
                         >
                             <td className="ps-[5px]">Sr No.</td>
-                            <td>TRN-ID</td>
-                            <td>BANK NAME</td>
-                            <td>DATE</td>
+                            <td>Username</td>
+                            <td>Bank Name</td>
+                            <td>Date</td>
                             <td>AMOUNT<SortingArrows /></td>
                             <td>Status</td>
                             <td>View</td>
@@ -77,18 +77,15 @@ const WithdrawTable = ({ colors }: any) => {
                 onClose={closeModal}
                 style={{ fontFamily: "Roboto" }}
                 centered
-                width={900}
+                width={500}
                 footer={null}
             >
-                <p className="text-[25px] font-[700]">Deposited Transaction Details</p>
-                <div className="my-[20px] flex gap-[30px]">
-                    <div className="max-w-[400px]">
-                        <img alt="" src={`${URL}/${selectedItem?.receipt}`} className="rounded-[20px]" />
-                    </div>
-                    <div className="flex-1 max-w-[400px] flex flex-col gap-[20px]">
+                <p className="text-[25px] font-[700]">Withdraw Transaction Details</p>
+                <div className="my-[20px]">
+                    <div className="flex flex-col gap-[20px]">
                         <div>
-                            <p className="text-[17px] font-[500] text-gray-800">Transaction Id</p>
-                            <p className="text-[19px] font-[600]">{selectedItem?.transactionId}</p>
+                            <p className="text-[17px] font-[500] text-gray-800">Withdraw Request By</p>
+                            <p className="text-[19px] font-[600] capitalize">{selectedItem?.user?.username}</p>
                         </div>
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Bank Name</p>
@@ -96,7 +93,7 @@ const WithdrawTable = ({ colors }: any) => {
                         </div>
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Transaction Time</p>
-                            <p className="text-[19px] font-[600]">{selectedItem?.createdAt}</p>
+                            <p className="text-[19px] font-[600]">{formatDate(selectedItem?.createdAt)}</p>
                         </div>
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Transaction Amount</p>
@@ -126,9 +123,9 @@ const TableRows = ({ colors, item, index, isModalOpen, setIsModalOpen, setSelect
             style={{ borderColor: colors.line, color: colors.subText }}
         >
             <td className="ps-[5px]">{index}</td>
-            <td className="ps-[5px]">{item?.transactionId}</td>
+            <td className="ps-[5px] capitalize">{item?.user?.username}</td>
             <td>{item?.bank?.bank}</td>
-            <td>{item?.createdAt}</td>
+            <td>{formatDate(item?.createdAt)}</td>
             <td><FaIndianRupeeSign className="inline-block" />{item?.amount}</td>
             <td>
                 {item?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#2b872a] flex justify-center items-center">Verified</p>}

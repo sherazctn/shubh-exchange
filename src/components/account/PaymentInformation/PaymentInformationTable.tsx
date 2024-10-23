@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { FiEye } from "react-icons/fi";
-import URL, { getUserDepositApi } from "../../../api/api";
+import URL, { formatDate, getUserDepositApi } from "../../../api/api";
 import { useEffect, useState } from "react";
 import { Modal } from 'antd';
 import Loader from "../../Loader";
@@ -96,7 +96,7 @@ const PaymentInformationTable = ({ colors }: any) => {
                         </div>
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Transaction Time</p>
-                            <p className="text-[19px] font-[600]">{selectedItem?.createdAt}</p>
+                            <p className="text-[19px] font-[600]">{<td>{formatDate(selectedItem?.createdAt)}</td>}</p>
                         </div>
                         <div>
                             <p className="text-[17px] font-[500] text-gray-800">Transaction Amount</p>
@@ -128,7 +128,7 @@ const TableRows = ({ colors, item, index, isModalOpen, setIsModalOpen, setSelect
             <td className="ps-[5px]">{index}</td>
             <td className="ps-[5px]">{item?.transactionId}</td>
             <td>{item?.bank?.bank}</td>
-            <td>{item?.createdAt}</td>
+            <td>{formatDate(item?.createdAt)}</td>
             <td><FaIndianRupeeSign className="inline-block" />{item?.amount}</td>
             <td>
                 {item?.status === "approved" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[30px] rounded-full w-[80px] text-[12px] font-[600] text-[#2b872a] flex justify-center items-center">Approved</p>}

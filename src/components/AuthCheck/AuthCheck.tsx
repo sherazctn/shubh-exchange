@@ -25,12 +25,21 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
             const response: any = await AuthCheckApi(token || "");
             if (websiteColor === "") {
                 const colorResponse = await webColorApi();
-                dispatch(updateWebsiteColor(colorResponse?.data[0].color));
+                if (colorResponse?.status) {
+                    dispatch(updateWebsiteColor(colorResponse?.data[0].color));
+                } else {
+                    dispatch(updateWebsiteColor("#ff4444"));
+                }
             }
             if (panelMainColor === "") {
                 const panelColorResponse = await panelColorApi();
-                dispatch(updatePanelMainColor(panelColorResponse?.data[0].mainColor));
-                dispatch(updatePanelSecColor(panelColorResponse?.data[0].secColor));
+                if (panelColorResponse?.status) {
+                    dispatch(updatePanelMainColor(panelColorResponse?.data[0].mainColor));
+                    dispatch(updatePanelSecColor(panelColorResponse?.data[0].secColor));
+                } else {
+                    dispatch(updatePanelMainColor("rgb(232, 232, 252)"));
+                    dispatch(updatePanelSecColor("rgb(61, 61, 158)"));
+                }
             }
             dispatch(authenticate(response.status ? true : false));
             if (response?.status) {

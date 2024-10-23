@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { GoDotFill } from "react-icons/go"
 import { FaIndianRupeeSign } from "react-icons/fa6"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"
-import { updateBettingSlip } from "../../features/features"
+import { updateBets, updateBettingSlip } from "../../features/features"
 import { ImCross } from "react-icons/im"
 
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
@@ -54,10 +54,14 @@ const BetSlip = () => {
 export default BetSlip;
 
 const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any }) => {
+    const dispatch = useDispatch();
     const [input1, setInput1] = useState<any>();
     const [input2, setInput2] = useState<any>();
     const [view1, setView1] = useState<boolean>(true);
     const [view2, setView2] = useState<boolean>(true);
+
+    const bets = useSelector((state: any) => state.bets);
+    const wallet = useSelector((state: any) => state.wallet);
 
     const fn_keyDown = (e: any) => {
         e.preventDefault();
@@ -111,32 +115,47 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
             e.preventDefault();
         }
     }
+
+    const fn_changeAmountInput = (value: any, index: any) => {
+        const updatedBets = bets.map((bet: any, i: any) => {
+            if (i === index) {
+                return { ...bet, amount: parseInt(value), afterWin: wallet + parseInt(value), afterLoss: wallet - parseInt(value) };
+            }
+            return bet;
+        });
+        dispatch(updateBets(updatedBets));
+    }
+
+    const fn_closeBet = (index: any) => {
+        const updatedBets = bets.filter((_: any, i: any) => i !== index);
+        dispatch(updateBets(updatedBets));
+    }
+
     return (
         <div className="flex flex-col justify-between gap-[7px] h-[570px]">
             {/* bets */}
             <div className="flex flex-1 flex-col gap-[5px] overflow-auto">
-                {view1 && (
-                    <div className="px-[5px] pb-[5px] pt-[7px] bg-white">
+                {bets?.length > 0 && bets?.map((item: any, index: any) => (
+                    <div key={index} className="px-[5px] pb-[5px] pt-[7px] bg-white">
                         <div className="flex justify-between items-center">
                             <p className="flex items-center gap-[4px] mb-[5px]">
                                 <GoDotFill className="text-[15px]" />
-                                <span className="text-[15px] font-[600]">Namibia vs USA</span>
+                                <span className="text-[15px] font-[600]">{item?.gameName}</span>
                             </p>
-                            <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => setView1(false)} />
+                            <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => fn_closeBet(index)} />
                         </div>
                         <div className="flex gap-[10px]">
                             <input
                                 min={1}
+                                value={item?.odd}
                                 type="number"
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                             <input
-                                ref={inputRef}
                                 min={1}
                                 type="number"
-                                value={input1}
-                                onKeyDown={fn_keyDown}
-                                onChange={(e) => setInput1(e.target.value)}
+                                value={item?.amount}
+                                onChange={(e) => fn_changeAmountInput(e.target.value, index)}
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                         </div>
@@ -146,12 +165,12 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                             <span>Max Profit: 2.5M</span>
                         </p>
                         <div className="text-[11px] mt-[2px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
-                            <button onClick={() => setInput1(5000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">5000</button>
-                            <button onClick={() => setInput1(25000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">25000</button>
-                            <button onClick={() => setInput1(50000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">50000</button>
-                            <button onClick={() => setInput1(100000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">100000</button>
-                            <button onClick={() => setInput1(200000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">200000</button>
-                            <button onClick={() => setInput1(500000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">5000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">25000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">50000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">100000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">200000</button>
+                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
                         </div>
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
@@ -162,21 +181,21 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                                     <span>Current Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">20,000</span>
+                                        <span className="w-[45px] text-end">{wallet}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">5,000</span>
+                                        <span className="w-[45px] text-end">{item?.amount}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-green-600 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
                                     <span>Net Amount:<TiArrowSortedUp className="inline-block text-[18px] ms-[5px]" /></span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">25,000</span>
+                                        <span className="w-[45px] text-end">{item?.afterWin}</span>
                                     </span>
                                 </p>
                             </div>
@@ -188,120 +207,27 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                                     <span>Current Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">20,000</span>
+                                        <span className="w-[45px] text-end">{wallet}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">5,000</span>
+                                        <span className="w-[45px] text-end">{item?.amount}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-red-500 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
                                     <span>Net Amount:<TiArrowSortedDown className="inline-block text-[18px] ms-[5px]" /></span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="mt-[-2px] text-[12px]" />
-                                        <span className="w-[45px] text-end">15,000</span>
+                                        <span className="w-[45px] text-end">{item?.afterLoss}</span>
                                     </span>
                                 </p>
                             </div>
                         </div>
                     </div>
-                )}
-                {view2 && (
-                    <div className="px-[5px] pb-[5px] pt-[7px] bg-white">
-                        <div className="flex justify-between items-center">
-                            <p className="flex items-center gap-[4px] mb-[5px]">
-                                <GoDotFill className="text-[15px]" />
-                                <span className="text-[15px] font-[600]">Namibia vs USA</span>
-                            </p>
-                            <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => setView2(false)} />
-                        </div>
-                        <div className="flex gap-[10px]">
-                            <input
-                                min={1}
-                                type="number"
-                                className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
-                            />
-                            <input
-                                min={1}
-                                type="number"
-                                value={input2}
-                                onChange={(e) => setInput2(e.target.value)}
-                                onKeyDown={fn_keyDown2}
-                                className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
-                            />
-                        </div>
-                        <p className="flex text-[11px] mt-[5px] font-[500] gap-[15px] items-center text-[red]">
-                            <span>Min Bet: 10</span>
-                            <span>Max Bet: 100k</span>
-                            <span>Max Profit: 2.5M</span>
-                        </p>
-                        <div className="text-[11px] mt-[2px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
-                            <button onClick={() => setInput2(5000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">5000</button>
-                            <button onClick={() => setInput2(10000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">25000</button>
-                            <button onClick={() => setInput2(50000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">50000</button>
-                            <button onClick={() => setInput2(100000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">100000</button>
-                            <button onClick={() => setInput2(200000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">200000</button>
-                            <button onClick={() => setInput2(500000)} className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
-                        </div>
-                        <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
-                            <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-green-600 pt-[5px] pb-[7px]">
-                                    After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">20,000</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Bet Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">5,000</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] text-green-600 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
-                                    <span>Net Amount:<TiArrowSortedUp className="inline-block text-[18px] ms-[5px]" /></span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">25,000</span>
-                                    </span>
-                                </p>
-                            </div>
-                            <div className="flex-1 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-red-500 pt-[5px] pb-[7px]">
-                                    After Lossing<BsGraphDownArrow className="inline-block mt-[-3px] ms-[6px]" />
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">20,000</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Bet Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">5,000</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] text-red-500 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
-                                    <span>Net Amount:<TiArrowSortedDown className="inline-block text-[18px] ms-[5px]" /></span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="mt-[-2px] text-[12px]" />
-                                        <span className="w-[45px] text-end">15,000</span>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                ))}
             </div>
             {/* buttons */}
             <div>
