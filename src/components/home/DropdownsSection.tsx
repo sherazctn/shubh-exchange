@@ -7,6 +7,7 @@ import { GoDotFill } from "react-icons/go";
 
 import crciketBall from "../../assets/cricket-ball.png";
 import { updateBets, updateBettingSlip } from "../../features/features";
+import toast from "react-hot-toast";
 
 const CricketDropdownsSection = ({ text }: any) => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const CricketDropdownsSection = ({ text }: any) => {
   const webColor = useSelector((state: any) => state.websiteColor);
   const wallet = useSelector((state: any) => state.wallet);
   const bets = useSelector((state: any) => state.bets);
+  const authentication = useSelector((state: any) => state.authentication);
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
@@ -21,16 +23,19 @@ const CricketDropdownsSection = ({ text }: any) => {
   const handleBetClicked = (e: any, odd: any, gameName: any) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
     if (!gameName) return;
+    const profit = parseFloat((10 * (odd - 1)).toFixed(2));
+    const loss = 10;
     const obj = {
-      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + 10, afterLoss: wallet - 10
+      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + profit, afterLoss: wallet - 10, profit, loss
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
-  
+
   return (
     <div className="mt-[15px]">
       <div
@@ -85,17 +90,17 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, 810, "Durham VS Lanchire")}
+                      onClick={(e) => handleBetClicked(e, 1.5, "Durham VS Lanchire")}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        810
+                        1.5
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>
                     </div>
-                    <div onClick={(e) => handleBetClicked(e, 770, "Durham VS Lanchire")} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                      <p className="font-[800] text-center text-[15px]">770</p>
+                    <div onClick={(e) => handleBetClicked(e, 2.3, "Durham VS Lanchire")} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                      <p className="font-[800] text-center text-[15px]">2.3</p>
                       <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                         3.35k
                       </p>

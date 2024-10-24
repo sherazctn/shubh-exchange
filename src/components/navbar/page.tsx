@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import { SignInApi, webNameApi } from "../../api/api";
-import { authenticate, updateMobileMenu, updateMobileSidebar } from "../../features/features";
+import { authenticate, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -41,6 +41,7 @@ const Navbar = () => {
   const [webName, setWebName] = useState("");
   const webColor = useSelector((state: any) => state.websiteColor);
   const wallet = useSelector((state: any) => state.wallet);
+  const username = useSelector((state: any) => state.username);
 
   useEffect(() => {
     fn_webName();
@@ -81,6 +82,8 @@ const Navbar = () => {
       setPassword("");
       setPasswordType("password");
       dispatch(authenticate(true));
+      dispatch(updateWallet(response?.data?.wallet || 0));
+      dispatch(updateUsername(response?.data?.username));
       setLoginModal(false);
       setLoader(false);
       return toast.success(response?.message)
@@ -149,10 +152,18 @@ const Navbar = () => {
             </Link>
           </ul>
           {authentication ? (
-            <div className="w-[155px] bg-[#ffffff5e] rounded-full flex justify-between">
+            <div className="w-[270px] bg-[#ffffff5e] rounded-full flex justify-between">
               <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
-                <span className="text-[11px] leading-[10px] font-[500]">Available Balance</span>
+                <span className="text-[11px] leading-[10px] font-[500]">Balance</span>
                 <span className="text-[14px] leading-[14px] font-[600]"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{wallet}</span>
+              </p>
+              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
+                <span className="text-[11px] leading-[10px] font-[500]">Availabe To Bet</span>
+                <span className="text-[14px] leading-[14px] font-[600]"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{wallet}</span>
+              </p>
+              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
+                <span className="text-[11px] leading-[10px] font-[500]">Username</span>
+                <span className="text-[14px] leading-[14px] font-[600] capitalize">{username}</span>
               </p>
               <button
                 className="navbar-profile"

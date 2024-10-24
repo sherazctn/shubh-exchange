@@ -4,11 +4,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { GoDotFill } from "react-icons/go"
 import { FaIndianRupeeSign } from "react-icons/fa6"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"
-import { updateBets, updateBettingSlip } from "../../features/features"
+import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
 import { ImCross } from "react-icons/im"
 
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { BsGraphDownArrow, BsGraphUpArrow } from "react-icons/bs"
+import toast from "react-hot-toast"
+import { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
+import Loader from "../Loader"
+import cricketLogo from "../../assets/cricket-ball.png";
 
 const BetSlip = () => {
     const dispatch = useDispatch();
@@ -17,12 +21,26 @@ const BetSlip = () => {
     const inputRef = useRef<any>(null);
 
     const webColor = useSelector((state: any) => state.websiteColor);
+    const [openBets, setOpenBets] = useState([]);
+
+    useEffect(() => {
+        fn_getOpenBets();
+    }, []);
 
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
     }, [bettingSlip, tabs]);
+
+    const fn_getOpenBets = async () => {
+        const response = await getOpenBetsByUserApi();
+        if (response?.status) {
+            setOpenBets(response?.data?.reverse());
+        } else {
+            setOpenBets([]);
+        }
+    }
 
     return (
         <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[670px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-625px]" : bettingSlip === "hide" ? "bottom-[-670px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
@@ -44,8 +62,8 @@ const BetSlip = () => {
                         onClick={() => setTabs("open")}
                     >Open Bet</button>
                 </div>
-                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} />}
-                {tabs === "open" && <OpenBet />}
+                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} fn_getOpenBets={fn_getOpenBets} />}
+                {tabs === "open" && <OpenBet openBets={openBets} />}
             </div>
         </div>
     )
@@ -53,7 +71,7 @@ const BetSlip = () => {
 
 export default BetSlip;
 
-const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any }) => {
+const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, inputRef: any, fn_getOpenBets: any }) => {
     const dispatch = useDispatch();
     const [input1, setInput1] = useState<any>();
     const [input2, setInput2] = useState<any>();
@@ -62,6 +80,7 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
 
     const bets = useSelector((state: any) => state.bets);
     const wallet = useSelector((state: any) => state.wallet);
+    const [loader, setLoader] = useState(false);
 
     const fn_keyDown = (e: any) => {
         e.preventDefault();
@@ -116,13 +135,48 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
         }
     }
 
-    const fn_changeAmountInput = (value: any, index: any) => {
+    const fn_changeOddInput = (value: any, index: any) => {
         const updatedBets = bets.map((bet: any, i: any) => {
             if (i === index) {
-                return { ...bet, amount: parseInt(value), afterWin: wallet + parseInt(value), afterLoss: wallet - parseInt(value) };
+                const odd = parseFloat(value);
+                const amount = bet.amount;
+                const profit = parseFloat((amount * (odd - 1)).toFixed(2));
+                const loss = amount;
+
+                return {
+                    ...bet,
+                    odd: odd,
+                    afterWin: wallet + profit,
+                    afterLoss: wallet - loss,
+                    profit: profit,
+                    loss: loss
+                };
             }
             return bet;
         });
+
+        dispatch(updateBets(updatedBets));
+    };
+
+    const fn_changeAmountInput = (value: any, index: any) => {
+        const updatedBets = bets.map((bet: any, i: any) => {
+            if (i === index) {
+                const amount = parseInt(value);
+                const profit = parseFloat((amount * (bet.odd - 1)).toFixed(2));
+                const loss = amount;
+
+                return {
+                    ...bet,
+                    amount: amount,
+                    afterWin: wallet + profit,
+                    afterLoss: wallet - loss,
+                    profit: profit,
+                    loss: loss
+                };
+            }
+            return bet;
+        });
+
         dispatch(updateBets(updatedBets));
     }
 
@@ -130,6 +184,49 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
         const updatedBets = bets.filter((_: any, i: any) => i !== index);
         dispatch(updateBets(updatedBets));
     }
+
+    const fn_placeBet = async () => {
+        if (bets?.length === 0) return toast.error("Select Match For Bet")
+        const bettedAmount = bets?.reduce((acc: any, i: any) => {
+            return acc + i?.amount
+        }, 0);
+        if (bettedAmount > wallet) {
+            return toast.error("Not Enough Balance");
+        }
+        setLoader(true);
+        const response = await placeBetsApi(bets);
+        if (response?.status) {
+            setLoader(false);
+            fn_getOpenBets();
+            dispatch(updateBets([]));
+            dispatch(updateWallet(response?.wallet))
+            return toast.success(response?.message);
+        } else {
+            setLoader(false);
+            return toast.error(response?.message);
+        }
+    }
+
+    const fn_setAmount = (amount: number, index: number) => {
+        const updatedBets = bets.map((bet: any, i: any) => {
+            if (i === index) {
+                const profit = parseFloat((amount * (bet.odd - 1)).toFixed(2));
+                const loss = amount;
+
+                return {
+                    ...bet,
+                    amount: amount,
+                    afterWin: wallet + profit,
+                    afterLoss: wallet - loss,
+                    profit: profit,
+                    loss: loss
+                };
+            }
+            return bet;
+        });
+
+        dispatch(updateBets(updatedBets));
+    };
 
     return (
         <div className="flex flex-col justify-between gap-[7px] h-[570px]">
@@ -139,7 +236,8 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                     <div key={index} className="px-[5px] pb-[5px] pt-[7px] bg-white">
                         <div className="flex justify-between items-center">
                             <p className="flex items-center gap-[4px] mb-[5px]">
-                                <GoDotFill className="text-[15px]" />
+                                {/* <GoDotFill className="text-[15px]" /> */}
+                                <img alt="" src={cricketLogo} className="w-[20px] h-[20px]" />
                                 <span className="text-[15px] font-[600]">{item?.gameName}</span>
                             </p>
                             <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => fn_closeBet(index)} />
@@ -148,16 +246,27 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                             <input
                                 min={1}
                                 value={item?.odd}
+                                onChange={(e) => fn_changeOddInput(e.target.value, index)}
                                 type="number"
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
-                            <input
-                                min={1}
-                                type="number"
-                                value={item?.amount}
-                                onChange={(e) => fn_changeAmountInput(e.target.value, index)}
-                                className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
-                            />
+                            {index === 0 ? (
+                                <input
+                                    ref={inputRef}
+                                    min={1}
+                                    type="number"
+                                    value={item?.amount}
+                                    onChange={(e) => fn_changeAmountInput(e.target.value, index)}
+                                    className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
+                                />) : (
+                                <input
+                                    min={1}
+                                    type="number"
+                                    value={item?.amount}
+                                    onChange={(e) => fn_changeAmountInput(e.target.value, index)}
+                                    className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
+                                />
+                            )}
                         </div>
                         <p className="flex text-[11px] mt-[5px] font-[500] gap-[15px] items-center text-[red]">
                             <span>Min Bet: 10</span>
@@ -165,30 +274,72 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                             <span>Max Profit: 2.5M</span>
                         </p>
                         <div className="text-[11px] mt-[2px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">5000</button>
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">25000</button>
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">50000</button>
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">100000</button>
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">200000</button>
-                            <button className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]">500000</button>
+                            {bets.map((bet: any, index: number) => (
+                                <div key={index} className="flex gap-[5px]">
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(5000, index)}
+                                    >
+                                        5000
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(25000, index)}
+                                    >
+                                        25000
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(50000, index)}
+                                    >
+                                        50000
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(100000, index)}
+                                    >
+                                        100000
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(200000, index)}
+                                    >
+                                        200000
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(500000, index)}
+                                    >
+                                        500000
+                                    </button>
+                                </div>
+                            ))}
                         </div>
+
                         <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
                                 <p className="text-center text-[15px] font-[600] text-green-600 pt-[5px] pb-[7px]">
                                     After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{wallet}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
                                         <span className="w-[45px] text-end">{item?.amount}</span>
+                                    </span>
+                                </p>
+                                <p className="flex text-[13px] items-center justify-between">
+                                    <span>Profit Amount:</span>
+                                    <span className="flex items-center">
+                                        <FaIndianRupeeSign className="text-[14px]" />
+                                        <span className="w-[45px] text-end">{item?.profit}</span>
+                                    </span>
+                                </p>
+                                <p className="flex text-[13px] items-center justify-between">
+                                    <span>Current Amount:</span>
+                                    <span className="flex items-center">
+                                        <FaIndianRupeeSign className="text-[14px]" />
+                                        <span className="w-[45px] text-end">{wallet}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-green-600 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
@@ -204,17 +355,24 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
                                     After Lossing<BsGraphDownArrow className="inline-block mt-[-3px] ms-[6px]" />
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{wallet}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
                                         <span className="w-[45px] text-end">{item?.amount}</span>
+                                    </span>
+                                </p>
+                                <p className="flex text-[13px] items-center justify-between">
+                                    <span>Loss Amount:</span>
+                                    <span className="flex items-center">
+                                        <FaIndianRupeeSign className="text-[14px]" />
+                                        <span className="w-[45px] text-end">{item?.loss}</span>
+                                    </span>
+                                </p>
+                                <p className="flex text-[13px] items-center justify-between">
+                                    <span>Current Amount:</span>
+                                    <span className="flex items-center">
+                                        <FaIndianRupeeSign className="text-[14px]" />
+                                        <span className="w-[45px] text-end">{wallet}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-red-500 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
@@ -231,8 +389,8 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
             </div>
             {/* buttons */}
             <div>
-                <button className="w-full min-h-[43px] font-[600] rounded-[5px] text-[15px] text-[--text-color]" style={{ backgroundColor: webColor }}>
-                    Place Bets
+                <button className="w-full min-h-[43px] font-[600] flex justify-center items-center rounded-[5px] text-[15px] text-[--text-color]" disabled={loader} style={{ backgroundColor: webColor }} onClick={fn_placeBet}>
+                    {!loader ? "Place Bets" : <Loader size={22} color="white" />}
                 </button>
                 <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{ borderColor: webColor, color: webColor }}>
                     Cancel
@@ -242,10 +400,32 @@ const BetSlipTab = ({ webColor, inputRef }: { webColor: string, inputRef: any })
     )
 }
 
-const OpenBet = () => {
+const OpenBet = ({ openBets }: any) => {
+
     return (
         <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[570px]">
-            <p className="text-[13px] text-gray-600">You have no matched or unmatched bets.</p>
+            {openBets?.length === 0 ? (
+                <p className="text-[13px] text-gray-600">You have no matched or unmatched bets.</p>
+            ) : (
+                <div>
+                    <table className="w-full">
+                        <tr className="h-[40px] bg-gray-100 text-[13px] font-[500]">
+                            <td className="w-[50%]"></td>
+                            <td>Odds</td>
+                            <td>Stake</td>
+                            <td>PL</td>
+                        </tr>
+                        {openBets?.map((item: any) => (
+                            <tr className="h-[40px] text-[13px] font-[500] border-b">
+                                <td><img alt="" src={cricketLogo} className="w-[20px] h-[20px] inline-block me-[7px]" />{item?.gameName}</td>
+                                <td>{item?.odd}</td>
+                                <td>{item?.amount}</td>
+                                <td>{item?.profit}</td>
+                            </tr>
+                        ))}
+                    </table>
+                </div>
+            )}
         </div>
     )
 }

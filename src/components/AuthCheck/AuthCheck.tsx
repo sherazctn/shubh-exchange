@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { authenticate, updatePanelMainColor, updatePanelSecColor, updateWallet, updateWebsiteColor } from '../../features/features';
+import { authenticate, updatePanelMainColor, updatePanelSecColor, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
 import { AuthCheckApi, panelColorApi, webColorApi } from '../../api/api';
 import Loader from '../Loader';
 
@@ -44,6 +44,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
             dispatch(authenticate(response.status ? true : false));
             if (response?.status) {
                 dispatch(updateWallet(response?.data?.wallet))
+                dispatch(updateUsername(response?.data?.username))
             }
             if (location.pathname.includes("/account")) {
                 if (response?.status) {
