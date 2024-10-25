@@ -9,7 +9,7 @@ import 'react-phone-input-2/lib/style.css';
 
 import { SignUpApi } from "../../api/api";
 // import { auth } from "../../firebase.config";
-import { authenticate } from "../../features/features";
+import { authenticate, updateUsername } from "../../features/features";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
@@ -69,6 +69,7 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
             setLengthError(true);
             setCharacterError(true);
             dispatch(authenticate(true));
+            dispatch(updateUsername(response?.data?.username))
             return toast.success(response?.message)
         } else {
             setLoader(false);

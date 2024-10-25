@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
-import { SignInApi, webNameApi } from "../../api/api";
+import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
 import { authenticate, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
@@ -39,12 +39,14 @@ const Navbar = () => {
   const [loader, setLoader] = useState(false);
 
   const [webName, setWebName] = useState("");
+  const [webLogo, setWebLogo] = useState("");
   const webColor = useSelector((state: any) => state.websiteColor);
   const wallet = useSelector((state: any) => state.wallet);
   const username = useSelector((state: any) => state.username);
 
   useEffect(() => {
     fn_webName();
+    fn_webLogo();
   }, [])
 
   const handleMobileLogin = () => {
@@ -61,6 +63,15 @@ const Navbar = () => {
     const response = await webNameApi();
     if (response?.status) {
       setWebName(response?.data[0].name)
+    } else {
+      setWebName("Shubh Exchange")
+    }
+  };
+
+  const fn_webLogo = async () => {
+    const response = await webLogoApi();
+    if (response?.status) {
+      setWebLogo(response?.data[0].image)
     } else {
       setWebName("Shubh Exchange")
     }
@@ -113,7 +124,12 @@ const Navbar = () => {
     <>
       <div className="navbar shadow-md" style={{ backgroundColor: webColor }}>
         {/* company name */}
-        <div>
+        <div className="flex items-center gap-[10px]">
+          {webLogo !== "" && (
+            <div className="h-[47px] w-[47px] inline-block rounded-full">
+              <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
+            </div>
+          )}
           <Link to={"/"} className="text-[28px] font-[700] text-[--text-color]">
             {webName}
           </Link>

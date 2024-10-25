@@ -20,8 +20,9 @@ export const SignUpApi = async (data: any) => {
         const admin = localStorage.getItem('adminId')
         const response = await axios.post(`${URL}/user`, { ...data, admin: admin || Cookies.get('token') });
         if (response?.status === 200) {
+            console.log(response);
             Cookies.set('token', response?.data?.token);
-            return { status: true, message: "User Created Successfully" };
+            return { status: true, message: "User Created Successfully", data: response?.data?.data };
         }
     } catch (error: any) {
         if (error?.status === 409) {
@@ -85,6 +86,21 @@ export const getAvailableGames = async () => {
 export const webNameApi = async () => {
     try {
         const response = await axios.get(`${URL}/website/name`);
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const webLogoApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/website/logo`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
