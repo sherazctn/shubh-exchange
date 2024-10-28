@@ -82,56 +82,28 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
     const wallet = useSelector((state: any) => state.wallet);
     const [loader, setLoader] = useState(false);
 
-    const fn_keyDown = (e: any) => {
+    const fn_keyDown = (e: any, index: number) => {
         e.preventDefault();
+
+        let value;
         if (e.key === '1') {
-            setInput1('1000');
+            value = 1000;
         } else if (e.key === '2') {
-            setInput1('2000');
+            value = 2000;
         } else if (e.key === '3') {
-            setInput1('3000');
+            value = 3000;
         } else if (e.key === '4') {
-            setInput1('4000');
+            value = 4000;
         } else if (e.key === '5') {
-            setInput1('5000');
+            value = 5000;
         } else if (e.key === 'ArrowUp') {
-            setInput1((prev: any) => {
-                const newValue = (parseInt(prev, 10) || 0) + 1;
-                return newValue.toString();
-            });
-            e.preventDefault();
+            value = (parseInt(bets[index].amount || '0') + 1).toString();
         } else if (e.key === 'ArrowDown') {
-            setInput1((prev: any) => {
-                const newValue = (parseInt(prev, 10) || 0) - 1;
-                return newValue.toString();
-            });
-            e.preventDefault();
+            value = (parseInt(bets[index].amount || '0') - 1).toString();
         }
-    }
-    const fn_keyDown2 = (e: any) => {
-        e.preventDefault();
-        if (e.key === '1') {
-            setInput2('1000');
-        } else if (e.key === '2') {
-            setInput2('2000');
-        } else if (e.key === '3') {
-            setInput2('3000');
-        } else if (e.key === '4') {
-            setInput2('4000');
-        } else if (e.key === '5') {
-            setInput2('5000');
-        } else if (e.key === 'ArrowUp') {
-            setInput2((prev: any) => {
-                const newValue = (parseInt(prev, 10) || 0) + 1;
-                return newValue.toString();
-            });
-            e.preventDefault();
-        } else if (e.key === 'ArrowDown') {
-            setInput2((prev: any) => {
-                const newValue = (parseInt(prev, 10) || 0) - 1;
-                return newValue.toString();
-            });
-            e.preventDefault();
+        console.log(value);
+        if (value) {
+            fn_changeAmountInput(value, index);
         }
     }
 
@@ -256,6 +228,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                                     min={1}
                                     type="number"
                                     value={item?.amount}
+                                    onKeyDown={(e) => fn_keyDown(e, index)}
                                     onChange={(e) => fn_changeAmountInput(e.target.value, index)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />) : (
@@ -263,6 +236,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                                     min={1}
                                     type="number"
                                     value={item?.amount}
+                                    onKeyDown={(e) => fn_keyDown(e, index)}
                                     onChange={(e) => fn_changeAmountInput(e.target.value, index)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />

@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const URL = "http://62.72.57.126:5000";
-const token = Cookies.get('token');
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -146,7 +145,7 @@ export const panelColorApi = async () => {
 export const getAllBanksApi = async () => {
     try {
         const admin = localStorage.getItem('adminId')
-        const response = await axios.get(`${URL}/bank/active/${admin || Cookies.get('token')}`);
+        const response = await axios.get(`${URL}/bank/active/${admin}`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -161,6 +160,7 @@ export const getAllBanksApi = async () => {
 
 export const createBankApi = async (data: any) => {
     try {
+        const token = Cookies.get('token');
         const response = await axios.post(`${URL}/bank`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -181,6 +181,7 @@ export const createBankApi = async (data: any) => {
 
 export const getUserBankApi = async () => {
     try {
+        const token = Cookies.get('token');
         const response = await axios.get(`${URL}/bank`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -259,6 +260,7 @@ export const createWithdrawApi = async (data: any) => {
 
 export const getUserDepositApi = async () => {
     try {
+        const token = Cookies.get('token');
         const response = await axios.get(`${URL}/deposit/user`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -278,6 +280,7 @@ export const getUserDepositApi = async () => {
 
 export const getUserWithdrawApi = async () => {
     try {
+        const token = Cookies.get('token');
         const response = await axios.get(`${URL}/withdraw/user`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -325,6 +328,21 @@ export const getOpenBetsByUserApi = async () => {
         });
         if (response.status === 200) {
             return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getSoccerMatchesApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/redis/soccer-data`);
+        if (response.status === 200) {
+            return { status: true, data: response?.data }
         }
     } catch (error: any) {
         if (error?.status === 400) {
