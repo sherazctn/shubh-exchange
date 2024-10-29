@@ -36,11 +36,10 @@ const Home = () => {
       {/* live matches */}
       <CricketDropdownsSection text={"Live Cricket Match"} />
       <SoccerDropdownsSection text={"Live Soccer"} />
-      <TennisDropdownsSection text={"Live Tennis"} />
+      {/* <TennisDropdownsSection text={"Live Tennis"} /> */}
       {/* upcoming matches */}
-      <UpcomingCricketMatches text={"Cricket"} />
+      {/* <UpcomingCricketMatches text={"Cricket"} /> */}
       <UpcomingSoccerMatches text={"Soccer"} />
-      <UpcomingSoccerMatches text={"Tennis"} />
       {/* casino slider */}
       <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />

@@ -353,4 +353,49 @@ export const getSoccerMatchesApi = async () => {
     }
 }
 
+export const getSoccerUpcomingMatchesApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/redis/soccer-data/upcoming`);
+        if (response.status === 200) {
+            return { status: true, data: response?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveSoccerDataToRedisApi = async () => {
+    try {
+        const response = await axios.post(`${URL}/redis/soccer-data`);
+        if (response.status === 200) {
+            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveCricketDataToRedisApi = async () => {
+    try {
+        const response = await axios.post(`${URL}/redis/cricket-data`);
+        if (response.status === 200) {
+            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export default URL;

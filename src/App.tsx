@@ -1,9 +1,14 @@
 import "./App.css";
 import "aos/dist/aos.css";
 
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useColorScheme from "./hooks/useColorScheme";
 import { Route, Routes, useLocation } from "react-router-dom";
+
+import useColorScheme from "./hooks/useColorScheme";
+import { retrieveCricketDataToRedisApi, retrieveSoccerDataToRedisApi } from "./api/api";
+import { updateAdminId, updateLiveCricket, updateLiveSoccer, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
@@ -30,20 +35,72 @@ import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
 import PaymentInfo from "./pages/account/paymentInfo/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
-import { useEffect } from "react";
-import { updateAdminId } from "./features/features";
-import Cookies from "js-cookie";
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const darkTheme = useSelector((state: any) => state.dashboardDarkTheme);
+
   const colors = useColorScheme(darkTheme, colorScheme);
 
   const isAccountPage = location.pathname.startsWith("/account");
 
   const adminId = "671a6ae070daba095fa7e507";
+
+  const fn_getSoccerGamesData = async () => {
+    const response = await retrieveSoccerDataToRedisApi();
+    if (response?.status) {
+      const liveMatches = response?.live;
+      const upcomingMatches = response?.upcoming;
+      //get live soccer
+      const formatedLiveMatches = liveMatches.reduce((acc: any, match: any) => {
+        let competition = acc.find((comp: any) => comp.competitionId === match.competitionId);
+        if (!competition) {
+          competition = {
+            competitionId: match.competitionId,
+            competitionName: match.competitionName,
+            games: []
+          };
+          acc.push(competition);
+        }
+        competition.games.push(match);
+        return acc;
+      }, []);
+      dispatch(updateLiveSoccer(formatedLiveMatches));
+      //get upcoming soccer
+      const formatedUpcomingMatches = upcomingMatches.reduce((acc: any, match: any) => {
+        let competition = acc.find((comp: any) => comp.competitionId === match.competitionId);
+        if (!competition) {
+          competition = {
+            competitionId: match.competitionId,
+            competitionName: match.competitionName,
+            games: []
+          };
+          acc.push(competition);
+        }
+        competition.games.push(match);
+        return acc;
+      }, []);
+      dispatch(updateUpcomingSoccer(formatedUpcomingMatches));
+    }
+  }
+
+  const fn_getCricketGamesData = async () => {
+    const response = await retrieveCricketDataToRedisApi();
+    if (response?.status) {
+      const liveMatches = response?.live;
+      const upcomingMatches = response?.upcoming;
+
+      dispatch(updateLiveCricket(liveMatches));
+      dispatch(updateUpcomingCricket(upcomingMatches));
+    }
+  }
+
+  useEffect(() => {
+    fn_getSoccerGamesData();
+    fn_getCricketGamesData();
+  }, []);
 
   useEffect(() => {
     dispatch(updateAdminId(adminId));

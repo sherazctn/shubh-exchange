@@ -17,6 +17,10 @@ const initialState = {
   adminId: "",
   bets: [],
   username: "",
+  liveSoccer: [],
+  upcomingSoccer: [],
+  liveCricket: [],
+  upcomingCricket: [],
 };
 
 export const featuresSlice = createSlice({
@@ -70,7 +74,19 @@ export const featuresSlice = createSlice({
     },
     updateUsername: (state, action) => {
       state.username = action.payload;
-    }
+    },
+    updateUpcomingSoccer: (state, action) => {
+      state.upcomingSoccer = action.payload;
+    },
+    updateLiveSoccer: (state, action) => {
+      state.liveSoccer = action.payload;
+    },
+    updateLiveCricket: (state, action) => {
+      state.liveCricket = action.payload;
+    },
+    updateUpcomingCricket: (state, action) => {
+      state.upcomingCricket = action.payload;
+    },
   },
 });
 
@@ -90,6 +106,11 @@ export const {
   updateWallet,
   updateAdminId,
   updateBets,
-  updateUsername
+  updateUsername,
+  updateUpcomingSoccer,
+  updateLiveSoccer,
+  updateLiveCricket,
+  updateUpcomingCricket
 } = featuresSlice.actions;
+
 export const featuresReducer = featuresSlice.reducer;
