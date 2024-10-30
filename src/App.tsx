@@ -119,7 +119,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/all-sports" element={<Sports />} />
             <Route path="/in-play" element={<Inplay />} />
-            <Route path="/cricket/live" element={<LiveCricket />} />
+            <Route path="/cricket/live/:id" element={<LiveCricket />} />
             <Route path="/casino" element={<Casino />} />
             {/* accounts pages */}
             <Route path="/account/dashboard" element={<Profile darkTheme={darkTheme} />} />

@@ -101,7 +101,6 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
         } else if (e.key === 'ArrowDown') {
             value = (parseInt(bets[index].amount || '0') - 1).toString();
         }
-        console.log(value);
         if (value) {
             fn_changeAmountInput(value, index);
         }
@@ -156,6 +155,8 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
         const updatedBets = bets.filter((_: any, i: any) => i !== index);
         dispatch(updateBets(updatedBets));
     }
+
+    console.log("bets ==> ", bets);
 
     const fn_placeBet = async () => {
         if (bets?.length === 0) return toast.error("Select Match For Bet")

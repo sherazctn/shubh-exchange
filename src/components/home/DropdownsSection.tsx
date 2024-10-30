@@ -30,7 +30,7 @@ const CricketDropdownsSection = ({ text }: any) => {
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {
-      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + profit, afterLoss: wallet - 10, profit, loss
+      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + profit, afterLoss: wallet - 10, profit, loss, admin: localStorage.getItem('adminId')
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
@@ -71,7 +71,7 @@ const CricketDropdownsSection = ({ text }: any) => {
               {/* content */}
               <div>
                 <Link
-                  to={"/cricket/live"}
+                  to={`/cricket/live/${item?.competitionId}`}
                   className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
                 >
                   <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">

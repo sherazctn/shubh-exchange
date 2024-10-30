@@ -10,7 +10,7 @@ import { HiMiniInformationCircle } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBettingSlip } from "../../features/features";
 
-const LiveCricketLeftSection = () => {
+const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
   const [tabs, setTabs] = useState("all");
   const [matchOdds, setMatchOdds] = useState(true);
@@ -18,6 +18,9 @@ const LiveCricketLeftSection = () => {
   const [fancyMatch, setFancyMatch] = useState(true);
 
   const webColor = useSelector((state: any) => state.websiteColor);
+  const matchOddsData = [singleLiveCricket?.odds?.Runners[0], singleLiveCricket?.odds?.Runners[1]];
+  const drawMatchData = singleLiveCricket?.odds?.Runners[2];
+  const fancyMacthData = singleLiveCricket?.hasFancy;
 
   return (
     <div
@@ -25,8 +28,8 @@ const LiveCricketLeftSection = () => {
       style={{ maxHeight: divHeight }}
     >
       <div className="min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
-        <p className="text-[23px] text-center">One Day Internationals</p>
-        <p className="text-[22px] text-center">England VS Australia</p>
+        <p className="text-[23px] text-center">{singleLiveCricket?.competitionName}</p>
+        <p className="text-[22px] text-center">{singleLiveCricket?.name}</p>
         <button className="live-match-btn">IN-PLAY</button>
       </div>
       {/* tabs */}
@@ -74,10 +77,10 @@ const LiveCricketLeftSection = () => {
       </div>
       <div className="flex flex-col gap-[10px]">
         {(tabs === "all" || tabs === "match-odd") && (
-          <MatchOdds matchOdds={matchOdds} setMatchOdds={setMatchOdds} webColor={webColor} />
+          <MatchOdds matchOdds={matchOdds} setMatchOdds={setMatchOdds} webColor={webColor} matchOddsData={matchOddsData} />
         )}
         {tabs === "all" && (
-          <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} webColor={webColor} />
+          <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} webColor={webColor} drawMatchData={drawMatchData} />
         )}
         {(tabs === "all" || tabs === "fancy") && (
           <FancyMatch fancyMatch={fancyMatch} setFancyMatch={setFancyMatch} tabs={tabs} setTabs={setTabs} webColor={webColor} />
@@ -91,7 +94,7 @@ const LiveCricketLeftSection = () => {
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ matchOdds, setMatchOdds, webColor }: any) => {
+const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) => {
   const dispatch = useDispatch();
   const handleBetClicked = (e: any) => {
     e.preventDefault();
@@ -119,107 +122,43 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor }: any) => {
           />
         </div>
       </div>
-      {matchOdds && (
+      {matchOdds && matchOddsData?.length > 0 && (
         <div>
-          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-              <BsGraphUp />
-              <p className="text-[15px] font-[500]">England</p>
-            </div>
-            <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                  620
-                </p>
-                <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
+          {matchOddsData?.map((item: any, index: any) => (
+            <div key={index} className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+              <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                <BsGraphUp />
+                <p className="text-[15px] font-[500]">{item?.runnerName}</p>
               </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
+              <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
+                {item?.ExchangePrices?.AvailableToBack?.map((i: any) => (
+                  <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
+                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                      {i?.price}
+                    </p>
+                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                      {i?.size}
+                    </p>
+                  </div>
+                ))}
+                {item?.ExchangePrices?.AvailableToLay?.map((i: any) => (
+                  <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
+                    <p className="font-[800] text-center text-[15px]">{i?.price}</p>
+                    <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                      {i?.size}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-              <BsGraphUp />
-              <p className="text-[15px] font-[500]">Australia</p>
-            </div>
-            <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                  620
-                </p>
-                <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
   );
 };
 
-const TiedMatch = ({ tiedMatch, setTiedMatch, webColor }: any) => {
+const TiedMatch = ({ tiedMatch, setTiedMatch, webColor, drawMatchData }: any) => {
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
@@ -249,90 +188,24 @@ const TiedMatch = ({ tiedMatch, setTiedMatch, webColor }: any) => {
               <p className="text-[15px] font-[500]">Yes</p>
             </div>
             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                  620
-                </p>
-                <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-              <BsGraphUp />
-              <p className="text-[15px] font-[500]">No</p>
-            </div>
-            <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                  620
-                </p>
-                <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
-              <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                <p className="font-[800] text-center text-[15px]">620</p>
-                <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                  3.35k
-                </p>
-              </div>
+              {drawMatchData?.ExchangePrices?.AvailableToBack?.map((i: any) => (
+                <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                  <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                    {i?.price}
+                  </p>
+                  <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                    {i?.size}
+                  </p>
+                </div>
+              ))}
+              {drawMatchData?.ExchangePrices?.AvailableToLay?.map((i: any) => (
+                <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                  <p className="font-[800] text-center text-[15px]">{i?.price}</p>
+                  <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                    {i?.size}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -341,7 +214,7 @@ const TiedMatch = ({ tiedMatch, setTiedMatch, webColor }: any) => {
   );
 };
 
-const FancyMatch = ({ fancyMatch, setFancyMatch, tabs, setTabs, webColor }: any) => {
+const FancyMatch = ({ fancyMatch, setFancyMatch, tabs, setTabs, webColor, fancyMacthData }: any) => {
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
@@ -359,7 +232,7 @@ const FancyMatch = ({ fancyMatch, setFancyMatch, tabs, setTabs, webColor }: any)
           />
         </div>
       </div>
-      {fancyMatch && (
+      {fancyMatch && fancyMacthData && (
         <div>
           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
