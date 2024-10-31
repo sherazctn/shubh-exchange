@@ -1,6 +1,6 @@
 import Aos from "aos";
 import { useEffect, useState } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "../../../components/account/sidebar";
 import Navbar from "../../../components/account/navbar";
@@ -11,11 +11,10 @@ import { VscGraph } from "react-icons/vsc";
 
 const Bets = ({ darkTheme }: any) => {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState("current-bets");
+  const location = useLocation();
+  const [selectedTab, setSelectedTab] = useState(location.pathname.split("/").pop() || "current-bets");
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
-  const dashboardDarkTheme = useSelector(
-    (state: any) => state.dashboardDarkTheme
-  );
+  const dashboardDarkTheme = useSelector((state: any) => state.dashboardDarkTheme);
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
@@ -24,8 +23,13 @@ const Bets = ({ darkTheme }: any) => {
 
   useEffect(() => {
     Aos.init({ once: true });
-    navigate(selectedTab);
-  }, [navigate, selectedTab]);
+    if (!location.pathname.includes("current-bets") &&
+      !location.pathname.includes("bet-history") &&
+      !location.pathname.includes("profit-loss") &&
+      !location.pathname.includes("fd-profitloss")) {
+      navigate("current-bets");
+    }
+  }, [navigate, location.pathname]);
 
   const handleNavigation = (path: string) => {
     setSelectedTab(path);
@@ -36,9 +40,8 @@ const Bets = ({ darkTheme }: any) => {
     <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>
       <Sidebar colors={colors} path={"bets"} />
       <div
-        className={`relative p-[1px] transition-all duration-500 ${
-          smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
-        }`}
+        className={`relative p-[1px] transition-all duration-500 ${smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
+          }`}
       >
         <Navbar pageName={"My Bets"} darkTheme={darkTheme} colors={colors} />
         <div className="mt-[15px] px-[10px] sm:px-[20px]">
@@ -74,7 +77,7 @@ const Bets = ({ darkTheme }: any) => {
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
             />
-            <Button
+            {/* <Button
               colors={colors}
               title={"FD Profitloss"}
               selectedTab={selectedTab}
@@ -83,7 +86,7 @@ const Bets = ({ darkTheme }: any) => {
               icon={<BsGraphUpArrow />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
-            />
+            /> */}
           </div>
           <Outlet />
         </div>

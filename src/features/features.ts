@@ -21,6 +21,7 @@ const initialState = {
   upcomingSoccer: [],
   liveCricket: [],
   upcomingCricket: [],
+  token: ""
 };
 
 export const featuresSlice = createSlice({
@@ -87,6 +88,9 @@ export const featuresSlice = createSlice({
     updateUpcomingCricket: (state, action) => {
       state.upcomingCricket = action.payload;
     },
+    updateToken: (state, action) => {
+      state.token = action.payload;
+    },
   },
 });
 
@@ -110,7 +114,8 @@ export const {
   updateUpcomingSoccer,
   updateLiveSoccer,
   updateLiveCricket,
-  updateUpcomingCricket
+  updateUpcomingCricket,
+  updateToken
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

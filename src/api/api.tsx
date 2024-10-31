@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "http://62.72.57.126:8000";
+const URL = "http://62.72.57.126:5000";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -318,10 +318,30 @@ export const placeBetsApi = async (data: any) => {
     }
 }
 
-export const getOpenBetsByUserApi = async () => {
+export const getOpenBetsByUserApi = async (savedToken: any) => {
     try {
-        const token = Cookies.get('token');
+        const token = savedToken || Cookies.get('token');
         const response = await axios.get(`${URL}/bet/user/open`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getBetsByUserApi = async (savedToken: any) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/bet/user`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

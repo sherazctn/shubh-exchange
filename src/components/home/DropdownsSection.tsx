@@ -21,7 +21,7 @@ const CricketDropdownsSection = ({ text }: any) => {
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
 
-  const handleBetClicked = (e: any, odd: any, gameName: any) => {
+  const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself")
@@ -30,7 +30,16 @@ const CricketDropdownsSection = ({ text }: any) => {
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {
-      odd: odd, gameName: gameName, amount: 10, afterWin: wallet + profit, afterLoss: wallet - 10, profit, loss, admin: localStorage.getItem('adminId')
+      odd: odd,
+      gameName: gameName,
+      amount: 10,
+      afterWin: wallet + profit,
+      afterLoss: wallet - 10,
+      profit,
+      loss,
+      admin: localStorage.getItem('adminId'),
+      side: side,
+      runner: runner,
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
@@ -91,7 +100,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[0]?.runnerName)}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         {item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price}
@@ -102,7 +111,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price}
@@ -113,7 +122,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[2]?.runnerName)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price}
@@ -124,7 +133,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[2]?.runnerName)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price}
@@ -133,7 +142,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.size}
                       </p>
                     </div>
-                    <div onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[1]?.price, item?.name)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[1]?.runnerName)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[1]?.price}
                       </p>
@@ -141,7 +150,10 @@ const CricketDropdownsSection = ({ text }: any) => {
                         {item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[1]?.size}
                       </p>
                     </div>
-                    <div onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToBack[1]?.price, item?.name)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName)}
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+                    >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[1]?.ExchangePrices?.AvailableToBack[1]?.price}
                       </p>

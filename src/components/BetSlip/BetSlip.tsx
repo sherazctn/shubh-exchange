@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-import { GoDotFill } from "react-icons/go"
+// import { GoDotFill } from "react-icons/go"
 import { FaIndianRupeeSign } from "react-icons/fa6"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"
 import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
@@ -19,6 +19,7 @@ const BetSlip = () => {
     const bettingSlip = useSelector((state: any) => state.bettingSlip);
     const [tabs, setTabs] = useState("slip");
     const inputRef = useRef<any>(null);
+    const token: any = useSelector((state: any) => state.token);
 
     const webColor = useSelector((state: any) => state.websiteColor);
     const [openBets, setOpenBets] = useState([]);
@@ -28,13 +29,14 @@ const BetSlip = () => {
     }, []);
 
     useEffect(() => {
+        fn_getOpenBets();
         if (inputRef.current) {
             inputRef.current.focus();
         }
     }, [bettingSlip, tabs]);
 
     const fn_getOpenBets = async () => {
-        const response = await getOpenBetsByUserApi();
+        const response = await getOpenBetsByUserApi(token);
         if (response?.status) {
             setOpenBets(response?.data?.reverse());
         } else {
@@ -155,8 +157,6 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
         const updatedBets = bets.filter((_: any, i: any) => i !== index);
         dispatch(updateBets(updatedBets));
     }
-
-    console.log("bets ==> ", bets);
 
     const fn_placeBet = async () => {
         if (bets?.length === 0) return toast.error("Select Match For Bet")
