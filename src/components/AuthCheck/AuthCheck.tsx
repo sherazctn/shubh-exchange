@@ -45,6 +45,15 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
             if (response?.status) {
                 dispatch(updateWallet(response?.data?.wallet))
                 dispatch(updateUsername(response?.data?.username))
+                // dispatch(updateDashboardData({
+                //     totalBets: response?.data?.totalBets || 0,
+                //     winShots: response?.data?.winShots || 0,
+                //     lossesShots: response?.data?.lossesShots || 0,
+                //     continueBets: response?.data?.continueBets || 0,
+                //     totalDeposit: response?.data?.totalDeposit || 0,
+                //     totalWithdraw: response?.data?.totalWithdraw || 0,
+                //     totalEarning: response?.data?.totalEarning || 0
+                // }))
             }
             if (location.pathname.includes("/account")) {
                 if (response?.status) {

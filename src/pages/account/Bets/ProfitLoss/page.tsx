@@ -1,19 +1,18 @@
+import moment from "moment";
 import { DatePicker } from "antd";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import moment from "moment";
+
+import { FaCalendarAlt } from "react-icons/fa";
 
 import Loader from "../../../../components/Loader";
 import { getBetsByUserApi } from "../../../../api/api";
-import BetHistoryTable from "../../../../components/account/Bets/BetHistory/BetHistoryTable";
-import { FaCalendarAlt } from "react-icons/fa";
 import ProfitLossTable from "../../../../components/account/Bets/ProfitLoss/ProfitLossTable";
 
 const ProfitLoss = ({ colors }: any) => {
   const [data, setData] = useState([]);
   const [originalData, setOriginal] = useState([]);
   const [loader, setLoader] = useState(true);
-  const [selectedSide, setSelectedSide] = useState("all");
   const token = useSelector((state: any) => state.token);
   const [startDate, setStartDate] = useState<any>(null);
   const [endDate, setEndDate] = useState<any>(null);

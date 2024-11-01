@@ -1,5 +1,5 @@
 import Aos from "aos";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "../../../components/account/sidebar";
 import Navbar from "../../../components/account/navbar";
@@ -7,13 +7,18 @@ import useColorScheme from "../../../hooks/useColorScheme";
 import Table1 from "../../../components/account/Dashboard/Table1";
 // import Table1Pagination from "../../../components/account/Dashboard/Table1Pagination";
 
-import { MdOutlineBarChart } from "react-icons/md";
 import { SiBetfair } from "react-icons/si";
 import { useEffect } from "react";
 import { BsGraphDownArrow, BsGraphUpArrow } from "react-icons/bs";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { PiHandDepositBold, PiHandWithdrawBold } from "react-icons/pi";
+import Cookies from "js-cookie";
+import { getUserDataForDashboard } from "../../../api/api";
+import { updateDashboardData } from "../../../features/features";
 
 const Profile = ({ darkTheme }: any) => {
+  const dispatch = useDispatch();
+  const token = Cookies.get('token');
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
   const dashboardDarkTheme = useSelector(
     (state: any) => state.dashboardDarkTheme
@@ -23,10 +28,27 @@ const Profile = ({ darkTheme }: any) => {
 
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const dashboardData = useSelector((state: any) => state.dashboardData);
 
   useEffect(() => {
+    fn_getUserDataForDashboard();
     Aos.init({ once: true });
   }, []);
+
+  const fn_getUserDataForDashboard = async () => {
+    const response: any = await getUserDataForDashboard(token || "");
+    if (response?.status) {
+      dispatch(updateDashboardData({
+        totalBets: response?.data?.totalBets || 0,
+        winShots: response?.data?.winShots || 0,
+        lossesShots: response?.data?.lossesShots || 0,
+        continueBets: response?.data?.continueBets || 0,
+        totalDeposit: response?.data?.totalDeposit || 0,
+        totalWithdraw: response?.data?.totalWithdraw || 0,
+        totalEarning: response?.data?.totalEarning || 0
+      }))
+    }
+  }
 
   return (
     <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>
@@ -41,32 +63,32 @@ const Profile = ({ darkTheme }: any) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-[10px] sm:gap-[15px]">
             <Boxes
               colors={colors}
-              sub="Earning"
-              main="$3500"
-              icon={<MdOutlineBarChart className="text-[27px]" />}
-              panelMainColor={panelMainColor}
-              panelSecColor={panelSecColor}
-            />
-            <Boxes
-              colors={colors}
-              sub="Monthly Revenue Avg."
-              main="$1050.5"
+              sub="Total Earning"
+              main={dashboardData?.totalEarning}
               icon={<FaIndianRupeeSign className="pt-[2px]" />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
             />
             <Boxes
               colors={colors}
-              sub="Earning this month"
-              main="$540"
-              icon={<FaIndianRupeeSign className="pt-[2px]" />}
+              sub="Total Deposit"
+              main={dashboardData?.totalDeposit}
+              icon={<PiHandDepositBold className="scale-[1.1] pt-[2px]" />}
+              panelMainColor={panelMainColor}
+              panelSecColor={panelSecColor}
+            />
+            <Boxes
+              colors={colors}
+              sub="Total Withdraw"
+              main={dashboardData?.totalWithdraw}
+              icon={<PiHandWithdrawBold className="scale-[1.1] pt-[2px]" />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
             />
             <Boxes
               colors={colors}
               sub="Total Bets"
-              main="54"
+              main={dashboardData?.totalBets}
               icon={<SiBetfair />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
@@ -74,7 +96,7 @@ const Profile = ({ darkTheme }: any) => {
             <Boxes
               colors={colors}
               sub="Winning Shorts"
-              main="41"
+              main={dashboardData?.winShots}
               icon={<BsGraphUpArrow className="text-[18px] md:text-[21px]" />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}
@@ -82,7 +104,7 @@ const Profile = ({ darkTheme }: any) => {
             <Boxes
               colors={colors}
               sub="Loses Shorts"
-              main="13"
+              main={dashboardData?.lossesShots}
               icon={<BsGraphDownArrow className="text-[18px] md:text-[21px]" />}
               panelMainColor={panelMainColor}
               panelSecColor={panelSecColor}

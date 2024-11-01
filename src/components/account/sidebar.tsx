@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuWallet2 } from "react-icons/lu";
 import { FaHandHoldingDollar } from "react-icons/fa6";
@@ -94,7 +93,7 @@ const Sidebar = ({ colors, path }: any) => {
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
         />
-        <Menus
+        {/* <Menus
           title={"Account Statement"}
           colors={colors}
           pathEquals={"accountStatement"}
@@ -104,7 +103,7 @@ const Sidebar = ({ colors, path }: any) => {
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
-        />
+        /> */}
         <Menus
           title={"Bonus Statement"}
           colors={colors}

@@ -21,7 +21,8 @@ const initialState = {
   upcomingSoccer: [],
   liveCricket: [],
   upcomingCricket: [],
-  token: ""
+  token: "",
+  dashboardData: {},
 };
 
 export const featuresSlice = createSlice({
@@ -91,6 +92,9 @@ export const featuresSlice = createSlice({
     updateToken: (state, action) => {
       state.token = action.payload;
     },
+    updateDashboardData: (state, action) => {
+      state.dashboardData = action.payload;
+    },
   },
 });
 
@@ -115,7 +119,8 @@ export const {
   updateLiveSoccer,
   updateLiveCricket,
   updateUpcomingCricket,
-  updateToken
+  updateToken,
+  updateDashboardData
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

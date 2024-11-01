@@ -67,6 +67,24 @@ export const AuthCheckApi = async (token: string) => {
     }
 }
 
+export const getUserDataForDashboard = async (token: string) => {
+    try {
+        const response = await axios.get(`${URL}/user/dashboard-data`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response;
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export const getAvailableGames = async () => {
     try {
         const response = await axios.get(`${URL}/game/available`);
@@ -409,6 +427,24 @@ export const retrieveCricketDataToRedisApi = async () => {
         if (response.status === 200) {
             return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
         }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserAmountForApprovalApi = async (savedToken: string) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/user/approval-amount`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response;
     } catch (error: any) {
         if (error?.status === 400) {
             return { status: false, message: error?.response?.data?.message };

@@ -20,8 +20,8 @@ import Inplay from "./pages/inplay/page";
 import Casino from "./pages/casino/page";
 import LiveCricket from "./pages/cricket/LiveCricket";
 
-import Profile from "./pages/account/profile/page";
 import Wallet from "./pages/account/wallet/page";
+import Profile from "./pages/account/profile/page";
 import LoginHistory from "./pages/account/loginHistory/page";
 import BonusStatement from "./pages/account/bonusStatement/page";
 import AccountStatement from "./pages/account/accountStatement/page";
