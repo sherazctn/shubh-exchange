@@ -454,4 +454,24 @@ export const getUserAmountForApprovalApi = async (savedToken: string) => {
     }
 }
 
+export const getUserDetailsApi = async (savedToken: string) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/user/login-details`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export default URL;

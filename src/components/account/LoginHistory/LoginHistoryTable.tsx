@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
+import { formatDate } from "../../../api/api";
 
-const LoginHistoryTable = ({ colors }: any) => {
+const LoginHistoryTable = ({ colors, data }: any) => {
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
@@ -14,14 +15,15 @@ const LoginHistoryTable = ({ colors }: any) => {
               style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
               <td className="ps-[5px]">Login Date & Time</td>
-              <td>Logout Date & Time</td>
               <td>IP Address</td>
               <td>ISP</td>
               <td>City, State, Country</td>
             </tr>
           </thead>
           <tbody>
-            <TableRows colors={colors} />
+            {data?.map((item: any) => (
+              <TableRows colors={colors} item={item} />
+            ))}
           </tbody>
         </table>
       </div>
@@ -31,17 +33,16 @@ const LoginHistoryTable = ({ colors }: any) => {
 
 export default LoginHistoryTable;
 
-const TableRows = ({ colors }: any) => {
+const TableRows = ({ colors, item }: any) => {
   return (
     <tr
       className="text-[13px] font-[500] leading-[34px] border-b"
       style={{ borderColor: colors.line, color: colors.subText }}
     >
-      <td className="ps-[5px]">2024-09-23 21:55:58</td>
-      <td>2024-09-23 23:23:38</td>
-      <td>182.181.2.21</td>
-      <td>Triple Play Project SOUTH</td>
-      <td>Lahore, Punjab, Pakistan</td>
+      <td className="ps-[5px]">{formatDate(item?.loginDateTime)}</td>
+      <td>{item?.ipAddress}</td>
+      <td>{item?.isp}</td>
+      <td>{item?.city}, {item?.state}, {item?.country}</td>
     </tr>
   );
 };

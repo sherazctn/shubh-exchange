@@ -8,7 +8,8 @@ import { IoIosArrowUp } from "react-icons/io";
 import { BsGraphUp } from "react-icons/bs";
 import { HiMiniInformationCircle } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBettingSlip } from "../../features/features";
+import { updateBets, updateBettingSlip } from "../../features/features";
+import toast from "react-hot-toast";
 
 const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
@@ -96,11 +97,34 @@ export default LiveCricketLeftSection;
 
 const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) => {
   const dispatch = useDispatch();
-  const handleBetClicked = (e: any) => {
+  const bets = useSelector((state: any) => state.bets);
+  const wallet = useSelector((state: any) => state.wallet);
+  const authentication = useSelector((state: any) => state.authentication);
+  const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!authentication) return toast.error("Login Yourself")
+    if (!odd) return;
+    if (!gameName) return;
+    const profit = parseFloat((10 * (odd - 1)).toFixed(2));
+    const loss = 10;
+    const obj = {
+      odd: odd,
+      gameName: gameName,
+      amount: 10,
+      afterWin: wallet + profit,
+      afterLoss: wallet - 10,
+      profit,
+      loss,
+      admin: localStorage.getItem('adminId'),
+      side: side,
+      runner: runner,
+    }
+    const updatedBets = [obj, ...bets];
+    dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
+  console.log("matchOddsData ==> ", matchOddsData);
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div
@@ -132,7 +156,10 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
               </div>
               <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
                 {item?.ExchangePrices?.AvailableToBack?.map((i: any) => (
-                  <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
+                  <div
+                    className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                    onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
+                  >
                     <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                       {i?.price}
                     </p>
@@ -142,7 +169,10 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
                   </div>
                 ))}
                 {item?.ExchangePrices?.AvailableToLay?.map((i: any) => (
-                  <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer" onClick={handleBetClicked}>
+                  <div
+                    className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
+                    onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
+                  >
                     <p className="font-[800] text-center text-[15px]">{i?.price}</p>
                     <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                       {i?.size}
