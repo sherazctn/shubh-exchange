@@ -67,6 +67,21 @@ export const AuthCheckApi = async (token: string) => {
     }
 }
 
+export const CheckAdminApi = async (id: string) => {
+    try {
+        const response = await axios.get(`${URL}/user/check-admin/${id}`);
+        if(response?.status === 200){
+            return { status: true };
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export const getUserDataForDashboard = async (token: string) => {
     try {
         const response = await axios.get(`${URL}/user/dashboard-data`, {
