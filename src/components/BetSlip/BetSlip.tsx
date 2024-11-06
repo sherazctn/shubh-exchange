@@ -359,6 +359,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                                 </p>
                             </div>
                         </div>
+                        <p className="text-[14px] mt-[-4px] text-end">Plateform Charger: <span className="font-[500]">{item?.adminCommision}%</span></p>
                     </div>
                 ))}
             </div>

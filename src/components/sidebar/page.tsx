@@ -12,9 +12,6 @@ import { BsFillExclamationCircleFill } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
-// options
-import { CricketOptions } from "../../assets/data";
-
 const Sidebar = () => {
   const dispatch = useDispatch();
   const screenHeight = `${window.innerHeight}px`;
@@ -155,7 +152,7 @@ const CricketOption = ({
         {showSidebar && (
           <div className="flex items-center gap-2.5">
             <div className="px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[3px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
-              16
+              {game?.competitionsData.length}
             </div>
             {!option ? <IoIosArrowDown /> : <IoIosArrowUp />}
           </div>
@@ -164,16 +161,18 @@ const CricketOption = ({
       {/* options */}
       {showSidebar && option && (
         <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
-          {CricketOptions.map((item) => (
+          {game?.competitionsData.length > 0 ? game?.competitionsData.map((item: any) => (
             <div
               key={item.id}
               className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
-              onClick={() => navigate("/cricket/live")}
+              onClick={() => navigate(`/cricket/live${item?.competition?.id}`)}
             >
-              <p className="text-[13px] font-[500]">{item?.name}</p>
+              <p className="text-[13px] font-[500]">{item?.competition?.name}</p>
               {/* <IoIosArrowDown /> */}
             </div>
-          ))}
+          )) : (
+            <p className="text-[13px] font-[600] text-center text-gray-700"><BsFillExclamationCircleFill className="text-[16px] inline-block me-[5px] mt-[-2px]" />No Competition Found</p>
+          )}
         </div>
       )}
     </div>

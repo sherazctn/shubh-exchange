@@ -21,6 +21,7 @@ const initialState = {
   upcomingSoccer: [],
   liveCricket: [],
   upcomingCricket: [],
+  redisGames: [],
   token: "",
   dashboardData: {},
 };
@@ -95,6 +96,9 @@ export const featuresSlice = createSlice({
     updateDashboardData: (state, action) => {
       state.dashboardData = action.payload;
     },
+    updateRedisGamesData: (state, action) => {
+      state.redisGames = action.payload;
+    },
   },
 });
 
@@ -120,7 +124,8 @@ export const {
   updateLiveCricket,
   updateUpcomingCricket,
   updateToken,
-  updateDashboardData
+  updateDashboardData,
+  updateRedisGamesData
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
-import { retrieveCricketDataToRedisApi, retrieveSoccerDataToRedisApi } from "./api/api";
-import { updateAdminId, updateLiveCricket, updateLiveSoccer, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
+import { retrieveCricketDataToRedisApi, retrieveGamesDataToRedisApi, retrieveSoccerDataToRedisApi } from "./api/api";
+import { updateAdminId, updateLiveCricket, updateLiveSoccer, updateRedisGamesData, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
@@ -47,6 +47,13 @@ function App() {
   const isAccountPage = location.pathname.startsWith("/account");
 
   const adminId = "671a6ae070daba095fa7e507";
+
+  const fn_getGamesData = async () => {
+    const response = await retrieveGamesDataToRedisApi();
+    if (response?.status) {
+      dispatch(updateRedisGamesData(response?.data));
+    }
+  }
 
   const fn_getSoccerGamesData = async () => {
     const response = await retrieveSoccerDataToRedisApi();
@@ -98,6 +105,7 @@ function App() {
   }
 
   useEffect(() => {
+    fn_getGamesData();
     fn_getSoccerGamesData();
     fn_getCricketGamesData();
   }, []);

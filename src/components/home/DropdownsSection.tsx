@@ -21,7 +21,7 @@ const CricketDropdownsSection = ({ text }: any) => {
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
 
-  const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string) => {
+  const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string, sport: string, adminCommission: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself")
@@ -40,6 +40,8 @@ const CricketDropdownsSection = ({ text }: any) => {
       admin: localStorage.getItem('adminId'),
       side: side,
       runner: runner,
+      sport: sport,
+      adminCommision: adminCommission
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
@@ -100,7 +102,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[0]?.runnerName)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[0]?.runnerName, item?.sport, item?.adminCommission)}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         {item?.odds?.Runners[0]?.ExchangePrices?.AvailableToLay[0]?.price}
@@ -111,7 +113,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName, item?.sport, item?.adminCommission)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[0]?.ExchangePrices?.AvailableToBack[0]?.price}
@@ -122,7 +124,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[2]?.runnerName)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[2]?.runnerName, item?.sport, item?.adminCommission)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToLay[0]?.price}
@@ -133,7 +135,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                     </div>
                     <div
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[2]?.runnerName)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[2]?.runnerName, item?.sport, item?.adminCommission)}
                     >
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.price}
@@ -142,7 +144,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                         {item?.odds?.Runners[2]?.ExchangePrices?.AvailableToBack[0]?.size}
                       </p>
                     </div>
-                    <div onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[1]?.runnerName)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                    <div onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[0]?.price, item?.name, "Lay", item?.odds?.Runners[1]?.runnerName, item?.sport, item?.adminCommission)} className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[15px]">
                         {item?.odds?.Runners[1]?.ExchangePrices?.AvailableToLay[1]?.price}
                       </p>
@@ -151,7 +153,7 @@ const CricketDropdownsSection = ({ text }: any) => {
                       </p>
                     </div>
                     <div
-                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName)}
+                      onClick={(e) => handleBetClicked(e, item?.odds?.Runners[1]?.ExchangePrices?.AvailableToBack[0]?.price, item?.name, "Back", item?.odds?.Runners[0]?.runnerName, item?.sport, item?.adminCommission)}
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
                     >
                       <p className="font-[800] text-center text-[15px]">

@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const URL = "http://62.72.57.126:5000";
+const adminId = "671a6ae070daba095fa7e507";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -70,7 +71,7 @@ export const AuthCheckApi = async (token: string) => {
 export const CheckAdminApi = async (id: string) => {
     try {
         const response = await axios.get(`${URL}/user/check-admin/${id}`);
-        if(response?.status === 200){
+        if (response?.status === 200) {
             return { status: true };
         }
     } catch (error: any) {
@@ -102,7 +103,7 @@ export const getUserDataForDashboard = async (token: string) => {
 
 export const getAvailableGames = async () => {
     try {
-        const response = await axios.get(`${URL}/game/available`);
+        const response = await axios.get(`${URL}/game/available/${adminId}`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -421,36 +422,6 @@ export const getSoccerUpcomingMatchesApi = async () => {
     }
 }
 
-export const retrieveSoccerDataToRedisApi = async () => {
-    try {
-        const response = await axios.post(`${URL}/redis/soccer-data`);
-        if (response.status === 200) {
-            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const retrieveCricketDataToRedisApi = async () => {
-    try {
-        const response = await axios.post(`${URL}/redis/cricket-data`);
-        if (response.status === 200) {
-            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
 export const getUserAmountForApprovalApi = async (savedToken: string) => {
     try {
         const token = savedToken || Cookies.get('token');
@@ -479,6 +450,53 @@ export const getUserDetailsApi = async (savedToken: string) => {
         });
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+// ============== redis ================
+
+export const retrieveGamesDataToRedisApi = async () => {
+    try {
+        const response = await axios.post(`${URL}/redis/games-data`);
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveSoccerDataToRedisApi = async () => {
+    try {
+        const response = await axios.post(`${URL}/redis/soccer-data`);
+        if (response.status === 200) {
+            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveCricketDataToRedisApi = async () => {
+    try {
+        const response = await axios.post(`${URL}/redis/cricket-data`);
+        if (response.status === 200) {
+            return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
         }
     } catch (error: any) {
         if (error?.status === 400) {
