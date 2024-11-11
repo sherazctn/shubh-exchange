@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+import Loader from "../../../../components/Loader";
 import { getOpenBetsByUserApi } from "../../../../api/api";
 import CurrentBetTable1 from "../../../../components/account/Bets/CurrentBets/CurrentBetTable1";
-import Loader from "../../../../components/Loader";
 // import CurrentBetTable2 from "../../../../components/account/Bets/CurrentBets/CurrentBetTable2";
 
 const CurrentBets = ({ colors }: any) => {

@@ -1,14 +1,13 @@
 import "./App.css";
 import "aos/dist/aos.css";
 
-import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
 import { retrieveCricketDataToRedisApi, retrieveGamesDataToRedisApi, retrieveSoccerDataToRedisApi } from "./api/api";
-import { updateAdminId, updateLiveCricket, updateLiveSoccer, updateRedisGamesData, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
+import { updateLiveCricket, updateLiveSoccer, updateRedisGamesData, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
@@ -45,8 +44,6 @@ function App() {
   const colors = useColorScheme(darkTheme, colorScheme);
 
   const isAccountPage = location.pathname.startsWith("/account");
-
-  const adminId = "671a6ae070daba095fa7e507";
 
   const fn_getGamesData = async () => {
     const response = await retrieveGamesDataToRedisApi();
@@ -109,12 +106,6 @@ function App() {
     fn_getSoccerGamesData();
     fn_getCricketGamesData();
   }, []);
-
-  useEffect(() => {
-    dispatch(updateAdminId(adminId));
-    Cookies.set('adminId', adminId);
-    localStorage.setItem("adminId", adminId);
-  }, [dispatch]);
 
   return (
     <>

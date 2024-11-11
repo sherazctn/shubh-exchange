@@ -116,7 +116,6 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
       afterLoss: wallet - 10,
       profit,
       loss,
-      admin: localStorage.getItem('adminId'),
       side: side,
       runner: runner,
     }
@@ -124,7 +123,6 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
-  console.log("matchOddsData ==> ", matchOddsData);
   return (
     <div className="bg-white shadow-sm rounded-[7px]">
       <div

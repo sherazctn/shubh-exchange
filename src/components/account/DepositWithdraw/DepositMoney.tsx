@@ -1,10 +1,10 @@
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createDepositApi, getAllBanksApi } from "../../../api/api";
 import { Banks } from "../../../json-data/bank";
-import toast from "react-hot-toast";
+import { createDepositApi, getAllBanksApi } from "../../../api/api";
 
 const DepositMoney = ({ colors }: any) => {
   const navigate = useNavigate();
@@ -16,9 +16,9 @@ const DepositMoney = ({ colors }: any) => {
   const [depositeAmount, setDepositeAmount] = useState<any>(null);
 
   const [banks, setBanks] = useState([]);
+  const [image, setImage] = useState<any>(null);
   const [selectedBank, setSelectedBank] = useState<any>({});
   const [transactionId, setTransactionId] = useState<number | null>(null);
-  const [image, setImage] = useState<any>(null);
 
   useEffect(() => {
     fn_getBanks();

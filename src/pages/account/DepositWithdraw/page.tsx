@@ -2,8 +2,8 @@ import Aos from "aos";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import Sidebar from "../../../components/account/sidebar";
 import Navbar from "../../../components/account/navbar";
+import Sidebar from "../../../components/account/sidebar";
 import useColorScheme from "../../../hooks/useColorScheme";
 import DepositMoney from "../../../components/account/DepositWithdraw/DepositMoney";
 import WithdrawMoney from "../../../components/account/DepositWithdraw/WithdrawMoney";

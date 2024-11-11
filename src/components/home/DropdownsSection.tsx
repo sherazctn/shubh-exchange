@@ -1,13 +1,13 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { IoIosArrowUp } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
+import { IoIosArrowUp } from "react-icons/io";
 
 import crciketBall from "../../assets/cricket-ball.png";
 import { updateBets, updateBettingSlip } from "../../features/features";
-import toast from "react-hot-toast";
 
 const CricketDropdownsSection = ({ text }: any) => {
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const CricketDropdownsSection = ({ text }: any) => {
       afterLoss: wallet - 10,
       profit,
       loss,
-      admin: localStorage.getItem('adminId'),
       side: side,
       runner: runner,
       sport: sport,

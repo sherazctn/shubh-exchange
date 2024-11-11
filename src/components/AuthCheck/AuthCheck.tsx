@@ -24,12 +24,10 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
 
     const [blockWebsite, setBlockWebsite] = useState(false);
 
-    const adminId = "671a6ae070daba095fa7e507";
-
     useEffect(() => {
         setLoader(true);
         const fn_checkAuth = async () => {
-            const checkAdmin = await CheckAdminApi(adminId);
+            const checkAdmin = await CheckAdminApi();
             if (!checkAdmin?.status) {
                 setLoader(false);
                 setBlockWebsite(true);

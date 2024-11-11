@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const URL = "http://62.72.57.126:5000";
-const adminId = "671a6ae070daba095fa7e507";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -15,12 +14,25 @@ export const formatDate = (dateString: any) => {
     return `${formattedDate}, ${formattedTime}`;
 };
 
+export const CheckAdminApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/user/check-admin`);
+        if (response?.status === 200) {
+            return { status: true };
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
 export const SignUpApi = async (data: any) => {
     try {
-        const admin = localStorage.getItem('adminId')
-        const response = await axios.post(`${URL}/user`, { ...data, admin: admin || Cookies.get('token') });
+        const response = await axios.post(`${URL}/user`, data);
         if (response?.status === 200) {
-            console.log(response);
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Created Successfully", data: response?.data?.data };
         }
@@ -35,8 +47,7 @@ export const SignUpApi = async (data: any) => {
 
 export const SignInApi = async (data: any) => {
     try {
-        const admin = localStorage.getItem('adminId')
-        const response = await axios.post(`${URL}/user/login`, { ...data, admin: admin || Cookies.get('token') });
+        const response = await axios.post(`${URL}/user/login`, data);
         if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Logged In Successfully", data: response?.data?.data };
@@ -68,15 +79,85 @@ export const AuthCheckApi = async (token: string) => {
     }
 }
 
-export const CheckAdminApi = async (id: string) => {
+export const panelColorApi = async () => {
     try {
-        const response = await axios.get(`${URL}/user/check-admin/${id}`);
+        const response = await axios.get(`${URL}/website/color/active`);
         if (response?.status === 200) {
-            return { status: true };
+            return { status: true, data: response?.data?.data }
         }
     } catch (error: any) {
         if (error?.status === 400) {
-            return { status: false };
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const webColorApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/website/website-color/active`);
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getOpenBetsByUserApi = async (savedToken: any) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/bet/user/open`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const placeBetsApi = async (data: any) => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.post(`${URL}/bet`, { bets: data }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, message: "Bets Placed", wallet: response?.data?.wallet }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getAvailableGames = async () => {
+    try {
+        const response = await axios.get(`${URL}/game/available`);
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
         } else {
             return { status: false, message: "Network Error" }
         }
@@ -101,9 +182,127 @@ export const getUserDataForDashboard = async (token: string) => {
     }
 }
 
-export const getAvailableGames = async () => {
+export const getBetsByUserApi = async (savedToken: any) => {
     try {
-        const response = await axios.get(`${URL}/game/available/${adminId}`);
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/bet/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserAmountForApprovalApi = async (savedToken: string) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/user/approval-amount`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response;
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const createDepositApi = async (data: any) => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.post(`${URL}/deposit`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, message: "Deposited Request Sent Successfully" }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getAllBanksApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/bank/active`);
+        if (response?.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserDepositApi = async () => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.get(`${URL}/deposit/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserWithdrawApi = async () => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.get(`${URL}/withdraw/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response.status === 200) {
+            return { status: true, data: response?.data?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUserDetailsApi = async (savedToken: string) => {
+    try {
+        const token = savedToken || Cookies.get('token');
+        const response = await axios.get(`${URL}/user/login-details`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -134,52 +333,6 @@ export const webNameApi = async () => {
 export const webLogoApi = async () => {
     try {
         const response = await axios.get(`${URL}/website/logo`);
-        if (response?.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const webColorApi = async () => {
-    try {
-        const response = await axios.get(`${URL}/website/website-color/active`);
-        if (response?.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const panelColorApi = async () => {
-    try {
-        const response = await axios.get(`${URL}/website/color/active`);
-        if (response?.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getAllBanksApi = async () => {
-    try {
-        const admin = localStorage.getItem('adminId')
-        const response = await axios.get(`${URL}/bank/active/${admin}`);
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -249,33 +402,10 @@ export const deleteBankByIdApi = async (id: string) => {
     }
 }
 
-export const createDepositApi = async (data: any) => {
-    try {
-        const admin = localStorage.getItem('adminId')
-        const token = Cookies.get('token');
-        data.append('admin', admin || Cookies.get('token'));
-        const response = await axios.post(`${URL}/deposit`, data, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, message: "Deposited Request Sent Successfully" }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
 export const createWithdrawApi = async (data: any) => {
     try {
-        const admin = localStorage.getItem('adminId')
         const token = Cookies.get('token');
-        const response = await axios.post(`${URL}/withdraw`, { ...data, admin }, {
+        const response = await axios.post(`${URL}/withdraw`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
@@ -292,105 +422,7 @@ export const createWithdrawApi = async (data: any) => {
     }
 }
 
-export const getUserDepositApi = async () => {
-    try {
-        const token = Cookies.get('token');
-        const response = await axios.get(`${URL}/deposit/user`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getUserWithdrawApi = async () => {
-    try {
-        const token = Cookies.get('token');
-        const response = await axios.get(`${URL}/withdraw/user`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const placeBetsApi = async (data: any) => {
-    try {
-        const token = Cookies.get('token');
-        const response = await axios.post(`${URL}/bet`, { bets: data }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, message: "Bets Placed", wallet: response?.data?.wallet }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getOpenBetsByUserApi = async (savedToken: any) => {
-    try {
-        const token = savedToken || Cookies.get('token');
-        const response = await axios.get(`${URL}/bet/user/open`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getBetsByUserApi = async (savedToken: any) => {
-    try {
-        const token = savedToken || Cookies.get('token');
-        const response = await axios.get(`${URL}/bet/user`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response.status === 200) {
-            return { status: true, data: response?.data?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
+// ============================================================ extras
 
 export const getSoccerMatchesApi = async () => {
     try {
@@ -412,44 +444,6 @@ export const getSoccerUpcomingMatchesApi = async () => {
         const response = await axios.get(`${URL}/redis/soccer-data/upcoming`);
         if (response.status === 200) {
             return { status: true, data: response?.data }
-        }
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getUserAmountForApprovalApi = async (savedToken: string) => {
-    try {
-        const token = savedToken || Cookies.get('token');
-        const response = await axios.get(`${URL}/user/approval-amount`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        return response;
-    } catch (error: any) {
-        if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
-        } else {
-            return { status: false, message: "Network Error" }
-        }
-    }
-}
-
-export const getUserDetailsApi = async (savedToken: string) => {
-    try {
-        const token = savedToken || Cookies.get('token');
-        const response = await axios.get(`${URL}/user/login-details`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (response?.status === 200) {
-            return { status: true, data: response?.data?.data }
         }
     } catch (error: any) {
         if (error?.status === 400) {

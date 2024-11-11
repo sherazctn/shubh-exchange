@@ -23,13 +23,7 @@ const PaymentInfo = ({ darkTheme }: any) => {
     Aos.init({ once: true });
   }, []);
 
-  const [state, setState] = useState({
-    number: "",
-    expiry: "",
-    cvc: "",
-    name: "",
-    focus: "",
-  });
+  const [state, setState] = useState({ number: "", expiry: "", cvc: "", name: "", focus: "" });
 
   const handleInputChange = (evt: any) => {
     const { name, value } = evt.target;
