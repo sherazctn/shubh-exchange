@@ -1,20 +1,21 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { format, parseISO } from 'date-fns';
+import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "../footer/page";
+import { updateBets, updateBettingSlip } from "../../features/features";
 
 import cashoutImg from "../../assets/cashout.png";
 
-import { IoIosArrowUp } from "react-icons/io";
 import { BsGraphUp } from "react-icons/bs";
+import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { useDispatch, useSelector } from "react-redux";
-import { updateBets, updateBettingSlip } from "../../features/features";
-import toast from "react-hot-toast";
 
-const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
+const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
   const [tabs, setTabs] = useState("all");
-  const [matchOdds, setMatchOdds] = useState(true);
+  const [matchOdds, setMatchOdds] = useState<string[]>([]);
   const [tiedMatch, setTiedMatch] = useState(true);
   const [fancyMatch, setFancyMatch] = useState(true);
 
@@ -23,15 +24,23 @@ const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
   const drawMatchData = singleLiveCricket?.odds?.Runners[2];
   const fancyMacthData = singleLiveCricket?.hasFancy;
 
+  console.log("markets ==> ", markets);
+  console.log("selectedEvent ==> ", selectedEvent);
+  console.log("runners ==> ", runners);
+
+  const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
+
+
+
   return (
     <div
       className="w-[100%] lg:me-[15px] overflow-auto pt-[15px]"
       style={{ maxHeight: divHeight }}
     >
       <div className="min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
-        <p className="text-[23px] text-center">{singleLiveCricket?.competitionName}</p>
-        <p className="text-[22px] text-center">{singleLiveCricket?.name}</p>
-        <button className="live-match-btn">IN-PLAY</button>
+        <p className="text-[23px] text-center">{selectedEvent?.competitionName}</p>
+        <p className="text-[22px] text-center">{selectedEvent?.eventName}</p>
+        <button className="live-match-btn">{format(eventDate, "dd MMM yyyy, hh:mm a")}</button>
       </div>
       {/* tabs */}
       <div className="flex gap-[10px] overflow-auto mb-[10px]">
@@ -43,15 +52,17 @@ const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
         >
           All
         </div>
-        <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "match-odd" ? "text-[--text-color]" : ""
-            }`}
-          style={{ backgroundColor: tabs === "match-odd" ? webColor : "white" }}
-          onClick={() => setTabs("match-odd")}
-        >
-          Match Odd
-        </div>
-        <div
+        {markets?.map((item: any) => (
+          <div
+            className={`h-[47px] capitalize text-center pt-[1px] rounded-[7px] text-[14px] min-w-[max-content] px-[15px] flex-1 text-nowrap flex justify-center items-center cursor-pointer font-[600] ${tabs === item?.marketId ? "text-[--text-color]" : ""
+              }`}
+            style={{ backgroundColor: tabs === item?.marketId ? webColor : "white" }}
+            onClick={() => setTabs(item?.marketId)}
+          >
+            {item?.marketName}
+          </div>
+        ))}
+        {/* <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "bookmaker" ? "text-[--text-color]" : ""
             }`}
           style={{ backgroundColor: tabs === "bookmaker" ? webColor : "white" }}
@@ -74,18 +85,21 @@ const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
           onClick={() => setTabs("fancy")}
         >
           Fancy
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-col gap-[10px]">
-        {(tabs === "all" || tabs === "match-odd") && (
-          <MatchOdds matchOdds={matchOdds} setMatchOdds={setMatchOdds} webColor={webColor} matchOddsData={matchOddsData} />
-        )}
-        {tabs === "all" && (
+        {markets?.map((item: any) => {
+          const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
+          return (
+            <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
+          )
+        })}
+        {/* {tabs === "all" && (
           <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} webColor={webColor} drawMatchData={drawMatchData} />
         )}
         {(tabs === "all" || tabs === "fancy") && (
           <FancyMatch fancyMatch={fancyMatch} setFancyMatch={setFancyMatch} tabs={tabs} setTabs={setTabs} webColor={webColor} />
-        )}
+        )} */}
       </div>
       <br />
       <Footer />
@@ -95,11 +109,20 @@ const LiveCricketLeftSection = ({ singleLiveCricket }: any) => {
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) => {
+const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner }: any) => {
   const dispatch = useDispatch();
   const bets = useSelector((state: any) => state.bets);
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
+  const fn_controlOddsView = (id: string) => {
+    const findId = matchOdds.find((m: any) => m === id);
+    if (findId) {
+      const updatedData = matchOdds.filter((m: any) => m !== id);
+      setMatchOdds(updatedData);
+    } else {
+      setMatchOdds((prev: any) => ([...prev, id]));
+    }
+  }
   const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -124,13 +147,13 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
     dispatch(updateBettingSlip("open"));
   }
   return (
-    <div className="bg-white shadow-sm rounded-[7px]">
+    <div key={market.marketId} className="bg-white shadow-sm rounded-[7px]">
       <div
         className="h-[47px] flex justify-between border-b cursor-pointer"
-        onClick={() => setMatchOdds(!matchOdds)}
+        onClick={() => fn_controlOddsView(market.marketId)}
       >
         <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
-          Match Odds
+          {market.marketName}
         </div>
         <div className="flex gap-[7px] items-center pe-[10px]">
           <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
@@ -138,48 +161,48 @@ const MatchOdds = ({ matchOdds, setMatchOdds, webColor, matchOddsData }: any) =>
             CashOut
           </div>
           <HiMiniInformationCircle className="text-[20px]" />
-          <IoIosArrowUp
-            className={`${!matchOdds && "-rotate-180"
-              } transition-all duration-300`}
-          />
+          <IoIosArrowUp className={`transition-all duration-300 ${matchOdds.find((m: any) => m === market.marketId) ? "rotate-180" : "rotate-0"}`} />
         </div>
       </div>
-      {matchOdds && matchOddsData?.length > 0 && (
+      {runner && market.odds && !matchOdds.find((m: any) => m === market.marketId) && (
         <div>
-          {matchOddsData?.map((item: any, index: any) => (
-            <div key={index} className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-              <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                <BsGraphUp />
-                <p className="text-[15px] font-[500]">{item?.runnerName}</p>
+          {runner.runners?.map((item: any, index: any) => {
+            const odd = market.odds.runners.find((run: any) => run.selectionId === item?.selectionId);
+            return (
+              <div key={index} className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                  <BsGraphUp />
+                  <p className="text-[15px] font-[500]">{item?.runnerName}</p>
+                </div>
+                <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
+                  {odd?.lay?.map((i: any) => (
+                    <div
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                    // onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
+                    >
+                      <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                        {i?.price}
+                      </p>
+                      <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                        {i?.size}
+                      </p>
+                    </div>
+                  ))}
+                  {odd?.back?.map((i: any) => (
+                    <div
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
+                    // onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
+                    >
+                      <p className="font-[800] text-center text-[15px]">{i?.price}</p>
+                      <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                        {i?.size}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-                {item?.ExchangePrices?.AvailableToBack?.map((i: any) => (
-                  <div
-                    className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                    onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
-                  >
-                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                      {i?.price}
-                    </p>
-                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                      {i?.size}
-                    </p>
-                  </div>
-                ))}
-                {item?.ExchangePrices?.AvailableToLay?.map((i: any) => (
-                  <div
-                    className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
-                    onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
-                  >
-                    <p className="font-[800] text-center text-[15px]">{i?.price}</p>
-                    <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                      {i?.size}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

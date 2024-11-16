@@ -24,6 +24,8 @@ const initialState = {
   redisGames: [],
   token: "",
   dashboardData: {},
+  eventData: [],
+  selectedEvent: {},
 };
 
 export const featuresSlice = createSlice({
@@ -99,6 +101,12 @@ export const featuresSlice = createSlice({
     updateRedisGamesData: (state, action) => {
       state.redisGames = action.payload;
     },
+    updateEventData: (state, action) => {
+      state.eventData = action.payload;
+    },
+    updateSelectedEvent: (state, action) => {
+      state.selectedEvent = action.payload;
+    },
   },
 });
 
@@ -125,7 +133,9 @@ export const {
   updateUpcomingCricket,
   updateToken,
   updateDashboardData,
-  updateRedisGamesData
+  updateRedisGamesData,
+  updateEventData,
+  updateSelectedEvent
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

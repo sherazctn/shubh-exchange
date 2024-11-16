@@ -63,8 +63,6 @@ const Navbar = () => {
     const response = await webNameApi();
     if (response?.status) {
       setWebName(response?.data[0].name)
-    } else {
-      setWebName("Shubh Exchange")
     }
   };
 
@@ -72,8 +70,6 @@ const Navbar = () => {
     const response = await webLogoApi();
     if (response?.status) {
       setWebLogo(response?.data[0].image)
-    } else {
-      setWebName("Shubh Exchange")
     }
   };
 

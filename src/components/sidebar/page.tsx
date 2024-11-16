@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
-import URL, { getAvailableGames } from "../../api/api";
-import { updateMobileSidebar, updateSidebar } from "../../features/features";
+import URL, { getAvailableGames, retrieveEventsDataToRedisApi } from "../../api/api";
+import { updateEventData, updateMobileSidebar, updateSelectedEvent, updateSidebar } from "../../features/features";
 
 import { FiSearch } from "react-icons/fi";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
@@ -17,24 +17,27 @@ const Sidebar = () => {
   const screenHeight = `${window.innerHeight}px`;
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
+  const eventData = useSelector((state: any) => state.eventData);
   const [openOptions, setOpenOption] = useState<any>([]);
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
   useEffect(() => {
     aos.init({ once: true });
-    fn_getGames();
-  }, []);
-  const fn_getGames = async () => {
-    setLoader(true)
-    const response: any = await getAvailableGames();
-    if (response?.status) {
-      setLoader(false);
-      setData(response?.data);
-    } else {
+    if (eventData.length !== 0) {
+      setData(eventData);
       setLoader(false);
     }
-  };
+    fn_getEvents();
+  }, []);
+  const fn_getEvents = async () => {
+    const response = await retrieveEventsDataToRedisApi();
+    if (response.status) {
+      setData(response?.data);
+      dispatch(updateEventData(response?.data));
+    }
+    setLoader(false);
+  }
   return (
     <div
       className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${showSidebar ? "w-[270px]" : "w-[67px] ms-2"
@@ -91,7 +94,7 @@ const Sidebar = () => {
           className={`sidebar-menus my-[15px] flex flex-col gap-1.5 items-center`}
         >
           {data?.length > 0 ? data?.map((item: any) => (
-            <CricketOption
+            <Events
               showSidebar={showSidebar}
               openOptions={openOptions}
               setOpenOption={setOpenOption}
@@ -110,17 +113,28 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-const CricketOption = ({
+const Events = ({
   showSidebar,
   openOptions,
   setOpenOption,
   game
 }: any) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [option, setOption] = useState(false);
+  const [subOption, setSubOption] = useState<any>(null);
   useEffect(() => {
-    setOption(openOptions.find((id: string) => id === game?._id) ? true : false);
+    setOption(openOptions.find((id: string) => id === game?.sportId) ? true : false);
   }, [openOptions, game]);
+  const fn_subOption = (id: string) => {
+    if (subOption === id) return setSubOption(null);
+    setSubOption(id);
+  }
+  const fn_selectEvent = (sportId: string, eventId: string, i: any, competitionName: string) => {
+    dispatch(updateSelectedEvent({ ...i, competitionName }));
+    localStorage.setItem('selectedEvent', JSON.stringify({ ...i, competitionName }));
+    navigate(`/match?sportId=${sportId}&eventId=${eventId}`)
+  }
   return (
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
       {/* header */}
@@ -134,25 +148,25 @@ const CricketOption = ({
           }`}
         onClick={() => {
           if (!option) {
-            setOpenOption((prev: any) => [...prev, game?._id])
+            setOpenOption((prev: any) => [...prev, game?.sportId])
           } else {
-            const updatedOptions = openOptions.filter((item: any) => item !== game?._id);
+            const updatedOptions = openOptions.filter((item: any) => item !== game?.sportId);
             setOpenOption(updatedOptions);
           }
         }}
       >
         <div className="flex items-center gap-2.5">
-          <img
+          {/* <img
             alt={game?.name}
             src={`${URL}/${game?.image}`}
             className="w-[25px] h-[25px] rounded-full object-cover"
-          />
-          {showSidebar && <p className="font-[600] text-[15px] capitalize">{game?.name}</p>}
+          /> */}
+          {showSidebar && <p className="font-[600] text-[15px] capitalize">{game?.sportName}</p>}
         </div>
         {showSidebar && (
           <div className="flex items-center gap-2.5">
             <div className="px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[3px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
-              {game?.competitionsData.length}
+              {game?.competitions.length}
             </div>
             {!option ? <IoIosArrowDown /> : <IoIosArrowUp />}
           </div>
@@ -161,14 +175,23 @@ const CricketOption = ({
       {/* options */}
       {showSidebar && option && (
         <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
-          {game?.competitionsData.length > 0 ? game?.competitionsData.map((item: any) => (
+          {game?.competitions.length > 0 ? game?.competitions.map((item: any) => (
             <div
-              key={item.id}
-              className="min-h-[30px] flex items-center justify-between cursor-pointer hover:bg-white px-[5px] rounded-[3px]"
-              onClick={() => navigate(`/cricket/live${item?.competition?.id}`)}
+              key={item.competitionId}
+              className={`min-h-[30px] flex flex-col justify-center hover:bg-white px-[5px] rounded-[3px] ${subOption === item.competitionId && "bg-white pb-[3px] pt-[5px]"}`}
+              onClick={() => fn_subOption(item?.competitionId)}
             >
-              <p className="text-[13px] font-[500]">{item?.competition?.name}</p>
-              {/* <IoIosArrowDown /> */}
+              <div className="flex items-center justify-between cursor-pointer">
+                <p className="text-[13px] font-[500]">{item?.competitionName}</p>
+                {subOption === item?.competitionId ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </div>
+              {subOption === item?.competitionId && (
+                <div className="py-[2px] px-[3px] rounded-[5px]">
+                  {item?.events?.map((i: any) => (
+                    <p key={i?.eventId} className="text-[13px] hover:bg-gray-100 cursor-pointer px-[5px] py-[3px]" onClick={() => fn_selectEvent(game.sportId, i.eventId, i, item?.competitionName)}>{i?.eventName}</p>
+                  ))}
+                </div>
+              )}
             </div>
           )) : (
             <p className="text-[13px] font-[600] text-center text-gray-700"><BsFillExclamationCircleFill className="text-[16px] inline-block me-[5px] mt-[-2px]" />No Competition Found</p>

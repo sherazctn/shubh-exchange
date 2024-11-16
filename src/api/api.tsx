@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "http://62.72.57.126:5000";
+const URL = "http://62.72.57.126:8000";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -492,6 +492,32 @@ export const retrieveCricketDataToRedisApi = async () => {
         if (response.status === 200) {
             return { status: true, live: response?.data?.live, upcoming: response?.data?.upcoming }
         }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveEventsDataToRedisApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/redis/events`);
+        return { status: true, data: response?.data }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const retrieveMarketsToRedisApi = async (data: any) => {
+    try {
+        const response = await axios.post(`${URL}/redis/markets`, data);
+        return { status: true, data: response?.data }
     } catch (error: any) {
         if (error?.status === 400) {
             return { status: false, message: error?.response?.data?.message };
