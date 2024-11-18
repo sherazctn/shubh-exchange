@@ -88,7 +88,7 @@ const Sidebar = () => {
       )}
       {/* sports */}
       {loader ? (
-        <div className="flex justify-center mt-[20px]"><Loader color="var(--main-color)" size={25} /></div>
+        <div className="flex justify-center mt-[20px]"><Loader color={webColor} size={25} /></div>
       ) : (
         <div
           className={`sidebar-menus my-[15px] flex flex-col gap-1.5 items-center`}

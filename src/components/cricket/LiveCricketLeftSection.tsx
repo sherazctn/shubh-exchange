@@ -14,7 +14,7 @@ import { HiMiniInformationCircle } from "react-icons/hi2";
 
 const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
-  const [tabs, setTabs] = useState("all");
+  const [tabs, setTabs] = useState("Match Odds");
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
   const [tiedMatch, setTiedMatch] = useState(true);
   const [fancyMatch, setFancyMatch] = useState(true);
@@ -23,10 +23,6 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
   const matchOddsData = [singleLiveCricket?.odds?.Runners[0], singleLiveCricket?.odds?.Runners[1]];
   const drawMatchData = singleLiveCricket?.odds?.Runners[2];
   const fancyMacthData = singleLiveCricket?.hasFancy;
-
-  console.log("markets ==> ", markets);
-  console.log("selectedEvent ==> ", selectedEvent);
-  console.log("runners ==> ", runners);
 
   const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
 
@@ -45,23 +41,21 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
       {/* tabs */}
       <div className="flex gap-[10px] overflow-auto mb-[10px]">
         <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "all" ? `text-[--text-color]` : ""
+          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[max-content] px-[15px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "Match Odds" ? `text-[--text-color]` : ""
             }`}
-          style={{ backgroundColor: tabs === "all" ? webColor : "white" }}
-          onClick={() => setTabs("all")}
+          style={{ backgroundColor: tabs === "Match Odds" ? webColor : "white" }}
+          onClick={() => setTabs("Match Odds")}
         >
-          All
+          Match Odds
         </div>
-        {markets?.map((item: any) => (
-          <div
-            className={`h-[47px] capitalize text-center pt-[1px] rounded-[7px] text-[14px] min-w-[max-content] px-[15px] flex-1 text-nowrap flex justify-center items-center cursor-pointer font-[600] ${tabs === item?.marketId ? "text-[--text-color]" : ""
-              }`}
-            style={{ backgroundColor: tabs === item?.marketId ? webColor : "white" }}
-            onClick={() => setTabs(item?.marketId)}
-          >
-            {item?.marketName}
-          </div>
-        ))}
+        <div
+          className={`h-[47px] pt-[1px] text-center text-nowrap rounded-[7px] text-[14px] min-w-[max-content]   flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "others" ? `text-[--text-color]` : ""
+            }`}
+          style={{ backgroundColor: tabs === "others" ? webColor : "white" }}
+          onClick={() => setTabs("others")}
+        >
+          Other Markets
+        </div>
         {/* <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "bookmaker" ? "text-[--text-color]" : ""
             }`}
@@ -89,10 +83,19 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
       </div>
       <div className="flex flex-col gap-[10px]">
         {markets?.map((item: any) => {
-          const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
-          return (
-            <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
-          )
+          if (tabs === "Match Odds") {
+            const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
+            if (item?.marketName !== "Match Odds") return;
+            return (
+              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
+            )
+          } else {
+            const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
+            if (item?.marketName === "Match Odds") return;
+            return (
+              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
+            )
+          }
         })}
         {/* {tabs === "all" && (
           <TiedMatch tiedMatch={tiedMatch} setTiedMatch={setTiedMatch} webColor={webColor} drawMatchData={drawMatchData} />
@@ -175,30 +178,40 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner }: any) =
                   <p className="text-[15px] font-[500]">{item?.runnerName}</p>
                 </div>
                 <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-                  {odd?.lay?.map((i: any) => (
-                    <div
-                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                    // onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
-                    >
-                      <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {i?.price}
-                      </p>
-                      <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {i?.size}
-                      </p>
-                    </div>
-                  ))}
-                  {odd?.back?.map((i: any) => (
-                    <div
-                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
-                    // onClick={(e) => handleBetClicked(e, i?.price, item?.name, "Lay", item?.runnerName)}
-                    >
-                      <p className="font-[800] text-center text-[15px]">{i?.price}</p>
-                      <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                        {i?.size}
-                      </p>
-                    </div>
-                  ))}
+                  {[0, 1, 2].map((index) => {
+                    const item = odd?.back?.[index] || {};
+                    return (
+                      <div
+                        key={index}
+                        className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer bg-[--blue]`}
+                      // onClick={(e) => handleBetClicked(e, item?.price || '-', item?.name || '-', "Lay", item?.runnerName || '-')}
+                      >
+                        <p className="font-[800] text-center text-[15px]">
+                          {item.price || "-"}
+                        </p>
+                        <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                          {item.size || "-"}
+                        </p>
+                      </div>
+                    );
+                  })}
+                  {[0, 1, 2].map((index) => {
+                    const item = odd?.lay?.[index] || {};
+                    return (
+                      <div
+                        key={index}
+                        className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
+                      // onClick={(e) => handleBetClicked(e, item?.price || '-', item?.name || '-', "Lay", item?.runnerName || '-')}
+                      >
+                        <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                          {item.price || "-"}
+                        </p>
+                        <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                          {item.size || "-"}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )
