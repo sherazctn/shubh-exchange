@@ -12,7 +12,7 @@ import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
 
-const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners }: any) => {
+const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners, sportId, eventId }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
   const [tabs, setTabs] = useState("Match Odds");
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
@@ -87,13 +87,13 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
             if (item?.marketName !== "Match Odds") return;
             return (
-              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
+              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} />
             )
           } else {
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
             if (item?.marketName === "Match Odds") return;
             return (
-              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} />
+              <MatchOdds market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} />
             )
           }
         })}
@@ -112,7 +112,7 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner }: any) => {
+const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId }: any) => {
   const dispatch = useDispatch();
   const bets = useSelector((state: any) => state.bets);
   const wallet = useSelector((state: any) => state.wallet);
@@ -126,24 +126,28 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner }: any) =
       setMatchOdds((prev: any) => ([...prev, id]));
     }
   }
-  const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string) => {
+  const handleBetClicked = (e: any, odd: any, size:any, runnerName: any, runnerId: any, side: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
-    if (!gameName) return;
+    if (!runnerName) return;
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {
       odd: odd,
-      gameName: gameName,
+      gameName: runnerName,
+      gameId: runnerId, //
       amount: 10,
       afterWin: wallet + profit,
       afterLoss: wallet - 10,
       profit,
       loss,
       side: side,
-      runner: runner,
+      sportId: sportId,
+      eventId: eventId,
+      marketId: market.marketId,
+      marketName: market.marketName,
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
@@ -179,18 +183,18 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner }: any) =
                 </div>
                 <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
                   {[0, 1, 2].map((index) => {
-                    const item = odd?.back?.[index] || {};
+                    const i = odd?.back?.[index] || {};
                     return (
                       <div
                         key={index}
                         className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer bg-[--blue]`}
-                      // onClick={(e) => handleBetClicked(e, item?.price || '-', item?.name || '-', "Lay", item?.runnerName || '-')}
+                        onClick={(e) => handleBetClicked(e, i?.price, i?.size, item?.runnerName, item?.selectionId, "Back")}
                       >
                         <p className="font-[800] text-center text-[15px]">
-                          {item.price || "-"}
+                          {i.price || "-"}
                         </p>
                         <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                          {item.size || "-"}
+                          {i.size || "-"}
                         </p>
                       </div>
                     );

@@ -25,21 +25,22 @@ const Home = () => {
   }, [dispatch]);
   return (
     <div
-      className={`content pt-[68px] sm:pt-[78px] ${
-        showSidebar
+      className={`content pt-[68px] sm:pt-[78px] ${showSidebar
           ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]"
           : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"
-      } pe-[10px] sm:pe-[20px]`}
+        } pe-[10px] sm:pe-[20px]`}
     >
       <HeroSection />
       <CardsSection />
       {/* live matches */}
-      <CricketDropdownsSection text={"Live Cricket Match"} />
-      <SoccerDropdownsSection text={"Live Soccer"} />
+      <CricketDropdownsSection text={"Live Cricket Match"} id={"4"} />
+      <CricketDropdownsSection text={"Live Tennis Match"} id={"2"} />
+      <CricketDropdownsSection text={"Live Soccer Match"} id={"1"} />
+      {/* <SoccerDropdownsSection text={"Live Soccer"} /> */}
       {/* <TennisDropdownsSection text={"Live Tennis"} /> */}
       {/* upcoming matches */}
       {/* <UpcomingCricketMatches text={"Cricket"} /> */}
-      <UpcomingSoccerMatches text={"Soccer"} />
+      {/* <UpcomingSoccerMatches text={"Soccer"} /> */}
       {/* casino slider */}
       <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />

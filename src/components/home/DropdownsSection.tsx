@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,9 @@ import { IoIosArrowUp } from "react-icons/io";
 
 import crciketBall from "../../assets/cricket-ball.png";
 import { updateBets, updateBettingSlip } from "../../features/features";
+import { getLiveMarketsApi } from "../../api/api";
 
-const CricketDropdownsSection = ({ text }: any) => {
+const CricketDropdownsSection = ({ text, id }: any) => {
   const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -20,6 +21,9 @@ const CricketDropdownsSection = ({ text }: any) => {
   const [sub1, setSub1] = useState(true);
   const [sub2, setSub2] = useState(true);
   const [sub3, setSub3] = useState(true);
+
+  const [marketData, setMarketData] = useState([]);
+  const eventData = useSelector((state: any) => state.eventData)?.find((i: any) => i.sportId == id);
 
   const handleBetClicked = (e: any, odd: any, gameName: any, side: string, runner: string, sport: string, adminCommission: any) => {
     e.preventDefault();
@@ -46,6 +50,17 @@ const CricketDropdownsSection = ({ text }: any) => {
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
+
+  const fn_getLiveMarkets = async () => {
+    const response = await getLiveMarketsApi(id);
+    console.log(response?.data);
+    setMarketData(response?.data);
+    console.log("eventData ", eventData);
+  }
+
+  useEffect(() => {
+    fn_getLiveMarkets();
+  }, []);
 
   return (
     <div className="mt-[15px]">

@@ -4,8 +4,8 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
 import RightSection from "../../components/sports/RightSection";
-import { updateMobileMenu, updatePageNav, updateSelectedEvent } from "../../features/features";
 import LiveCricketLeftSection from "../../components/cricket/LiveCricketLeftSection";
+import { updateMobileMenu, updatePageNav, updateSelectedEvent } from "../../features/features";
 
 const LiveCricket = () => {
   const dispatch = useDispatch();
@@ -85,7 +85,7 @@ const LiveCricket = () => {
 
   return (
     <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]" : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"} pe-[10px] sm:pe-[20px] flex`}>
-      <LiveCricketLeftSection singleLiveCricket={singleLiveCricket} markets={markets} selectedEvent={selectedEvent} runners={runners} />
+      <LiveCricketLeftSection singleLiveCricket={singleLiveCricket} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} />
       <RightSection />
     </div>
   );
