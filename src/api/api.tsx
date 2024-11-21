@@ -580,4 +580,30 @@ export const getLiveMarketsApi = async (id: any) => {
     }
 }
 
+export const updateBetsApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/redis/update-bets`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getInplayMarketsApi = async (id: any) => {
+    try {
+        const response = await axios.get(`${URL}/redis/inplay-market?sportId=${id}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
 export default URL;

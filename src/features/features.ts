@@ -26,6 +26,7 @@ const initialState = {
   dashboardData: {},
   eventData: [],
   selectedEvent: {},
+  liveMarkets: {}
 };
 
 export const featuresSlice = createSlice({
@@ -107,6 +108,9 @@ export const featuresSlice = createSlice({
     updateSelectedEvent: (state, action) => {
       state.selectedEvent = action.payload;
     },
+    updateLiveMarkets: (state, action) => {
+      state.liveMarkets = action.payload;
+    },
   },
 });
 
@@ -135,7 +139,8 @@ export const {
   updateDashboardData,
   updateRedisGamesData,
   updateEventData,
-  updateSelectedEvent
+  updateSelectedEvent,
+  updateLiveMarkets
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

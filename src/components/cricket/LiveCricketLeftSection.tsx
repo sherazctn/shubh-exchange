@@ -117,7 +117,9 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
   const bets = useSelector((state: any) => state.bets);
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
-  const fn_controlOddsView = (id: string) => {
+  const fn_controlOddsView = (e: any, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     const findId = matchOdds.find((m: any) => m === id);
     if (findId) {
       const updatedData = matchOdds.filter((m: any) => m !== id);
@@ -126,7 +128,7 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
       setMatchOdds((prev: any) => ([...prev, id]));
     }
   }
-  const handleBetClicked = (e: any, odd: any, size:any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself")
@@ -135,19 +137,19 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {
-      odd: odd,
-      gameName: runnerName,
-      gameId: runnerId, //
-      amount: 10,
-      afterWin: wallet + profit,
       afterLoss: wallet - 10,
-      profit,
-      loss,
-      side: side,
-      sportId: sportId,
+      afterWin: wallet + profit,
+      amount: 10,
       eventId: eventId,
+      gameId: runnerId,
+      gameName: runnerName,
+      loss,
       marketId: market.marketId,
       marketName: market.marketName,
+      odd: odd,
+      profit,
+      side: side,
+      sportId: sportId,
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
@@ -157,7 +159,7 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
     <div key={market.marketId} className="bg-white shadow-sm rounded-[7px]">
       <div
         className="h-[47px] flex justify-between border-b cursor-pointer"
-        onClick={() => fn_controlOddsView(market.marketId)}
+        onClick={(e) => fn_controlOddsView(e, market.marketId)}
       >
         <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
           {market.marketName}
@@ -188,7 +190,7 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
                       <div
                         key={index}
                         className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer bg-[--blue]`}
-                        onClick={(e) => handleBetClicked(e, i?.price, i?.size, item?.runnerName, item?.selectionId, "Back")}
+                        onClick={(e) => handleBetClicked(e, i?.price, item?.runnerName, item?.selectionId, "Back")}
                       >
                         <p className="font-[800] text-center text-[15px]">
                           {i.price || "-"}

@@ -1,5 +1,5 @@
 import AOS from "aos";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { format, isToday, isTomorrow, parseISO } from 'date-fns';
 
@@ -8,6 +8,8 @@ import { IoIosArrowUp } from "react-icons/io";
 import Footer from "../footer/page";
 import URL, { getAvailableGames, getSingleMarketOddsApi } from "../../api/api";
 import Loader from "../Loader";
+import toast from "react-hot-toast";
+import { updateBets, updateBettingSlip } from "../../features/features";
 
 const LeftSection = () => {
   const divHeight = `${window.innerHeight - 60}px`;
@@ -80,12 +82,16 @@ const LeftSection = () => {
 export default LeftSection;
 
 const List = ({ webColor, event, tab }: { webColor: string; event: any; tab: string }) => {
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(true);
   const currentDate = new Date();
   const eventDate = new Date(event?.date);
   const isLive = eventDate <= currentDate;
   const eventDateString = parseISO(event?.date);
   const [odds, setOdds] = useState<any>({});
+  const bets = useSelector((state: any) => state.bets);
+  const wallet = useSelector((state: any) => state.wallet);
+  const authentication = useSelector((state: any) => state.authentication);
 
   let dayLabel;
   if (isToday(eventDateString)) {
@@ -110,6 +116,33 @@ const List = ({ webColor, event, tab }: { webColor: string; event: any; tab: str
   useEffect(() => {
     fn_getOdds();
   }, []);
+  const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!authentication) return toast.error("Login Yourself")
+    if (!odd) return;
+    if (!gameName) return;
+    const profit = parseFloat((10 * (odd - 1)).toFixed(2));
+    const loss = 10;
+    const obj = {
+      afterLoss: wallet - 10,
+      afterWin: wallet + profit,
+      amount: 10,
+      eventId: eventId,
+      gameId: selectionId,
+      gameName: gameName,
+      loss,
+      marketId: marketId,
+      marketName: marketName,
+      odd: odd,
+      profit,
+      side: side,
+      sportId: tab === "soccer" ? 1 : tab === "tennis" ? 2 : tab === "cricket" ? 4 : null
+    }
+    const updatedBets = [obj, ...bets];
+    dispatch(updateBets(updatedBets));
+    dispatch(updateBettingSlip("open"));
+  }
   return (
     <div className="border-b p-[7px] flex flex-col lg:flex-row gap-[10px] items-center justify-between cursor-pointer">
       <div className="flex gap-[10px] w-full lg:w-auto">
@@ -133,54 +166,66 @@ const List = ({ webColor, event, tab }: { webColor: string; event: any; tab: str
           <Loader color={webColor} size={25} />
         ) : odds ? (
           <>
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
+            <div
+              className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[0]?.ex?.availableToBack?.[0]?.price,
+                event?.eventName,
+                odds?.runners?.[0]?.selectionId,
+                "Back",
+                event?.eventId,
+                odds?.marketId,
+                "Match Odds"
+              )}
+            >
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[0]?.ex?.availableToBack?.[0].price}
+                {odds?.runners?.[0]?.ex?.availableToBack?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[0]?.ex?.availableToBack?.[0].size}
+                {odds?.runners?.[0]?.ex?.availableToBack?.[0]?.size}
               </p>
             </div>
             <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[0]?.ex?.availableToLay?.[0].price}
+                {odds?.runners?.[0]?.ex?.availableToLay?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[0]?.ex?.availableToLay?.[0].size}
+                {odds?.runners?.[0]?.ex?.availableToLay?.[0]?.size}
               </p>
             </div>
 
             <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[1]?.ex?.availableToBack?.[0].price}
+                {odds?.runners?.[1]?.ex?.availableToBack?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[1]?.ex?.availableToBack?.[0].size}
+                {odds?.runners?.[1]?.ex?.availableToBack?.[0]?.size}
               </p>
             </div>
             <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[1]?.ex?.availableToLay?.[0].price}
+                {odds?.runners?.[1]?.ex?.availableToLay?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[1]?.ex?.availableToLay?.[0].size}
+                {odds?.runners?.[1]?.ex?.availableToLay?.[0]?.size}
               </p>
             </div>
 
             <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[2]?.ex?.availableToBack?.[0].price}
+                {odds?.runners?.[2]?.ex?.availableToBack?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[2]?.ex?.availableToBack?.[0].size}
+                {odds?.runners?.[2]?.ex?.availableToBack?.[0]?.size}
               </p>
             </div>
             <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
               <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[2]?.ex?.availableToLay?.[0].price}
+                {odds?.runners?.[2]?.ex?.availableToLay?.[0]?.price}
               </p>
               <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[2]?.ex?.availableToLay?.[0].size}
+                {odds?.runners?.[2]?.ex?.availableToLay?.[0]?.size}
               </p>
             </div>
           </>

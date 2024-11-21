@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
-import { retrieveCricketDataToRedisApi, retrieveGamesDataToRedisApi, retrieveSoccerDataToRedisApi } from "./api/api";
+import { retrieveCricketDataToRedisApi, retrieveGamesDataToRedisApi, retrieveSoccerDataToRedisApi, updateBetsApi } from "./api/api";
 import { updateLiveCricket, updateLiveSoccer, updateRedisGamesData, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
 
 import Navbar from "./components/navbar/page";
@@ -101,11 +101,26 @@ function App() {
     }
   }
 
+  const fn_updateBets = async () => {
+    setInterval(async () => {
+      await updateBetsApi();
+    }, 30000);
+  }
+
   useEffect(() => {
     fn_getGamesData();
     fn_getSoccerGamesData();
     fn_getCricketGamesData();
   }, []);
+
+  useEffect(() => {
+    if (location.pathname !== localStorage.getItem("location")) {
+      window.location.reload();
+    }
+    localStorage.setItem("location", location.pathname);
+  }, [location.pathname]);
+
+  fn_updateBets();
 
   return (
     <>
