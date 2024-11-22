@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isBefore } from 'date-fns';
 import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "../footer/page";
@@ -36,7 +36,7 @@ const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, run
       <div className="min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
         <p className="text-[23px] text-center">{selectedEvent?.competitionName}</p>
         <p className="text-[22px] text-center">{selectedEvent?.eventName}</p>
-        <button className="live-match-btn">{format(eventDate, "dd MMM yyyy, hh:mm a")}</button>
+        <button className="live-match-btn">{eventDate && isBefore(eventDate, new Date()) ? "In Play" : format(eventDate, "dd MMM yyyy, hh:mm a")}</button>
       </div>
       {/* tabs */}
       <div className="flex gap-[10px] overflow-auto mb-[10px]">

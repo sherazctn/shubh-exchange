@@ -15,6 +15,7 @@ import Loader from "../Loader";
 import toast from "react-hot-toast";
 import { updateBets, updateBettingSlip } from "../../features/features";
 import { useLocation } from "react-router-dom";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const LeftSection = () => {
   const location = useLocation();
@@ -90,9 +91,11 @@ const LeftSection = () => {
         {!loader ?
           data?.length > 0 ? data?.map((item: any) => (
             <div
-              className={`sports-left-top-tabs shadow-sm ${tab === item?._id
+              className={`sports-left-top-tabs shadow-sm ${tab == "4" && item?.name === "cricket"
                 ? "bg-[#f3f3f3] border"
-                : " bg-white"
+                : tab == "1" && item?.name === "soccer" ? "bg-[#f3f3f3] border"
+                  : tab == "2" && item?.name === "tennis" ? "bg-[#f3f3f3] border"
+                    : " bg-white"
                 }`}
               style={{ borderColor: webColor }}
               onClick={() => fn_controlTabs(item?.name === "cricket" ? "4" : item?.name === "soccer" ? "1" : item?.name === "tennis" ? "2" : "")}
@@ -118,7 +121,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
   const [sub1, setSub1] = useState(true);
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
-      {competitions?.length > 0 && competitions?.map((comp: any) => (
+      {competitions?.length > 0 ? competitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
             onClick={() => setSub1(!sub1)}
@@ -141,7 +144,9 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
             </div>
           )}
         </div>
-      ))}
+      )) : (
+        <p className="font-[500] text-[15px] text-gray-600 flex items-center gap-[10px] mt-[10px]"><FaExclamationCircle className="text-[20px]" />No Live Matches Available</p>
+      )}
     </div>
   );
 };

@@ -1,51 +1,62 @@
-import AOS from "aos";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { format, isToday, isTomorrow, parseISO } from 'date-fns';
-
-import { IoIosArrowUp } from "react-icons/io";
-
-import Footer from "../footer/page";
-import URL, { getAvailableGames, getSingleMarketOddsApi } from "../../api/api";
-import Loader from "../Loader";
+import aos from "aos";
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { GoDotFill } from "react-icons/go";
+import { IoIosArrowUp } from "react-icons/io";
+import { FaExclamationCircle } from "react-icons/fa";
+
+import Loader from "../Loader";
+import Footer from "../footer/page";
 import { updateBets, updateBettingSlip } from "../../features/features";
+import URL, { getAvailableGames, getMarketOddsApi, getSingleSportMarketsApi } from "../../api/api";
 
 const LeftSection = () => {
-  const divHeight = `${window.innerHeight - 60}px`;
   const [tab, setTab] = useState("");
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [contentLoader, setContentLoader] = useState(true);
+  const [marketData, setMarketData] = useState([]);
+  const divHeight = `${window.innerHeight - 60}px`;
   const webColor = useSelector((state: any) => state.websiteColor);
-  const eventData = useSelector((state: any) => state.eventData);
-  const [singleEventData, setSingleEventData] = useState({});
+
   useEffect(() => {
-    AOS.init({ once: true });
     fn_getGames();
+    aos.init({ once: true });
   }, []);
+
   useEffect(() => {
-    if (eventData?.length > 0 && tab !== "") {
-      setLoader(false);
-      setSingleEventData(eventData?.find((i: any) => i.sportName === tab));
-    }
-  }, [eventData, tab]);
+    fn_getInPlayMarkets(tab);
+  }, [tab]);
+
   const fn_controlTabs = (id: string) => {
     setTab(id)
   };
+
   const fn_getGames = async () => {
     setLoader(true)
     const response: any = await getAvailableGames();
     if (response?.status) {
+      setLoader(false);
       setData(response?.data);
-      setTab(response?.data[0]?.name);
-      if (eventData?.length > 0) {
-        setLoader(false);
-        setSingleEventData(eventData?.find((i: any) => i.sportName === response?.data[0]?.name));
+      if (tab === "") {
+        setTab(response?.data[0]?.name === "cricket" ? "4" : response?.data[0]?.name === "soccer" ? "1" : response?.data[0]?.name === "tennis" ? "2" : "");
       }
     } else {
       setLoader(false);
     }
   };
+
+  const fn_getInPlayMarkets = async (tab: string) => {
+    if (tab === "") return;
+    const response = await getSingleSportMarketsApi(tab);
+    if (response?.status) {
+      setMarketData(response?.data);
+    }
+    setContentLoader(false);
+  };
+
   return (
     <div
       className="w-[100%] xl:me-[15px] overflow-auto pt-[15px]"
@@ -56,12 +67,17 @@ const LeftSection = () => {
         {!loader ?
           data?.length > 0 ? data?.map((item: any) => (
             <div
-              className={`sports-left-top-tabs shadow-sm ${tab === item?.name
+              className={`sports-left-top-tabs shadow-sm ${tab == "4" && item?.name === "cricket"
                 ? "bg-[#f3f3f3] border"
-                : " bg-white"
+                : tab == "1" && item?.name === "soccer" ? "bg-[#f3f3f3] border"
+                  : tab == "2" && item?.name === "tennis" ? "bg-[#f3f3f3] border"
+                    : " bg-white"
                 }`}
               style={{ borderColor: webColor }}
-              onClick={() => fn_controlTabs(item?._id)}
+              onClick={() => {
+                fn_controlTabs(item?.name === "cricket" ? "4" : item?.name === "soccer" ? "1" : item?.name === "tennis" ? "2" : "");
+                setContentLoader(true);
+              }}
             >
               <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" />
               <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
@@ -72,8 +88,11 @@ const LeftSection = () => {
             <div className="p-[18px]"><Loader color={webColor} size={25} /></div>
           )}
       </div>
-      {!loader ? Object.keys(singleEventData)?.length > 0 && <CricketTab singleEventData={singleEventData} webColor={webColor} tab={tab} /> : (<div className="flex justify-center py-[20px]"><Loader color={webColor} size={25} /></div>)}
-      <br />
+      {!contentLoader ? (
+        <AllTabs webColor={webColor} competitions={marketData} tab={tab} />
+      ) : (
+        <div className="mb-[10px] mt-[15px]"><Loader size={25} color={webColor} /></div>
+      )}
       <Footer />
     </div>
   );
@@ -81,41 +100,65 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const List = ({ webColor, event, tab }: { webColor: string; event: any; tab: string }) => {
-  const dispatch = useDispatch();
-  const [loader, setLoader] = useState(true);
-  const currentDate = new Date();
-  const eventDate = new Date(event?.date);
-  const isLive = eventDate <= currentDate;
-  const eventDateString = parseISO(event?.date);
-  const [odds, setOdds] = useState<any>({});
-  const bets = useSelector((state: any) => state.bets);
-  const wallet = useSelector((state: any) => state.wallet);
-  const authentication = useSelector((state: any) => state.authentication);
+const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitions: any; tab: any }) => {
+  const [sub1, setSub1] = useState(true);
+  return (
+    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
+      {competitions?.length > 0 ? competitions?.map((comp: any) => (
+        <div key={comp?.competitionId}>
+          <div
+            onClick={() => setSub1(!sub1)}
+            className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
+            style={{ backgroundColor: webColor }}
+          >
+            <p className="text-[13px] sm:text-[15px] font-[500]">{comp?.competitionName}</p>
+            <div className="flex items-center gap-[10px]">
+              <p className="text-[13px] sm:text-[15px] font-[500]">{comp?.events?.length}</p>
+              <IoIosArrowUp
+                className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"}`}
+              />
+            </div>
+          </div>
+          {sub1 && (
+            <div className="bg-white rounded-b-[7px]">
+              {comp?.events?.length > 0 && comp?.events?.map((event: any) => (
+                <List event={event} webColor={webColor} tab={tab} />
+              ))}
+            </div>
+          )}
+        </div>
+      )) : (
+        <p className="font-[500] text-[15px] text-gray-600 flex items-center gap-[10px] mt-[10px]"><FaExclamationCircle className="text-[20px]" />No Live Matches Available</p>
+      )}
+    </div>
+  );
+};
 
-  let dayLabel;
-  if (isToday(eventDateString)) {
-    dayLabel = 'Live';
-  } else if (isTomorrow(eventDateString)) {
-    dayLabel = 'Tomorrow';
-  } else if (eventDateString > currentDate) {
-    dayLabel = format(eventDateString, 'dd MMM yyyy');
-  } else {
-    dayLabel = 'Live';
+const List = ({ event, webColor, tab }: any) => {
+
+  const dispatch = useDispatch();
+  const authentication = useSelector((state: any) => state.authentication);
+  const wallet = useSelector((state: any) => state.wallet);
+  const bets = useSelector((state: any) => state.bets);
+  const [odds, setOdds] = useState<any>({});
+
+  const fn_getUpdatedOdds = async () => {
+    const response = await getMarketOddsApi(event?.market_id);
+    if (response?.status) {
+      setOdds(response?.data)
+    }
+    // setInterval(async () => {
+    //   const response = await getMarketOddsApi(event?.market_id);
+    //   if (response?.status) {
+    //     setOdds(response?.data)
+    //   }
+    // }, 60000);
   }
 
-  const timeLabel = format(eventDateString, 'HH:mm');
-
-  const fn_getOdds = async () => {
-    const response = await getSingleMarketOddsApi(event.eventId, tab === "soccer" ? 1 : tab === "tennis" ? 2 : tab === "cricket" ? 4 : null);
-    setLoader(false);
-    if (response?.status) {
-      setOdds(response?.data?.data);
-    }
-  };
   useEffect(() => {
-    fn_getOdds();
-  }, []);
+    fn_getUpdatedOdds();
+  }, [event]);
+
   const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -137,135 +180,278 @@ const List = ({ webColor, event, tab }: { webColor: string; event: any; tab: str
       odd: odd,
       profit,
       side: side,
-      sportId: tab === "soccer" ? 1 : tab === "tennis" ? 2 : tab === "cricket" ? 4 : null
+      sportId: tab
     }
     const updatedBets = [obj, ...bets];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }
+
   return (
-    <div className="border-b p-[7px] flex flex-col lg:flex-row gap-[10px] items-center justify-between cursor-pointer">
-      <div className="flex gap-[10px] w-full lg:w-auto">
-        <div className="min-w-[70px] sm:min-w-[80px] h-[50px] text-[--text-color] sm:h-[55px] rounded-[7px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
-          <p className="text-[11px] sm:text-[13px] font-[500]">{timeLabel}</p>
-          <p className="text-[10px] sm:text-[12px] font-[500]">{dayLabel}</p>
-        </div>
-        <div className="flex flex-col gap-[5px] justify-center">
-          <p className="text-[11px] sm:text-[13px] font-[500]">
-            {event?.eventName}
-          </p>
-          {isLive && (
-            <p className="text-[10px] text-[--text-color] sm:text-[12px] font-[500] px-[10px] rounded-[7px] py-[3px] w-[max-content]" style={{ backgroundColor: webColor }}>
-              Live
-            </p>
-          )}
+    <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+      <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
+        <p className="text-[14px]">
+          {event?.matchName}
+        </p>
+        <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
+          Live
+          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
         </div>
       </div>
-      <div className="flex justify-end flex-wrap gap-[6px] sm:gap-[10px]">
-        {loader ? (
-          <Loader color={webColor} size={25} />
-        ) : odds ? (
+      <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
+        <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
+          Live
+          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
+        </div>
+        {odds?.numberOfRunners === 3 ? (
           <>
             <div
-              className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center"
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
               onClick={(e) => handleBetClicked(
                 e,
-                odds?.runners?.[0]?.ex?.availableToBack?.[0]?.price,
-                event?.eventName,
+                odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
+                event?.matchName,
                 odds?.runners?.[0]?.selectionId,
                 "Back",
-                event?.eventId,
-                odds?.marketId,
-                "Match Odds"
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
               )}
             >
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[0]?.ex?.availableToBack?.[0]?.price}
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
               </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[0]?.ex?.availableToBack?.[0]?.size}
-              </p>
-            </div>
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[0]?.ex?.availableToLay?.[0]?.price}
-              </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[0]?.ex?.availableToLay?.[0]?.size}
+              <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
-
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[1]?.ex?.availableToBack?.[0]?.price}
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
+                event?.matchName,
+                odds?.runners?.[0]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
               </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[1]?.ex?.availableToBack?.[0]?.size}
-              </p>
-            </div>
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[1]?.ex?.availableToLay?.[0]?.price}
-              </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[1]?.ex?.availableToLay?.[0]?.size}
-              </p>
-            </div>
-
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--blue] flex flex-col gap-[4px] justify-center items-center">
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[2]?.ex?.availableToBack?.[0]?.price}
-              </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[2]?.ex?.availableToBack?.[0]?.size}
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
-            <div className="w-[43px] sm:w-[47px] h-[43px] sm:h-[47px] rounded-[7px] bg-[--red] flex flex-col gap-[4px] justify-center items-center">
-              <p className="text-[12px] sm:text-[13px] font-[600] leading-[13px] text-center">
-                {odds?.runners?.[2]?.ex?.availableToLay?.[0]?.price}
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
+                event?.matchName,
+                odds?.runners?.[1]?.selectionId,
+                "Back",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
               </p>
-              <p className="text-[9px] sm:text-[10px] font-[600] leading-[10px] text-gray-500 text-center">
-                {odds?.runners?.[2]?.ex?.availableToLay?.[0]?.size}
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
+                event?.matchName,
+                odds?.runners?.[1]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[2]?.ex?.availableToBack[0]?.price,
+                event?.matchName,
+                odds?.runners?.[2]?.selectionId,
+                "Back",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[2]?.ex?.availableToBack[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[2]?.ex?.availableToBack[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[2]?.ex?.availableToLay[0]?.price,
+                event?.matchName,
+                odds?.runners?.[2]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[2]?.ex?.availableToLay[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[2]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
           </>
-        ) : null}
+        ) : (
+          <>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
+                event?.matchName,
+                odds?.runners?.[0]?.selectionId,
+                "Back",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
+                event?.matchName,
+                odds?.runners?.[0]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[0]?.ex?.availableToBack[1]?.price,
+                event?.matchName,
+                odds?.runners?.[0]?.selectionId,
+                "Back",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[1]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[0]?.ex?.availableToBack[1]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
+                event?.matchName,
+                odds?.runners?.[1]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
+                event?.matchName,
+                odds?.runners?.[1]?.selectionId,
+                "Back",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              onClick={(e) => handleBetClicked(
+                e,
+                odds?.runners?.[1]?.ex?.availableToLay[1]?.price,
+                event?.matchName,
+                odds?.runners?.[1]?.selectionId,
+                "Lay",
+                event?.match_id,
+                event?.market_id,
+                event?.marketname
+              )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[1]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[1]?.size}
+              </p>
+            </div>
+          </>
+        )}
       </div>
-    </div >
-  );
-};
-
-const CricketTab = ({ webColor, singleEventData, tab }: { webColor: string; singleEventData: any, tab: string }) => {
-  const [sub1, setSub1] = useState(true);
-  const [sub2, setSub2] = useState(true);
-  const [sub3, setSub3] = useState(true);
-  return (
-    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]">
-      {singleEventData?.competitions?.map((competition: any) => (
-        <div>
-          <div
-            onClick={() => setSub1(!sub1)}
-            className="h-[40px] text-[--text-color] rounded-t-[7px] flex justify-between px-[15px] items-center cursor-pointer"
-            style={{ backgroundColor: webColor }}
-          >
-            <p className="text-[13px] sm:text-[15px] font-[500]">{competition?.competitionName}</p>
-            <div className="flex items-center gap-[10px]">
-              <p className="text-[13px] sm:text-[15px] font-[500]">{competition?.events?.length}</p>
-              <IoIosArrowUp
-                className={`transition-all duration-300 ${sub1 ? "" : "-rotate-180"
-                  }`}
-              />
-            </div>
-          </div>
-          {sub1 && (
-            <div className="bg-white rounded-b-[7px]">
-              {competition?.events?.map((event: any) => (
-                <List webColor={webColor} event={event} tab={tab} />
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
     </div>
   );
+
 };

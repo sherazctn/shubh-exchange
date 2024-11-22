@@ -21,7 +21,7 @@ const initialState = {
   upcomingSoccer: [],
   liveCricket: [],
   upcomingCricket: [],
-  redisGames: [],
+  redisGames: null,
   token: "",
   dashboardData: {},
   eventData: [],

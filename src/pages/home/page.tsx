@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "../../components/home/HeroSection";
@@ -19,23 +19,37 @@ import Footer from "../../components/footer/page";
 const Home = () => {
   const dispatch = useDispatch();
   const showSidebar = useSelector((state: any) => state.showSidebar);
+  const redisGames = useSelector((state: any) => state.redisGames);
+  const [loader, setLoader] = useState(true);
+  const [sportIds, setSportIds] = useState([]);
   useEffect(() => {
     dispatch(updateMobileMenu(false));
     dispatch(updatePageNav("home"));
   }, [dispatch]);
+  useEffect(() => {
+    const savedGameData = localStorage.getItem('eventData');
+    const gameData = redisGames;
+    if (gameData) {
+      return setSportIds(gameData?.map((game: any) => `${game?.id}`));
+    } else if (savedGameData) {
+      return setSportIds(JSON.parse(savedGameData)?.map((game: any) => `${game?.sportId}`));
+    } else {
+      return console.log("nothing");
+    }
+  }, [redisGames]);
   return (
     <div
       className={`content pt-[68px] sm:pt-[78px] ${showSidebar
-          ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]"
-          : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"
+        ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]"
+        : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"
         } pe-[10px] sm:pe-[20px]`}
     >
       <HeroSection />
       <CardsSection />
       {/* live matches */}
-      <CricketDropdownsSection text={"Live Cricket Match"} id={"4"} />
-      <CricketDropdownsSection text={"Live Tennis Match"} id={"2"} />
-      <CricketDropdownsSection text={"Live Soccer Match"} id={"1"} />
+      {sportIds?.length > 0 && sportIds?.map((sportid) => (
+        <CricketDropdownsSection text={`Live ${sportid === '4' ? "Cricket Matches" : sportid === '1' ? "Soccer Matches" : "Tennis Matches"}`} id={sportid} />
+      ))}
       {/* <SoccerDropdownsSection text={"Live Soccer"} /> */}
       {/* <TennisDropdownsSection text={"Live Tennis"} /> */}
       {/* upcoming matches */}

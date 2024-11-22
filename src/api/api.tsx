@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "http://62.72.57.126:8000";
+const URL = "http://62.72.57.126:5000";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -503,8 +503,8 @@ export const retrieveCricketDataToRedisApi = async () => {
 
 export const retrieveEventsDataToRedisApi = async () => {
     try {
-        const response = await axios.get(`${URL}/redis/events`);
-        return { status: true, data: response?.data }
+        const response = await axios.get(`${URL}/redis/events-data`);
+        return { status: true, data: response?.data?.data }
     } catch (error: any) {
         if (error?.status === 400) {
             return { status: false, message: error?.response?.data?.message };
@@ -556,8 +556,8 @@ export const getSingleMarketOddsApi = async (eventId: any, sportId: any) => {
 
 export const getMarketOddsApi = async (marketId: any) => {
     try {
-        const response = await axios.get(`${URL}/redis/data?market_id=${marketId}`);
-        return { status: true, data: response?.data };
+        const response = await axios.get(`${URL}/redis/get-single-odd?marketId=${marketId}`);
+        return { status: true, data: response?.data?.data };
     } catch (error: any) {
         if (error?.status === 400) {
             return { status: false, message: error?.response?.data?.message };
@@ -580,9 +580,9 @@ export const getLiveMarketsApi = async (id: any) => {
     }
 }
 
-export const updateBetsApi = async () => {
+export const getInplayMarketsApi = async (id: any) => {
     try {
-        const response = await axios.get(`${URL}/redis/update-bets`);
+        const response = await axios.get(`${URL}/redis/inplay-market?sportId=${id}`);
         return { status: true, data: response?.data };
     } catch (error: any) {
         if (error?.status === 400) {
@@ -593,9 +593,9 @@ export const updateBetsApi = async () => {
     }
 }
 
-export const getInplayMarketsApi = async (id: any) => {
+export const getSingleSportMarketsApi = async (id: any) => {
     try {
-        const response = await axios.get(`${URL}/redis/inplay-market?sportId=${id}`);
+        const response = await axios.get(`${URL}/redis/single-sports?sportId=${id}`);
         return { status: true, data: response?.data };
     } catch (error: any) {
         if (error?.status === 400) {

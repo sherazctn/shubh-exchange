@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
-import { retrieveCricketDataToRedisApi, retrieveGamesDataToRedisApi, retrieveSoccerDataToRedisApi, updateBetsApi } from "./api/api";
-import { updateLiveCricket, updateLiveSoccer, updateRedisGamesData, updateUpcomingCricket, updateUpcomingSoccer } from "./features/features";
+import { updateRedisGamesData } from "./features/features";
+import { retrieveGamesDataToRedisApi } from "./api/api";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
@@ -49,79 +49,19 @@ function App() {
     const response = await retrieveGamesDataToRedisApi();
     if (response?.status) {
       dispatch(updateRedisGamesData(response?.data));
+      localStorage.setItem('games', JSON.stringify(response?.data));
     }
-  }
-
-  const fn_getSoccerGamesData = async () => {
-    const response = await retrieveSoccerDataToRedisApi();
-    if (response?.status) {
-      const liveMatches = response?.live;
-      const upcomingMatches = response?.upcoming;
-      //get live soccer
-      const formatedLiveMatches = liveMatches.reduce((acc: any, match: any) => {
-        let competition = acc.find((comp: any) => comp.competitionId === match.competitionId);
-        if (!competition) {
-          competition = {
-            competitionId: match.competitionId,
-            competitionName: match.competitionName,
-            games: []
-          };
-          acc.push(competition);
-        }
-        competition.games.push(match);
-        return acc;
-      }, []);
-      dispatch(updateLiveSoccer(formatedLiveMatches));
-      //get upcoming soccer
-      const formatedUpcomingMatches = upcomingMatches.reduce((acc: any, match: any) => {
-        let competition = acc.find((comp: any) => comp.competitionId === match.competitionId);
-        if (!competition) {
-          competition = {
-            competitionId: match.competitionId,
-            competitionName: match.competitionName,
-            games: []
-          };
-          acc.push(competition);
-        }
-        competition.games.push(match);
-        return acc;
-      }, []);
-      dispatch(updateUpcomingSoccer(formatedUpcomingMatches));
-    }
-  }
-
-  const fn_getCricketGamesData = async () => {
-    const response = await retrieveCricketDataToRedisApi();
-    if (response?.status) {
-      const liveMatches = response?.live;
-      const upcomingMatches = response?.upcoming;
-
-      dispatch(updateLiveCricket(liveMatches));
-      dispatch(updateUpcomingCricket(upcomingMatches));
-    }
-  }
-
-  const fn_updateBets = async () => {
+  
     setInterval(async () => {
-      await updateBetsApi();
-    }, 30000);
-  }
-
-  useEffect(() => {
-    fn_getGamesData();
-    fn_getSoccerGamesData();
-    fn_getCricketGamesData();
-  }, []);
-
-  useEffect(() => {
-    if (location.pathname !== localStorage.getItem("location")) {
-      window.location.reload();
-    }
-    localStorage.setItem("location", location.pathname);
-  }, [location.pathname]);
-
-  fn_updateBets();
-
+      const response = await retrieveGamesDataToRedisApi();
+      if (response?.status) {
+        dispatch(updateRedisGamesData(response?.data));
+        localStorage.setItem('games', JSON.stringify(response?.data));
+      }
+    }, 60000);
+  };
+  fn_getGamesData();
+  
   return (
     <>
       {!isAccountPage && <Navbar />}

@@ -7,8 +7,10 @@ import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
 
 import crciketBall from "../../assets/cricket-ball.png";
-import { updateBets, updateBettingSlip, updateLiveMarkets } from "../../features/features";
+import { updateBets, updateBettingSlip, updateLiveMarkets, updateSelectedEvent } from "../../features/features";
 import { getLiveMarketsApi } from "../../api/api";
+import { FaExclamationCircle } from "react-icons/fa";
+import Loader from "../Loader";
 
 const CricketDropdownsSection = ({ text, id }: any) => {
   const dispatch = useDispatch();
@@ -25,6 +27,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
 
   const location = useLocation();
   const [marketData, setMarketData] = useState([]);
+  const [loader, setLoader] = useState(true);
   const sportName = id === 1 ? "soccer" : id === 2 ? "tennnis" : "cricket";
 
   const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
@@ -65,6 +68,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
       const response = await getLiveMarketsApi(id);
       setMarketData(response?.data);
       dispatch(updateLiveMarkets({ ...liveMarkets, [sportName]: response?.data }));
+      setLoader(false);
     }, 500);
   };
 
@@ -84,9 +88,9 @@ const CricketDropdownsSection = ({ text, id }: any) => {
             }`}
         />
       </div>
-      {dropdown && (
+      {dropdown ? !loader ? (
         <div className="flex flex-col gap-[10px]">
-          {marketData?.length > 0 && marketData?.map((competition: any) => (
+          {marketData?.length > 0 ? marketData?.map((competition: any) => (
             <div key={competition?.competitionId} className="bg-white mt-[5px] rounded-[7px]">
               {/* header */}
               <div
@@ -106,9 +110,22 @@ const CricketDropdownsSection = ({ text, id }: any) => {
               {/* content */}
               <div>
                 {competition?.events?.map((event: any) => (
-                  <Link
-                    onClick={() => setTimeout(() => window.location.reload(), 1000)}
-                    to={`/match?sportId=${id}&eventId=${event?.match_id}`}
+                  <a
+                    onClick={() => {
+                      dispatch(updateSelectedEvent({
+                        competitionName: competition?.competitionName,
+                        eventId: event?.match_id,
+                        eventName: event?.matchName,
+                        date: event?.date || event?.openDate
+                      }));
+                      localStorage.setItem('selectedEvent', JSON.stringify({
+                        competitionName: competition?.competitionName,
+                        eventId: event?.match_id,
+                        eventName: event?.matchName,
+                        date: event?.date || event?.openDate
+                      }))
+                    }}
+                    href={`/match?sportId=${id}&eventId=${event?.match_id}`}
                     className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
                   >
                     <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
@@ -374,13 +391,17 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                         </>
                       )}
                     </div>
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
-          ))}
+          )) : (
+            <div><p className="text-[15px] mb-[10px] flex items-center text-gray-600"><FaExclamationCircle className="pe-[5px] text-[22px]" />No Live Match Found</p></div>
+          )}
         </div>
-      )}
+      ) : (
+        <div><Loader size={25} color={webColor} /></div>
+      ) : null}
     </div>
   );
 };

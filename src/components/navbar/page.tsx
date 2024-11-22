@@ -126,9 +126,9 @@ const Navbar = () => {
               <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
             </div>
           )}
-          <Link to={"/"} className="text-[28px] font-[700] text-[--text-color]">
+          <a href={"/"} className="text-[28px] font-[700] text-[--text-color]">
             {webName}
-          </Link>
+          </a>
         </div>
         {/* web menus */}
         <div className="hidden md:flex gap-[10px]">
@@ -137,31 +137,31 @@ const Navbar = () => {
               <PiHandDeposit className="w-[19px] h-[19px]" />
               <span className="me-[5px]">Deposit</span>
             </p>
-            <Link to={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
+            <a href={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
               <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
               My Markets
-            </Link>
-            <Link
-              to={"/all-sports"}
+            </a>
+            <a
+              href={"/all-sports"}
               className={`menu ${pageNav === "sports" && "active"} flex items-center gap-[4px]`}
             >
               <MdOutlineSportsBaseball className="w-[17px] h-[17px] text-[--text-color]" />
               Sports
-            </Link>
-            <Link
-              to={"/in-play"}
+            </a>
+            <a
+              href={"/in-play"}
               className={`menu ${pageNav === "inplay" && "active"} flex items-center gap-[4px]`}
             >
               <MdOutlineSportsScore className="w-[17px] h-[17px] text-[--text-color]" />
               In-Play
-            </Link>
-            <Link
-              to={"/casino"}
+            </a>
+            <a
+              href={"/casino"}
               className={`menu ${pageNav === "casino" && "active"} flex items-center gap-[4px]`}
             >
               <MdOutlineCasino className="w-[17px] h-[17px] text-[--text-color]" />
               Casino
-            </Link>
+            </a>
           </ul>
           {authentication ? (
             <div className="w-[270px] bg-[#ffffff5e] rounded-full flex justify-between">

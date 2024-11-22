@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
-import URL, { getAvailableGames, retrieveEventsDataToRedisApi } from "../../api/api";
+import URL, { retrieveEventsDataToRedisApi, retrieveGamesDataToRedisApi } from "../../api/api";
 import { updateEventData, updateMobileSidebar, updateSelectedEvent, updateSidebar } from "../../features/features";
 
 import { FiSearch } from "react-icons/fi";
@@ -14,30 +14,55 @@ import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-ico
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const screenHeight = `${window.innerHeight}px`;
-  const showSidebar = useSelector((state: any) => state.showSidebar);
-  const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
-  const eventData = useSelector((state: any) => state.eventData);
-  const [openOptions, setOpenOption] = useState<any>([]);
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const screenHeight = `${window.innerHeight}px`;
+  const [openOptions, setOpenOption] = useState<any>([]);
+  const savedEventData = localStorage.getItem('eventData');
+  const eventData = useSelector((state: any) => state.eventData);
+  const redisGames = useSelector((state: any) => state.redisGames);
   const webColor = useSelector((state: any) => state.websiteColor);
+  const showSidebar = useSelector((state: any) => state.showSidebar);
+  const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
+  const fn_getEvents = async () => {
+    const response = await retrieveEventsDataToRedisApi();
+    const gameResponse = await retrieveGamesDataToRedisApi();
+    if (response?.status) {
+      const games = gameResponse?.data;
+      const gamesIds = games?.map((gm: any) => gm?.id);
+      const updatedGames = response?.data?.filter((gme: any) => gamesIds?.includes(gme?.sportId));
+      setData(updatedGames);
+      dispatch(updateEventData(updatedGames));
+      localStorage.setItem('eventData', JSON.stringify(updatedGames));
+    }
+    setLoader(false);
+  };
   useEffect(() => {
+    if (savedEventData) {
+      setLoader(false);
+      setData(JSON.parse(savedEventData));
+    }
     aos.init({ once: true });
+
     if (eventData.length !== 0) {
       setData(eventData);
       setLoader(false);
     }
+
     fn_getEvents();
+
+    const intervalId = setInterval(fn_getEvents, 2 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
-  const fn_getEvents = async () => {
-    const response = await retrieveEventsDataToRedisApi();
-    if (response.status) {
-      setData(response?.data);
-      dispatch(updateEventData(response?.data));
+  useEffect(() => {
+    if (redisGames) {
+      const sportId = redisGames?.map((gm: any) => gm?.id);
+      const Udata = data.filter((d: any) => sportId.includes(d?.sportId));
+      setData(Udata);
     }
-    setLoader(false);
-  }
+    fn_getEvents();
+  }, [redisGames]);
   return (
     <div
       className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${showSidebar ? "w-[270px]" : "w-[67px] ms-2"
@@ -123,6 +148,7 @@ const Events = ({
   const dispatch = useDispatch();
   const [option, setOption] = useState(false);
   const [subOption, setSubOption] = useState<any>(null);
+  const adminGamesData = useSelector((state: any) => state.redisGames);
   useEffect(() => {
     setOption(openOptions.find((id: string) => id === game?.sportId) ? true : false);
   }, [openOptions, game]);
@@ -133,7 +159,7 @@ const Events = ({
   const fn_selectEvent = (sportId: string, eventId: string, i: any, competitionName: string) => {
     dispatch(updateSelectedEvent({ ...i, competitionName }));
     localStorage.setItem('selectedEvent', JSON.stringify({ ...i, competitionName }));
-    navigate(`/match?sportId=${sportId}&eventId=${eventId}`)
+    window.location.href = `/match?sportId=${sportId}&eventId=${eventId}`;
   }
   return (
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
@@ -156,11 +182,13 @@ const Events = ({
         }}
       >
         <div className="flex items-center gap-2.5">
-          {/* <img
-            alt={game?.name}
-            src={`${URL}/${game?.image}`}
-            className="w-[25px] h-[25px] rounded-full object-cover"
-          /> */}
+          {adminGamesData && (
+            <img
+              alt={game?.name}
+              src={`${URL}/${adminGamesData?.find((g: any) => g?.id == game?.sportId)?.image}`}
+              className="w-[25px] h-[25px] rounded-full object-cover"
+            />
+          )}
           {showSidebar && <p className="font-[600] text-[15px] capitalize">{game?.sportName}</p>}
         </div>
         {showSidebar && (
