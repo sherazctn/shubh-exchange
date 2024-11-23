@@ -189,46 +189,6 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
                             onClick={(e) => handleBetClicked(
                               e,
-                              event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price,
-                              event?.matchName,
-                              event?.odd?.runners?.[1]?.selectionId,
-                              "Back",
-                              event?.match_id,
-                              event?.market_id,
-                              event?.marketname
-                            )}
-                          >
-                            <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price}
-                            </p>
-                            <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.size}
-                            </p>
-                          </div>
-                          <div
-                            className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                            onClick={(e) => handleBetClicked(
-                              e,
-                              event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,
-                              event?.matchName,
-                              event?.odd?.runners?.[1]?.selectionId,
-                              "Lay",
-                              event?.match_id,
-                              event?.market_id,
-                              event?.marketname
-                            )}
-                          >
-                            <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
-                            </p>
-                            <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
-                            </p>
-                          </div>
-                          <div
-                            className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                            onClick={(e) => handleBetClicked(
-                              e,
                               event?.odd?.runners?.[2]?.ex?.availableToBack[0]?.price,
                               event?.matchName,
                               event?.odd?.runners?.[2]?.selectionId,
@@ -263,6 +223,46 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             </p>
                             <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
                               {event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.size}
+                            </p>
+                          </div>
+                          <div
+                            className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+                            onClick={(e) => handleBetClicked(
+                              e,
+                              event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price,
+                              event?.matchName,
+                              event?.odd?.runners?.[1]?.selectionId,
+                              "Back",
+                              event?.match_id,
+                              event?.market_id,
+                              event?.marketname
+                            )}
+                          >
+                            <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                              {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price}
+                            </p>
+                            <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                              {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.size}
+                            </p>
+                          </div>
+                          <div
+                            className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+                            onClick={(e) => handleBetClicked(
+                              e,
+                              event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,
+                              event?.matchName,
+                              event?.odd?.runners?.[1]?.selectionId,
+                              "Lay",
+                              event?.match_id,
+                              event?.market_id,
+                              event?.marketname
+                            )}
+                          >
+                            <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
+                            </p>
+                            <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
                             </p>
                           </div>
                         </>
@@ -308,46 +308,28 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.size}
                             </p>
                           </div>
+
                           <div
                             className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-                            onClick={(e) => handleBetClicked(
-                              e,
-                              event?.odd?.runners?.[0]?.ex?.availableToBack[1]?.price,
-                              event?.matchName,
-                              event?.odd?.runners?.[0]?.selectionId,
-                              "Back",
-                              event?.match_id,
-                              event?.market_id,
-                              event?.marketname
-                            )}
                           >
                             <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                              {event?.odd?.runners?.[0]?.ex?.availableToBack[1]?.price}
+                              -
                             </p>
                             <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                              {event?.odd?.runners?.[0]?.ex?.availableToBack[1]?.size}
+                              -
                             </p>
                           </div>
                           <div
                             className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-                            onClick={(e) => handleBetClicked(
-                              e,
-                              event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,
-                              event?.matchName,
-                              event?.odd?.runners?.[1]?.selectionId,
-                              "Lay",
-                              event?.match_id,
-                              event?.market_id,
-                              event?.marketname
-                            )}
                           >
                             <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
+                              -
                             </p>
                             <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
+                              -
                             </p>
                           </div>
+                          
                           <div
                             className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
                             onClick={(e) => handleBetClicked(
@@ -372,7 +354,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
                             onClick={(e) => handleBetClicked(
                               e,
-                              event?.odd?.runners?.[1]?.ex?.availableToLay[1]?.price,
+                              event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,
                               event?.matchName,
                               event?.odd?.runners?.[1]?.selectionId,
                               "Lay",
@@ -382,10 +364,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             )}
                           >
                             <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[1]?.price}
+                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
                             </p>
                             <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                              {event?.odd?.runners?.[1]?.ex?.availableToLay[1]?.size}
+                              {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
                             </p>
                           </div>
                         </>

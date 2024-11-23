@@ -184,7 +184,7 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
                   <p className="text-[15px] font-[500]">{item?.runnerName}</p>
                 </div>
                 <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-                  {[0, 1, 2].map((index) => {
+                  {[2, 1, 0].map((index) => {
                     const i = odd?.back?.[index] || {};
                     return (
                       <div
@@ -202,18 +202,18 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
                     );
                   })}
                   {[0, 1, 2].map((index) => {
-                    const item = odd?.lay?.[index] || {};
+                    const i = odd?.lay?.[index] || {};
                     return (
                       <div
                         key={index}
                         className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
-                      // onClick={(e) => handleBetClicked(e, item?.price || '-', item?.name || '-', "Lay", item?.runnerName || '-')}
+                        onClick={(e) => handleBetClicked(e, i?.price, item?.runnerName, item?.selectionId, "Lay")}
                       >
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                          {item.price || "-"}
+                          {i.price || "-"}
                         </p>
                         <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                          {item.size || "-"}
+                          {i.size || "-"}
                         </p>
                       </div>
                     );

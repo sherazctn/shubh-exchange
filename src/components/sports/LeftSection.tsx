@@ -9,7 +9,7 @@ import { FaExclamationCircle } from "react-icons/fa";
 
 import Loader from "../Loader";
 import Footer from "../footer/page";
-import { updateBets, updateBettingSlip } from "../../features/features";
+import { updateBets, updateBettingSlip, updateSelectedEvent } from "../../features/features";
 import URL, { getAvailableGames, getMarketOddsApi, getSingleSportMarketsApi } from "../../api/api";
 
 const LeftSection = () => {
@@ -122,7 +122,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
           {sub1 && (
             <div className="bg-white rounded-b-[7px]">
               {comp?.events?.length > 0 && comp?.events?.map((event: any) => (
-                <List event={event} webColor={webColor} tab={tab} />
+                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} />
               ))}
             </div>
           )}
@@ -134,7 +134,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
   );
 };
 
-const List = ({ event, webColor, tab }: any) => {
+const List = ({ event, webColor, tab, compName }: any) => {
 
   const dispatch = useDispatch();
   const authentication = useSelector((state: any) => state.authentication);
@@ -188,35 +188,56 @@ const List = ({ event, webColor, tab }: any) => {
   }
 
   return (
-    <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+    <a 
+      href={`/match?sportId=${tab}&eventId=${event?.match_id}`} 
+      className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+      onClick={() => {
+        dispatch(updateSelectedEvent({
+          competitionName: compName,
+          eventId: event?.match_id,
+          eventName: event?.matchName,
+          date: event?.date || event?.openDate
+        }));
+        localStorage.setItem('selectedEvent', JSON.stringify({
+          competitionName: compName,
+          eventId: event?.match_id,
+          eventName: event?.matchName,
+          date: event?.date || event?.openDate
+        }))
+      }}
+    >
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
         <p className="text-[14px]">
           {event?.matchName}
         </p>
-        <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
-          Live
-          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
-        </div>
+        {new Date() >= new Date(event?.openDate) && (
+          <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
+            Live
+            <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-        <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
-          Live
-          <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
-        </div>
+        {new Date() >= new Date(event?.openDate) && (
+          <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
+            Live
+            <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
+          </div>
+        )}
         {odds?.numberOfRunners === 3 ? (
           <>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
-                event?.matchName,
-                odds?.runners?.[0]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[0]?.selectionId,
+              //   "Back",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
@@ -227,16 +248,16 @@ const List = ({ event, webColor, tab }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                odds?.runners?.[0]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[0]?.selectionId,
+              //   "Lay",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
@@ -245,58 +266,19 @@ const List = ({ event, webColor, tab }: any) => {
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
+
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
-                event?.matchName,
-                odds?.runners?.[1]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
-            >
-              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
-              </p>
-              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
-              </p>
-            </div>
-            <div
-              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                odds?.runners?.[1]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
-            >
-              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
-              </p>
-              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
-              </p>
-            </div>
-            <div
-              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[2]?.ex?.availableToBack[0]?.price,
-                event?.matchName,
-                odds?.runners?.[2]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[2]?.ex?.availableToBack[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[2]?.selectionId,
+              //   "Back",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[2]?.ex?.availableToBack[0]?.price}
@@ -307,16 +289,16 @@ const List = ({ event, webColor, tab }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[2]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                odds?.runners?.[2]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[2]?.ex?.availableToLay[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[2]?.selectionId,
+              //   "Lay",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[2]?.ex?.availableToLay[0]?.price}
@@ -325,21 +307,62 @@ const List = ({ event, webColor, tab }: any) => {
                 {odds?.runners?.[2]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
+
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[1]?.selectionId,
+              //   "Back",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
+              </p>
+            </div>
+            <div
+              className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[1]?.selectionId,
+              //   "Lay",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
+            >
+              <p className="font-[800] text-center text-[12px] sm:text-[14px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+              </p>
+              <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+              </p>
+            </div>
           </>
         ) : (
           <>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
-                event?.matchName,
-                odds?.runners?.[0]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[0]?.selectionId,
+              //   "Back",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
@@ -350,16 +373,16 @@ const List = ({ event, webColor, tab }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                odds?.runners?.[0]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[0]?.selectionId,
+              //   "Lay",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
@@ -368,58 +391,40 @@ const List = ({ event, webColor, tab }: any) => {
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
+
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[0]?.ex?.availableToBack[1]?.price,
-                event?.matchName,
-                odds?.runners?.[0]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[1]?.price}
+                -
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[1]?.size}
+                -
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                odds?.runners?.[1]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+                -
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+                -
               </p>
             </div>
+
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
-                event?.matchName,
-                odds?.runners?.[1]?.selectionId,
-                "Back",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[1]?.selectionId,
+              //   "Back",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
@@ -430,28 +435,28 @@ const List = ({ event, webColor, tab }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-              onClick={(e) => handleBetClicked(
-                e,
-                odds?.runners?.[1]?.ex?.availableToLay[1]?.price,
-                event?.matchName,
-                odds?.runners?.[1]?.selectionId,
-                "Lay",
-                event?.match_id,
-                event?.market_id,
-                event?.marketname
-              )}
+              // onClick={(e) => handleBetClicked(
+              //   e,
+              //   odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
+              //   event?.matchName,
+              //   odds?.runners?.[1]?.selectionId,
+              //   "Lay",
+              //   event?.match_id,
+              //   event?.market_id,
+              //   event?.marketname
+              // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[1]?.price}
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[1]?.size}
+                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
           </>
         )}
       </div>
-    </div>
+    </a>
   );
 
 };

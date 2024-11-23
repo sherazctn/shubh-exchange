@@ -13,7 +13,7 @@ import Footer from "../footer/page";
 import URL, { getAvailableGames, getInplayMarketsApi } from "../../api/api";
 import Loader from "../Loader";
 import toast from "react-hot-toast";
-import { updateBets, updateBettingSlip } from "../../features/features";
+import { updateBets, updateBettingSlip, updateSelectedEvent } from "../../features/features";
 import { useLocation } from "react-router-dom";
 import { FaExclamationCircle } from "react-icons/fa";
 
@@ -139,7 +139,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
           {sub1 && (
             <div className="bg-white rounded-b-[7px]">
               {comp?.events?.length > 0 && comp?.events?.map((event: any) => (
-                <List event={event} webColor={webColor} tab={tab} />
+                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} />
               ))}
             </div>
           )}
@@ -151,7 +151,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
   );
 };
 
-const List = ({ event, webColor, tab }: any) => {
+const List = ({ event, webColor, tab, compName }: any) => {
 
   const dispatch = useDispatch();
   const authentication = useSelector((state: any) => state.authentication);
@@ -187,7 +187,24 @@ const List = ({ event, webColor, tab }: any) => {
   }
 
   return (
-    <div className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer">
+    <a 
+      className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+      href={`/match?sportId=${tab}&eventId=${event?.match_id}`}
+      onClick={() => {
+        dispatch(updateSelectedEvent({
+          competitionName: compName,
+          eventId: event?.match_id,
+          eventName: event?.matchName,
+          date: event?.date || event?.openDate
+        }));
+        localStorage.setItem('selectedEvent', JSON.stringify({
+          competitionName: compName,
+          eventId: event?.match_id,
+          eventName: event?.matchName,
+          date: event?.date || event?.openDate
+        }))
+      }}
+    >
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
         <p className="text-[14px]">
           {event?.matchName}
@@ -450,7 +467,7 @@ const List = ({ event, webColor, tab }: any) => {
           </>
         )}
       </div>
-    </div>
+    </a>
   );
 
 };
