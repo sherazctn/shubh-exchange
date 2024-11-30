@@ -49,7 +49,7 @@ const RightSection = () => {
         </button>
         {popularEvents && (
           <div className="px-[5px]">
-            {popularEventsData?.slice(0, 10)?.map((event) => (
+            {popularEventsData?.slice(0, 7)?.map((event) => (
               <PopularEvents event={event} dispatch={dispatch} />
             ))}
           </div>
