@@ -2,9 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
 import RightSection from "../../components/sports/RightSection";
 import LiveCricketLeftSection from "../../components/cricket/LiveCricketLeftSection";
+import { retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
 import { updateMobileMenu, updatePageNav, updateSelectedEvent } from "../../features/features";
 
 const LiveCricket = () => {
@@ -17,6 +17,7 @@ const LiveCricket = () => {
   const [markets, setMarkets] = useState([]);
   const [runners, setRunners] = useState([]);
   const [marketIds, setMarketIds] = useState([]);
+  const [bookmaker, setBookmaker] = useState([]);
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const liveCricket = useSelector((state: any) => state.liveCricket);
   const selectedEvent = useSelector((state: any) => state.selectedEvent);
@@ -59,6 +60,7 @@ const LiveCricket = () => {
       setMarkets(response?.data?.data);
       setRunners(response?.data?.runners);
       setMarketIds(response?.data?.marketIds);
+      setBookmaker(response?.data?.bookmakersData);
     } else {
       navigate("");
     }
@@ -85,7 +87,7 @@ const LiveCricket = () => {
 
   return (
     <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]" : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"} pe-[10px] sm:pe-[20px] flex`}>
-      <LiveCricketLeftSection singleLiveCricket={singleLiveCricket} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} />
+      <LiveCricketLeftSection singleLiveCricket={singleLiveCricket} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
       <RightSection />
     </div>
   );

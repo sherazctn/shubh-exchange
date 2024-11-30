@@ -9,7 +9,9 @@
   /* --main-color-light: #ffb60c59; */
   --main-color-light: #ff4444a6;
   --red: #d9517847;
+  --red-dark: #d95177b8;
   --blue: #008efb24;
+  --blue-dark: #008efba6;
   --cashout: #bbf7d0;
   --navy: rgb(148, 148, 219);
   --navy-light: rgb(232, 232, 252);
@@ -17,6 +19,8 @@
   --dashboard-bg-light: rgb(243, 244, 246);
   --dashboard-bg-dark: #202020;
   --text-color: #ffffff;
+  --suspended-odds: #d5d9de;
+  --suspended-odds-dark: #9a9fa6;
 }
 
 .main-section {

@@ -18,7 +18,6 @@ const BetHistoryTable = ({ colors, data }: any) => {
             >
               <td className="ps-[5px] w-[100px]">Sr No.<SortingArrows /></td>
               <td className="min-w-[250px]">Market Name</td>
-              <td>Runner Name</td>
               <td className="min-w-[80px]">Side</td>
               <td>Bet Amount<SortingArrows /></td>
               <td className="min-w-[80px]">Price</td>
@@ -49,7 +48,7 @@ const TableRows = ({ colors, item, index }: any) => {
     >
       <td className="ps-[5px]">{index}</td>
       <td>{item?.gameName}</td>
-      <td>{item?.runner}</td>
+      {/* <td>{item?.runner}</td> */}
       <td>{item?.side}</td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{item?.odd}</td>

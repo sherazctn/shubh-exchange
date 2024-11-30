@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import Footer from "../../components/footer/page";
 import HeroSection from "../../components/home/HeroSection";
 import CardsSection from "../../components/home/cardsSection";
-import { updateMobileMenu, updatePageNav } from "../../features/features";
-// live matches
-import CricketDropdownsSection from "../../components/home/DropdownsSection";
-import SoccerDropdownsSection from "../../components/home/SoccerDropdownSection";
-import TennisDropdownsSection from "../../components/home/TennisDropdownSection";
-// upcoming matches
-import UpcomingCricketMatches from "../../components/home/UpcomingCricketMatches";
-import UpcomingSoccerMatches from "../../components/home/UpcomingSoccerMatches";
-
 import CasinoSlider from "../../components/home/CasinoSlider";
-// footer
-import Footer from "../../components/footer/page";
+import { updateMobileMenu, updatePageNav } from "../../features/features";
+import CricketDropdownsSection from "../../components/home/DropdownsSection";
 
 const Home = () => {
   const dispatch = useDispatch();
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const redisGames = useSelector((state: any) => state.redisGames);
-  const [loader, setLoader] = useState(true);
   const [sportIds, setSportIds] = useState([]);
   useEffect(() => {
     dispatch(updateMobileMenu(false));
@@ -46,16 +37,9 @@ const Home = () => {
     >
       <HeroSection />
       <CardsSection />
-      {/* live matches */}
       {sportIds?.length > 0 && sportIds?.map((sportid) => (
         <CricketDropdownsSection text={`Live ${sportid === '4' ? "Cricket Matches" : sportid === '1' ? "Soccer Matches" : "Tennis Matches"}`} id={sportid} />
       ))}
-      {/* <SoccerDropdownsSection text={"Live Soccer"} /> */}
-      {/* <TennisDropdownsSection text={"Live Tennis"} /> */}
-      {/* upcoming matches */}
-      {/* <UpcomingCricketMatches text={"Cricket"} /> */}
-      {/* <UpcomingSoccerMatches text={"Soccer"} /> */}
-      {/* casino slider */}
       <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />
       <Footer />

@@ -16,7 +16,6 @@ const LoginHistoryTable = ({ colors, data }: any) => {
             >
               <td className="ps-[5px]">Login Date & Time</td>
               <td>IP Address</td>
-              <td>ISP</td>
               <td>City, State, Country</td>
             </tr>
           </thead>
@@ -41,7 +40,6 @@ const TableRows = ({ colors, item }: any) => {
     >
       <td className="ps-[5px]">{formatDate(item?.loginDateTime)}</td>
       <td>{item?.ipAddress}</td>
-      <td>{item?.isp}</td>
       <td>{item?.city}, {item?.state}, {item?.country}</td>
     </tr>
   );

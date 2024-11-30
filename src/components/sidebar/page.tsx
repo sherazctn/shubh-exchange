@@ -1,6 +1,5 @@
 import aos from "aos";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
@@ -144,7 +143,6 @@ const Events = ({
   setOpenOption,
   game
 }: any) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [option, setOption] = useState(false);
   const [subOption, setSubOption] = useState<any>(null);

@@ -606,4 +606,43 @@ export const getSingleSportMarketsApi = async (id: any) => {
     }
 }
 
+export const getPopularCricketEventsApi = async () => {
+    try {
+        const response = await axios.get(`${URL}/redis/popular-events/cricket`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const getUpdatedBookmaker = async (eventId: any) => {
+    try {
+        const response = await axios.get(`${URL}/redis/markets-bookmaker?eventId=${eventId}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
+export const getUpdatedFancyMarket = async (eventId: any) => {
+    try {
+        const response = await axios.get(`${URL}/redis/markets-fancy?eventId=${eventId}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
 export default URL;

@@ -1,13 +1,12 @@
 import "./App.css";
 import "aos/dist/aos.css";
 
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
-import { updateRedisGamesData } from "./features/features";
 import { retrieveGamesDataToRedisApi } from "./api/api";
+import { updateRedisGamesData } from "./features/features";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";

@@ -1,18 +1,22 @@
+import toast from "react-hot-toast"
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
 // import { GoDotFill } from "react-icons/go"
+import { ImCross } from "react-icons/im"
 import { FaIndianRupeeSign } from "react-icons/fa6"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"
-import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
-import { ImCross } from "react-icons/im"
-
-import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { BsGraphDownArrow, BsGraphUpArrow } from "react-icons/bs"
-import toast from "react-hot-toast"
-import { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
-import Loader from "../Loader"
+import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
+
 import cricketLogo from "../../assets/cricket-ball.png";
+import emptySlip from "../../assets/empty-slip.png";
+
+import Loader from "../Loader"
+import { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
+import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
+import { FaExclamationCircle } from "react-icons/fa"
+
 
 const BetSlip = () => {
     const dispatch = useDispatch();
@@ -64,7 +68,7 @@ const BetSlip = () => {
                         onClick={() => setTabs("open")}
                     >Open Bet</button>
                 </div>
-                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} fn_getOpenBets={fn_getOpenBets} />}
+                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} fn_getOpenBets={fn_getOpenBets} setTabs={setTabs} />}
                 {tabs === "open" && <OpenBet openBets={openBets} />}
             </div>
         </div>
@@ -73,12 +77,8 @@ const BetSlip = () => {
 
 export default BetSlip;
 
-const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, inputRef: any, fn_getOpenBets: any }) => {
+const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor: string, inputRef: any, fn_getOpenBets: any, setTabs: any }) => {
     const dispatch = useDispatch();
-    const [input1, setInput1] = useState<any>();
-    const [input2, setInput2] = useState<any>();
-    const [view1, setView1] = useState<boolean>(true);
-    const [view2, setView2] = useState<boolean>(true);
 
     const bets = useSelector((state: any) => state.bets);
     const wallet = useSelector((state: any) => state.wallet);
@@ -159,12 +159,18 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
     }
 
     const fn_placeBet = async () => {
-        if (bets?.length === 0) return toast.error("Select Match For Bet")
+        if (bets?.length === 0) return toast.error("Select Match For Bet");
         const bettedAmount = bets?.reduce((acc: any, i: any) => {
             return acc + i?.amount
         }, 0);
         if (bettedAmount > wallet) {
             return toast.error("Not Enough Balance");
+        }
+        const suspendedBet = bets?.find(
+            (b: any) => b?.status && (b?.status !== "active" && b?.status !== "ACTIVE")
+        );
+        if (suspendedBet) {
+            return toast.error("Bet is Timed Out");
         }
         setLoader(true);
         const response = await placeBetsApi(bets);
@@ -172,7 +178,9 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
             setLoader(false);
             fn_getOpenBets();
             dispatch(updateBets([]));
-            dispatch(updateWallet(response?.wallet))
+            setTabs("open");
+            dispatch(updateWallet(response?.wallet));
+
             return toast.success(response?.message);
         } else {
             setLoader(false);
@@ -205,7 +213,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
         <div className="flex flex-col justify-between gap-[7px] h-[570px]">
             {/* bets */}
             <div className="flex flex-1 flex-col gap-[5px] overflow-auto">
-                {bets?.length > 0 && bets?.map((item: any, index: any) => (
+                {bets?.length > 0 ? bets?.map((item: any, index: any) => (
                     <div key={index} className="px-[5px] pb-[5px] pt-[7px] bg-white">
                         <div className="flex justify-between items-center">
                             <p className="flex items-center gap-[4px] mb-[5px]">
@@ -229,7 +237,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                                     min={1}
                                     type="number"
                                     value={item?.amount}
-                                    onKeyDown={(e) => fn_keyDown(e, index)}
+                                    // onKeyDown={(e) => fn_keyDown(e, index)}
                                     onChange={(e) => fn_changeAmountInput(e.target.value, index)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />) : (
@@ -237,7 +245,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                                     min={1}
                                     type="number"
                                     value={item?.amount}
-                                    onKeyDown={(e) => fn_keyDown(e, index)}
+                                    // onKeyDown={(e) => fn_keyDown(e, index)}
                                     onChange={(e) => fn_changeAmountInput(e.target.value, index)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />
@@ -361,17 +369,24 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets }: { webColor: string, 
                         </div>
                         <p className="text-[14px] mt-[-4px] text-end">Plateform Charger: <span className="font-[500]">{item?.adminCommision || 0}%</span></p>
                     </div>
-                ))}
+                )) : (
+                    <div className="flex justify-center flex-col items-center gap-[30px] mt-[90px]">
+                        <img src={emptySlip} className="h-[250px]" />
+                        <p className="flex items-center gap-[5px] text-[15px] font-[500]]"><FaExclamationCircle className="inline-block text-[22px]" /> Bet Slip is Empty</p>
+                    </div>
+                )}
             </div>
             {/* buttons */}
-            <div>
-                <button className="w-full min-h-[43px] font-[600] flex justify-center items-center rounded-[5px] text-[15px] text-[--text-color]" disabled={loader} style={{ backgroundColor: webColor }} onClick={fn_placeBet}>
-                    {!loader ? "Place Bets" : <Loader size={22} color="white" />}
-                </button>
-                <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{ borderColor: webColor, color: webColor }}>
-                    Cancel
-                </button>
-            </div>
+            {bets?.length > 0 && (
+                <div>
+                    <button className="w-full min-h-[43px] font-[600] flex justify-center items-center rounded-[5px] text-[15px] text-[--text-color]" disabled={loader} style={{ backgroundColor: webColor }} onClick={fn_placeBet}>
+                        {!loader ? "Place Bets" : <Loader size={22} color="white" />}
+                    </button>
+                    <button className="w-full mt-[7px] min-h-[43px] border-[2px] bg-gray-200 font-[600] rounded-[5px] text-[15px]" style={{ borderColor: webColor, color: webColor }}>
+                        Cancel
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
