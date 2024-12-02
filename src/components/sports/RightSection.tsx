@@ -16,6 +16,9 @@ const RightSection = () => {
 
   const webColor = useSelector((state: any) => state.websiteColor);
 
+  const redisGames = useSelector((state: any) => state.redisGames);
+  const cricketSport = redisGames?.find((sport: any) => sport?.id == 4);
+
   const fn_getPopularEvents = async () => {
     const response = await getPopularCricketEventsApi();
     if (response?.status) {
@@ -47,7 +50,7 @@ const RightSection = () => {
         >
           Popular Events
         </button>
-        {popularEvents && (
+        {popularEvents && cricketSport && (
           <div className="px-[5px]">
             {popularEventsData?.slice(0, 7)?.map((event) => (
               <PopularEvents event={event} dispatch={dispatch} />

@@ -13,7 +13,7 @@ import cricketLogo from "../../assets/cricket-ball.png";
 import emptySlip from "../../assets/empty-slip.png";
 
 import Loader from "../Loader"
-import { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
+import URL, { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
 import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
 import { FaExclamationCircle } from "react-icons/fa"
 
@@ -79,6 +79,7 @@ export default BetSlip;
 
 const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor: string, inputRef: any, fn_getOpenBets: any, setTabs: any }) => {
     const dispatch = useDispatch();
+    const redisGames = useSelector((state: any) => state.redisGames);
 
     const bets = useSelector((state: any) => state.bets);
     const wallet = useSelector((state: any) => state.wallet);
@@ -218,7 +219,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor:
                         <div className="flex justify-between items-center">
                             <p className="flex items-center gap-[4px] mb-[5px]">
                                 {/* <GoDotFill className="text-[15px]" /> */}
-                                <img alt="" src={cricketLogo} className="w-[20px] h-[20px]" />
+                                <img alt="" src={`${URL}/${redisGames?.find((r:any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />
                                 <span className="text-[15px] font-[600]">{item?.gameName}</span>
                             </p>
                             <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => fn_closeBet(index)} />
@@ -392,7 +393,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor:
 }
 
 const OpenBet = ({ openBets }: any) => {
-
+    const redisGames = useSelector((state: any) => state.redisGames);
     return (
         <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[570px]">
             {openBets?.length === 0 ? (
@@ -404,14 +405,14 @@ const OpenBet = ({ openBets }: any) => {
                             <td className="w-[50%]"></td>
                             <td>Odds</td>
                             <td>Stake</td>
-                            <td>PL</td>
+                            <td>P/L(<FaIndianRupeeSign className="inline-block" />)</td>
                         </tr>
                         {openBets?.map((item: any) => (
                             <tr className="h-[40px] text-[13px] font-[500] border-b">
-                                <td><img alt="" src={cricketLogo} className="w-[20px] h-[20px] inline-block me-[7px]" />{item?.gameName}</td>
+                                <td className="flex items-center gap-[3px]"><img alt="" src={`${URL}/${redisGames?.find((r:any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />{item?.gameName}</td>
                                 <td>{item?.odd}</td>
-                                <td>{item?.amount}</td>
-                                <td>{item?.profit}</td>
+                                <td className="flex items-center gap-[2px]"><FaIndianRupeeSign />{item?.amount}</td>
+                                <td>{item?.profit}/{item?.amount}</td>
                             </tr>
                         ))}
                     </table>
