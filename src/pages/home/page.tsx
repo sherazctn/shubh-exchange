@@ -21,7 +21,7 @@ const Home = () => {
     const savedGameData = localStorage.getItem('eventData');
     const gameData = redisGames;
     if (gameData) {
-      return setSportIds(gameData?.map((game: any) => `${game?.id}`));
+      return setSportIds(gameData?.map((game: any) => `${game?.id}`).sort((a: any, b: any) => parseInt(b?.sportid) - parseInt(a?.sportId)));
     } else if (savedGameData) {
       return setSportIds(JSON.parse(savedGameData)?.map((game: any) => `${game?.sportId}`));
     } else {
@@ -37,9 +37,12 @@ const Home = () => {
     >
       <HeroSection />
       <CardsSection />
-      {sportIds?.length > 0 && sportIds?.map((sportid) => (
-        <CricketDropdownsSection text={`Live ${sportid === '4' ? "Cricket Matches" : sportid === '1' ? "Soccer Matches" : "Tennis Matches"}`} id={sportid} />
-      ))}
+      {/* {sportIds?.length > 0 && sportIds?.map((sportid) => (
+        <CricketDropdownsSection text={`Live ${sportid == '4' ? "Cricket Matches" : sportid == '1' ? "Soccer Matches" : "Tennis Matches"}`} id={sportid} />
+      ))} */}
+      {sportIds?.find(id => id == "4") && (<CricketDropdownsSection text={`Live Cricket Matches`} id={"4"} />)}
+      {sportIds?.find(id => id == "2") && (<CricketDropdownsSection text={`Live Tennis Matches`} id={"2"} />)}
+      {sportIds?.find(id => id == "1") && (<CricketDropdownsSection text={`Live Soccer Matches`} id={"1"} />)}
       <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />
       <Footer />
