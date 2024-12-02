@@ -12,7 +12,7 @@ import Loader from "../Loader";
 import Footer from "../footer/page";
 import allSport from "../../assets/inplay.png";
 import URL, { getAvailableGames, getInplayMarketsApi } from "../../api/api";
-import { updateBets, updateBettingSlip, updateSelectedEvent } from "../../features/features";
+import { updateBets, updateBettingSlip, updateSelectedEvent, updateSlipTab } from "../../features/features";
 
 const LeftSection = () => {
   const location = useLocation();
@@ -219,6 +219,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
     if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
     if (!gameName) return;
+    dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {

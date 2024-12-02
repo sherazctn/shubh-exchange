@@ -26,7 +26,8 @@ const initialState = {
   dashboardData: {},
   eventData: [],
   selectedEvent: {},
-  liveMarkets: {}
+  liveMarkets: {},
+  slipTab: "slip",
 };
 
 export const featuresSlice = createSlice({
@@ -111,6 +112,9 @@ export const featuresSlice = createSlice({
     updateLiveMarkets: (state, action) => {
       state.liveMarkets = action.payload;
     },
+    updateSlipTab: (state, action) => {
+      state.slipTab = action.payload;
+    },
   },
 });
 
@@ -140,7 +144,8 @@ export const {
   updateRedisGamesData,
   updateEventData,
   updateSelectedEvent,
-  updateLiveMarkets
+  updateLiveMarkets,
+  updateSlipTab
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

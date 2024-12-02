@@ -14,14 +14,14 @@ import emptySlip from "../../assets/empty-slip.png";
 
 import Loader from "../Loader"
 import URL, { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
-import { updateBets, updateBettingSlip, updateWallet } from "../../features/features"
+import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features"
 import { FaExclamationCircle } from "react-icons/fa"
 
 
 const BetSlip = () => {
     const dispatch = useDispatch();
     const bettingSlip = useSelector((state: any) => state.bettingSlip);
-    const [tabs, setTabs] = useState("slip");
+    const slipTab = useSelector((state: any) => state?.slipTab);
     const inputRef = useRef<any>(null);
     const token: any = useSelector((state: any) => state.token);
 
@@ -37,7 +37,7 @@ const BetSlip = () => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
-    }, [bettingSlip, tabs]);
+    }, [bettingSlip, slipTab]);
 
     const fn_getOpenBets = async () => {
         const response = await getOpenBetsByUserApi(token);
@@ -60,16 +60,16 @@ const BetSlip = () => {
             <div className="p-[5px] bg-gray-200 rounded-t-[7px]">
                 <div>
                     <button
-                        className={`w-[100px] h-[45px] rounded-tl-[7px] text-[15px] font-[500] cursor-pointer ${tabs === "slip" ? "bg-white" : "bg-transparent"}`}
-                        onClick={() => setTabs("slip")}
+                        className={`w-[100px] h-[45px] rounded-tl-[7px] text-[15px] font-[500] cursor-pointer ${slipTab === "slip" ? "bg-white" : "bg-transparent"}`}
+                        onClick={() => dispatch(updateSlipTab("slip"))}
                     >Bet Slip</button>
                     <button
-                        className={`w-[100px] h-[45px] text-[15px] font-[500] cursor-pointer ${tabs === "open" ? "bg-white" : "bg-transparent"}`}
-                        onClick={() => setTabs("open")}
+                        className={`w-[100px] h-[45px] text-[15px] font-[500] cursor-pointer ${slipTab === "open" ? "bg-white" : "bg-transparent"}`}
+                        onClick={() => dispatch(updateSlipTab("open"))}
                     >Open Bet</button>
                 </div>
-                {tabs === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} fn_getOpenBets={fn_getOpenBets} setTabs={setTabs} />}
-                {tabs === "open" && <OpenBet openBets={openBets} />}
+                {slipTab === "slip" && <BetSlipTab webColor={webColor} inputRef={inputRef} fn_getOpenBets={fn_getOpenBets} updateSlipTab={updateSlipTab} />}
+                {slipTab === "open" && <OpenBet openBets={openBets} />}
             </div>
         </div>
     )
@@ -77,7 +77,7 @@ const BetSlip = () => {
 
 export default BetSlip;
 
-const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor: string, inputRef: any, fn_getOpenBets: any, setTabs: any }) => {
+const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { webColor: string, inputRef: any, fn_getOpenBets: any, updateSlipTab: any }) => {
     const dispatch = useDispatch();
     const redisGames = useSelector((state: any) => state.redisGames);
 
@@ -179,7 +179,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor:
             setLoader(false);
             fn_getOpenBets();
             dispatch(updateBets([]));
-            setTabs("open");
+            dispatch(updateSlipTab("open"));
             dispatch(updateWallet(response?.wallet));
 
             return toast.success(response?.message);
@@ -219,7 +219,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, setTabs }: { webColor:
                         <div className="flex justify-between items-center">
                             <p className="flex items-center gap-[4px] mb-[5px]">
                                 {/* <GoDotFill className="text-[15px]" /> */}
-                                <img alt="" src={`${URL}/${redisGames?.find((r:any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />
+                                <img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />
                                 <span className="text-[15px] font-[600]">{item?.gameName}</span>
                             </p>
                             <ImCross className="text-[red] text-[10px] cursor-pointer me-[5px]" onClick={() => fn_closeBet(index)} />
@@ -409,7 +409,7 @@ const OpenBet = ({ openBets }: any) => {
                         </tr>
                         {openBets?.map((item: any) => (
                             <tr className="h-[40px] text-[13px] font-[500] border-b">
-                                <td className="flex items-center gap-[3px]"><img alt="" src={`${URL}/${redisGames?.find((r:any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />{item?.gameName}</td>
+                                <td className="flex items-center gap-[3px]"><img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />{item?.gameName}</td>
                                 <td>{item?.odd}</td>
                                 <td className="flex items-center gap-[2px]"><FaIndianRupeeSign />{item?.amount}</td>
                                 <td>{item?.profit}/{item?.amount}</td>

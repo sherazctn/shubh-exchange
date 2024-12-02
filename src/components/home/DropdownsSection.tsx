@@ -9,7 +9,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import Loader from "../Loader";
 import { FaExclamationCircle } from "react-icons/fa";
 import URL, { getLiveMarketsApi } from "../../api/api";
-import { updateBets, updateBettingSlip, updateLiveMarkets, updateSelectedEvent } from "../../features/features";
+import { updateBets, updateBettingSlip, updateLiveMarkets, updateSelectedEvent, updateSlipTab } from "../../features/features";
 
 const CricketDropdownsSection = ({ text, id }: any) => {
 
@@ -35,6 +35,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
     if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
     if (!gameName) return;
+    dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {

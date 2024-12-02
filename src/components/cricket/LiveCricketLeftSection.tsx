@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
-import { updateBets, updateBettingSlip } from "../../features/features";
+import { updateBets, updateBettingSlip, updateSlipTab } from "../../features/features";
 
 import cashoutImg from "../../assets/cashout.png";
 
@@ -197,6 +197,7 @@ const MatchOdds = ({ market, webColor, matchOdds, setMatchOdds, runner, sportId,
     if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
     if (!runnerName) return;
+    dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
     const obj = {
@@ -350,6 +351,7 @@ const Bookmaker = ({ webColor, eventId }: any) => {
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
     const obj = {
@@ -568,6 +570,7 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
     const obj = {
