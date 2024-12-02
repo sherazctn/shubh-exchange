@@ -361,7 +361,7 @@ const Bookmaker = ({ webColor, eventId }: any) => {
       gameName: runnerName,
       loss,
       marketId: runnerId,
-      marketName: "bookmarker",
+      marketName: "bookmaker",
       odd: odd,
       profit,
       side: side,

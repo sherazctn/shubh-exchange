@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuWallet2 } from "react-icons/lu";
-import { FaHandHoldingDollar } from "react-icons/fa6";
+// import { FaHandHoldingDollar } from "react-icons/fa6";
 import { SiBetfair } from "react-icons/si";
 import { MdOutlineHistory } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -10,13 +11,24 @@ import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { BsBank } from "react-icons/bs";
 import { ImCreditCard } from "react-icons/im";
 
+import { webNameApi } from "../../api/api";
 import { updateSmallsidebar } from "../../features/features";
 
 const Sidebar = ({ colors, path }: any) => {
   const dispatch = useDispatch();
+  const [webName, setWebName] = useState("");
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const fn_webName = async () => {
+    const response = await webNameApi();
+    if (response?.status) {
+      setWebName(response?.data[0].name)
+    }
+  };
+  useEffect(() => {
+    fn_webName();
+  }, [])
   return (
     <div
       className={`fixed min-h-[100vh] z-[9] shadow-lg lg:shadow-none transition-all duration-500 ${smallSidebar ? "w-[50px]" : "w-[250px]"
@@ -31,10 +43,10 @@ const Sidebar = ({ colors, path }: any) => {
       />
       {!smallSidebar && (
         <p
-          className="text-[25px] text-center font-[500] mt-[40px]"
+          className="text-[25px] text-center font-[500] mt-[40px] min-h-[35px]"
           style={{ color: panelSecColor }}
         >
-          Shubh Exchange
+          {webName}
         </p>
       )}
       <div className={`flex flex-col gap-[5px] ${smallSidebar ? "mt-[50px]" : "mt-[20px]"}`}>
@@ -104,7 +116,7 @@ const Sidebar = ({ colors, path }: any) => {
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
         /> */}
-        <Menus
+        {/* <Menus
           title={"Bonus Statement"}
           colors={colors}
           pathEquals={"bonusStatement"}
@@ -114,7 +126,7 @@ const Sidebar = ({ colors, path }: any) => {
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
-        />
+        /> */}
         {/* <Menus
           title={"Payment Information"}
           colors={colors}

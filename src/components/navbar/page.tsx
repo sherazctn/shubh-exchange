@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -104,6 +104,7 @@ const Navbar = () => {
   const fn_logout = () => {
     Cookies.remove('token');
     dispatch(authenticate(false));
+    dispatch(updateBets([]));
     setAccountDropdown(false);
     return toast.success("Logout Successfullty");
   }
@@ -112,7 +113,7 @@ const Navbar = () => {
     if (!authentication) {
       return toast.error("Login Yourself")
     } else {
-      navigate("/account/deposit-withdraw")
+      window.location.href = "/account/deposit-withdraw";
     }
   }
 
@@ -234,30 +235,30 @@ const Navbar = () => {
             </div>
           </div>
           <ul className="menus flex flex-col text-white justify-center gap-[15px] font-[600] text-[15px] w-full">
-            <Link
-              to={"/"}
+            <a
+              href={"/"}
               className={`menu w-[max-content] ${pageNav === "home" && "border-b"
                 }`}
               style={{ borderColor: "white" }}
             >
               My Markets
-            </Link>
-            <Link
-              to={"/all-sports"}
+            </a>
+            <a
+              href={"/all-sports"}
               className={`menu w-[max-content] ${pageNav === "sports" && "border-b"
                 }`}
               style={{ borderColor: "white" }}
             >
               Sports
-            </Link>
-            <Link
-              to={"/in-play"}
+            </a>
+            <a
+              href={"/in-play"}
               className={`menu w-[max-content] ${pageNav === "inplay" && "border-b"
                 }`}
               style={{ borderColor: "white" }}
             >
               In-Play
-            </Link>
+            </a>
             <li
               className="menu w-[max-content]"
               style={{ borderColor: "white" }}
@@ -298,48 +299,48 @@ const Navbar = () => {
             onMouseLeave={() => setAccountDropdown(false)}
             className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
           >
-            <Link
-              to={"/account/dashboard"}
+            <a
+              href={"/account/dashboard"}
               className="border-b flex-1 flex items-center gap-[5px] w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
             >
               <LuLayoutDashboard />
               Dashboard
-            </Link>
-            <Link
-              to={"/account/wallet"}
+            </a>
+            <a
+              href={"/account/wallet"}
               className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
               <LuWallet2 />
               My Wallet
-            </Link>
-            <Link
-              to={"/account/bets"}
+            </a>
+            <a
+              href={"/account/bets"}
               className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
               <SiBetfair />
               Bets
-            </Link>
-            <Link
-              to={"/account/account-statement"}
+            </a>
+            <a
+              href={"/account/payment-information"}
               className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
               <GiNotebook />
-              Account Statement
-            </Link>
-            <Link
-              to={"/account/bonus-statement"}
+              Payment Information
+            </a>
+            {/* <a
+              href={"/account/bonus-statement"}
               className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
               <FaHandHoldingDollar />
               Bonus Statement
-            </Link>
-            <Link
-              to={"/account/login-history"}
+            </a> */}
+            <a
+              href={"/account/login-history"}
               className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
             >
               <MdOutlineHistory />
               Login History
-            </Link>
+            </a>
             <div
               onClick={fn_logout}
               className="border-b text-[13px] font-[500] flex items-center gap-[5px] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-b-[7px]"
