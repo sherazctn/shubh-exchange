@@ -46,7 +46,9 @@ const TableRows = ({ colors, item, index }: any) => {
             <td>{item?.gameName}</td>
             <td>{formatDate(item?.createdAt)}</td>
             <td>{item?.profit}</td>
-            <td style={{ color: item?.status === "pending" ? "black" : item?.status === "win" ? "green" : "red" }}>{item?.status === "pending" ? "Continue" : item?.status === "win" ? `+${item?.profit}` : `-${item?.loss}`}</td>
+            <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : item?.status === "abandoned" ? "orange" : "black" }}>
+                {item?.status === "win" ? `+${item?.profit}` : item?.status === "loss" ? `-${item?.loss}` : item?.status === "abandoned" ? `Abandoned` : `Continue`}
+            </td>
         </tr>
     );
 };

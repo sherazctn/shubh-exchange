@@ -52,12 +52,13 @@ const TableRows = ({ colors, item, index }: any) => {
       <td>{item?.side}</td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{item?.odd}</td>
-      <td style={{ color: item?.status === "win" ? "green" : "red" }} >{item?.status === "win" ? `+${item?.profit}` : `-${item?.loss}`}</td>
+      <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : "orange" }} >{item?.status === "win" ? `+${item?.profit}` : item?.status === "loss" ? `-${item?.loss}` : "Abandoned"}</td>
       <td>{formatDate(item?.createdAt)}</td>
       <td>
         {item?.status === "win" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[25px] rounded-full w-[75px] text-[11px] font-[600] text-[#2b872a] flex justify-center items-center">Win</p>}
         {item?.status === "pending" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#fff7cf] h-[25px] rounded-full w-[75px] text-[11px] font-[600] text-[#b9ab25] flex justify-center items-center">Running</p>}
         {item?.status === "loss" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#ffd6d6] h-[25px] rounded-full w-[75px] text-[11px] font-[600] text-[#fd3939] flex justify-center items-center">Loss</p>}
+        {item?.status === "abandoned" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#f6e1b9] h-[25px] rounded-full w-[75px] text-[11px] font-[600] text-[orange] flex justify-center items-center">Abandoned</p>}
       </td>
     </tr>
   );
