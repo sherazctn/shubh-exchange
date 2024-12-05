@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
-import { updateBets, updateBettingSlip, updateSlipTab } from "../../features/features";
+import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features";
 
 import cashoutImg from "../../assets/cashout.png";
 
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { getUpdatedBookmaker, getUpdatedFancyMarket } from "../../api/api";
+import { getUpdatedBookmaker, getUpdatedFancyMarket, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners, sportId, eventId }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
@@ -525,6 +525,8 @@ const Bookmaker = ({ webColor, eventId }: any) => {
 const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [showAmounts, setAmount] = useState("");
+  const [longPress, setLongPress] = useState(false);
   const bets = useSelector((state: any) => state.bets);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const wallet = useSelector((state: any) => state.wallet);
@@ -567,6 +569,8 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
   const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
     e.preventDefault();
     e.stopPropagation();
+    if (longPress) return;
+    if (showAmounts !== "") setAmount("");
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
@@ -593,6 +597,32 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
     dispatch(updateBettingSlip("open"));
   }
 
+  const handleMouseDown = (e: React.MouseEvent, item: any, num: string) => {
+    let timer: NodeJS.Timeout;
+
+    timer = setTimeout(() => {
+      setLongPress(true);
+      setAmount(`${item?.mid}-${item?.sid}-${num}`);
+    }, 1000);
+
+    const handleMouseUp = () => {
+      clearTimeout(timer);
+      document.removeEventListener('mouseup', handleMouseUp);
+
+      e.stopPropagation();
+    };
+
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  useEffect(() => {
+    if (longPress) {
+      setTimeout(() => {
+        setLongPress(false);
+      }, 2000);
+    }
+  }, [longPress]);
+
   useEffect(() => {
     if (eventId) {
       fn_updateFancyMarket();
@@ -604,9 +634,41 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
     };
   }, [eventId, tabs, bets]);
 
+  const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!authentication) return toast.error("Login Yourself");
+    const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
+    const loss = amount;
+    if (wallet < amount) return toast.error("Not Enough Balance");
+    setAmount("");
+    const obj = {
+      afterLoss: wallet - 10,
+      afterWin: wallet + profit,
+      amount: amount,
+      eventId: eventId,
+      gameId: `${item?.mid}-${item?.sid}`,
+      gameName: eventName,
+      loss,
+      marketId: `${item?.mid}-${item?.sid}`,
+      marketName: "fancy",
+      odd: odd,
+      profit,
+      side: side,
+      sportId: "4",
+    };
+    const response = await placeBetsApi([obj]);
+    if (response?.status) {
+      dispatch(updateWallet(response?.wallet));
+      return toast.success(response?.message);
+    } else {
+      return toast.error(response?.message);
+    }
+  }
+
   if (data?.length > 0) {
     return (
-      <div className="bg-white shadow-sm rounded-[7px]">
+      <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
         {/* header */}
         <div
           className="h-[47px] flex justify-between border-b cursor-pointer"
@@ -628,6 +690,7 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
         {/* content */}
         <div>
           {data?.map((item: any) => {
+            if (item?.gstatus === "SUSPENDED" || item?.gstatus === "Ball Running") setAmount("");
             if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running") {
               return (
                 <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
@@ -636,19 +699,9 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center relative">
                     <div
-                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                      onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back")}
-                    >
-                      <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {item?.b1}
-                      </p>
-                      <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {item?.bs1}
-                      </p>
-                    </div>
-                    <div
-                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer"
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
                       onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay")}
+                      onMouseDown={(e) => handleMouseDown(e, item, '1')}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         {item?.l1}
@@ -656,6 +709,36 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                         {item?.ls1}
                       </p>
+                      {showAmounts === `${item?.mid}-${item?.sid}-1` && (
+                        <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 1000, item, item?.l1, "Lay")}>1000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 2000, item, item?.l1, "Lay")}>2000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 3000, item, item?.l1, "Lay")}>3000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 4000, item, item?.l1, "Lay")}>4000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 5000, item, item?.l1, "Lay")}>5000</button>
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                      onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back")}
+                      onMouseDown={(e) => handleMouseDown(e, item, '2')}
+                    >
+                      <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                        {item?.b1}
+                      </p>
+                      <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                        {item?.bs1}
+                      </p>
+                      {showAmounts === `${item?.mid}-${item?.sid}-2` && (
+                        <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 1000, item, item?.b1, "Back")}>1000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 2000, item, item?.b1, "Back")}>2000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 3000, item, item?.b1, "Back")}>3000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 4000, item, item?.b1, "Back")}>4000</button>
+                          <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, 5000, item, item?.b1, "Back")}>5000</button>
+                        </div>
+                      )}
                     </div>
                     <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
                       <p className="text-[11px]">Min Bet: {item?.min}.00K</p>
