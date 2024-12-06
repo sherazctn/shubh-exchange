@@ -16,12 +16,10 @@ import { getUpdatedBookmaker, getUpdatedFancyMarket, placeBetsApi } from "../../
 const LiveCricketLeftSection = ({ singleLiveCricket, markets, selectedEvent, runners, sportId, eventId }: any) => {
   const divHeight = `${window.innerHeight - 60}px`;
   const [tabs, setTabs] = useState("Main");
-  const [tiedMatch, setTiedMatch] = useState(true);
+  // const [tiedMatch, setTiedMatch] = useState(true);
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
   const webColor = useSelector((state: any) => state.websiteColor);
-  const matchOddsData = [singleLiveCricket?.odds?.Runners[0], singleLiveCricket?.odds?.Runners[1]];
-  const drawMatchData = singleLiveCricket?.odds?.Runners[2];
 
   const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
 
@@ -615,6 +613,34 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  const handleLongPress = (e: React.MouseEvent | React.TouchEvent, item: any, num: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.userSelect = 'none';
+      e.currentTarget.style.webkitUserSelect = 'none';
+    }
+
+    let timer: NodeJS.Timeout;
+
+    const startLongPress = () => {
+      setLongPress(true);
+      setAmount(`${item?.mid}-${item?.sid}-${num}`);
+    };
+
+    const cancelLongPress = () => {
+      clearTimeout(timer);
+      document.removeEventListener('mouseup', cancelLongPress);
+      document.removeEventListener('touchend', cancelLongPress);
+    };
+
+    timer = setTimeout(startLongPress, 1000);
+
+    document.addEventListener('mouseup', cancelLongPress);
+    document.addEventListener('touchend', cancelLongPress);
+  };
+
   useEffect(() => {
     if (longPress) {
       setTimeout(() => {
@@ -690,7 +716,6 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
         {/* content */}
         <div>
           {data?.map((item: any) => {
-            if (item?.gstatus === "SUSPENDED" || item?.gstatus === "Ball Running") setAmount("");
             if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running") {
               return (
                 <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
@@ -702,6 +727,7 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
                       onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay")}
                       onMouseDown={(e) => handleMouseDown(e, item, '1')}
+                      onTouchStart={(e) => handleLongPress(e, item, '1')}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         {item?.l1}
@@ -723,6 +749,7 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                       className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
                       onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back")}
                       onMouseDown={(e) => handleMouseDown(e, item, '2')}
+                      onTouchStart={(e) => handleLongPress(e, item, '2')}
                     >
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                         {item?.b1}
@@ -754,23 +781,23 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                     <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                    <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] lg:ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                    <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                       SUSPENDED
                     </div>
                     <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {item?.b1}
+                        -
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {item?.bs1}
+                        -
                       </p>
                     </div>
                     <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {item?.l1}
+                        -
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {item?.ls1}
+                        -
                       </p>
                     </div>
                     <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
@@ -784,23 +811,23 @@ const Fancy = ({ webColor, eventId, tabs, setTabs, eventName }: any) => {
                     <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
                   </div>
                   <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                    <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] lg:ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                    <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                       Ball Running
                     </div>
                     <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {item?.b1}
+                        -
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {item?.bs1}
+                        -
                       </p>
                     </div>
                     <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
                       <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                        {item?.l1}
+                        -
                       </p>
                       <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                        {item?.ls1}
+                        -
                       </p>
                     </div>
                     <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>

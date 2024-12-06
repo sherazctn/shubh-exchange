@@ -40,7 +40,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
 }
 
 .navbar-btn {
@@ -168,7 +167,8 @@
 }
 
 .swiper-pagination-bullet-active {
-  background-color: white; /* Change active bullet color */
+  background-color: white;
+  /* Change active bullet color */
 }
 
 .home-hero-section-swiper .swiper-slide img {
@@ -287,9 +287,11 @@
   0% {
     color: white;
   }
+
   50% {
     color: gray;
   }
+
   100% {
     color: white;
   }
@@ -384,7 +386,7 @@
   font-weight: 500;
 }
 
-.bet-slip-main{
+.bet-slip-main {
   /* background-color: var(--main-color); */
   position: fixed;
   z-index: 9999;
@@ -393,22 +395,30 @@
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-.dot-blink{
+.dot-blink {
   animation: dot-blink 0.5s infinite;
 }
 
 @keyframes dot-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
-.swiper-button-prev{
+.swiper-button-prev {
   color: white !important;
   font-size: 20px !important;
   scale: 0.5;
   margin-left: -10px;
 }
-.swiper-button-next{
+
+.swiper-button-next {
   color: white !important;
   font-size: 20px !important;
   scale: 0.5;
@@ -416,9 +426,12 @@
 }
 
 @keyframes scaleUpDown {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }

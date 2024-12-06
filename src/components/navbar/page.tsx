@@ -119,7 +119,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar shadow-md" style={{ backgroundColor: webColor }}>
+      <div className="navbar px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>
         {/* company name */}
         <div className="flex items-center gap-[10px]">
           {webLogo !== "" && (
@@ -127,7 +127,7 @@ const Navbar = () => {
               <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
             </div>
           )}
-          <a href={"/"} className="text-[28px] font-[700] text-[--text-color]">
+          <a href={"/"} className="text-[22px] sm:text-[28px] font-[700] text-[--text-color]">
             {webName}
           </a>
         </div>

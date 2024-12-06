@@ -50,7 +50,7 @@ function App() {
       dispatch(updateRedisGamesData(response?.data));
       localStorage.setItem('games', JSON.stringify(response?.data));
     }
-  
+
     setInterval(async () => {
       const response = await retrieveGamesDataToRedisApi();
       if (response?.status) {
@@ -60,7 +60,7 @@ function App() {
     }, 60000);
   };
   fn_getGamesData();
-  
+
   return (
     <>
       {!isAccountPage && <Navbar />}
