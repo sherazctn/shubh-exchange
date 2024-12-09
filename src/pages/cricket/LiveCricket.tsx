@@ -4,8 +4,8 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import RightSection from "../../components/sports/RightSection";
 import LiveCricketLeftSection from "../../components/cricket/LiveCricketLeftSection";
-import { retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
 import { updateMobileMenu, updatePageNav, updateSelectedEvent } from "../../features/features";
+import { getExtraMarketsByEventIdApi, retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
 
 const LiveCricket = () => {
   const dispatch = useDispatch();
@@ -18,8 +18,8 @@ const LiveCricket = () => {
   const [runners, setRunners] = useState([]);
   const [marketIds, setMarketIds] = useState([]);
   const [bookmaker, setBookmaker] = useState([]);
+  const [extraMarkets, setExtraMarkets] = useState([]);
   const showSidebar = useSelector((state: any) => state.showSidebar);
-  const liveCricket = useSelector((state: any) => state.liveCricket);
   const selectedEvent = useSelector((state: any) => state.selectedEvent);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -30,6 +30,7 @@ const LiveCricket = () => {
     dispatch(updateMobileMenu(false));
     dispatch(updatePageNav("cricket"));
     fn_getMarket();
+    fn_getExtraMarkets();
     if (Object.keys(selectedEvent)?.length === 0) {
       const storedEvent = localStorage.getItem('selectedEvent');
       if (storedEvent) {
@@ -83,12 +84,17 @@ const LiveCricket = () => {
     }
   };
 
-  const singleLiveCricket = liveCricket?.find((item: any) => item?.Id);
+  const fn_getExtraMarkets = async () => {
+    const response = await getExtraMarketsByEventIdApi(eventId);
+    if (response?.status) {
+      setExtraMarkets(response?.data);
+    }
+  };
 
   return (
     <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]" : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"} pe-[10px] sm:pe-[20px] flex`}>
-      <LiveCricketLeftSection singleLiveCricket={singleLiveCricket} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
-      <RightSection />
+      <LiveCricketLeftSection extraMarkets={extraMarkets} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
+      <RightSection sportId={sportId} eventId={eventId}  />
     </div>
   );
 };

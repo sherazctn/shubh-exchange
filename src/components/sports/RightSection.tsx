@@ -7,7 +7,7 @@ import RightSlider from "./RightSlider";
 import { updateSelectedEvent } from "../../features/features";
 import URL, { getPopularCricketEventsApi } from "../../api/api";
 
-const RightSection = () => {
+const RightSection = ({ sportId, eventId }: any) => {
   const dispatch = useDispatch();
   const divHeight = `${window.innerHeight - 60}px`;
   const [showCasino, setShowCasino] = useState(true);
@@ -40,7 +40,7 @@ const RightSection = () => {
         >
           Live Casino Games
         </button>
-        {showCasino && <RightSlider />}
+        {showCasino && <RightSlider sportId={sportId} eventId={eventId} />}
       </div>
       <div className="rounded-[7px] p-[7px] bg-white mt-[7px]">
         <button

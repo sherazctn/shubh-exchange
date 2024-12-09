@@ -188,15 +188,15 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
                         {passwordType === "password" ? (
                             <FaRegEyeSlash
                                 onClick={() => setPasswordType("text")}
-                                className="cursor-pointer absolute right-[10px] bottom-[37px]"
+                                className="cursor-pointer absolute right-[10px] bottom-[55px] sm:bottom-[37px]"
                             />
                         ) : (
                             <FaRegEye
                                 onClick={() => setPasswordType("password")}
-                                className="cursor-pointer absolute right-[10px] bottom-[37px]"
+                                className="cursor-pointer absolute right-[10px] bottom-[55px] sm:bottom-[37px]"
                             />
                         )}
-                        <div className="text-[13px] flex items-center gap-[30px]">
+                        <div className="text-[13px] flex flex-col sm:flex-row sm:items-center sm:gap-[30px]">
                             <p className={`flex items-center ${lengthError ? "text-[red]" : "text-[green]"}`}>
                                 {lengthError ? <RxCross2 className={`me-[5px]`} /> : <TiTick className={`me-[5px] scale-[1.2]`} />}
                                 Length greater then 6 letter

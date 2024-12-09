@@ -7,7 +7,7 @@ import "swiper/css/autoplay";
 import img1 from "../../assets/slide-img-1.png";
 import img2 from "../../assets/slide-img-2.png";
 
-const RightSlider = () => {
+const RightSlider = ({ sportId, eventId }: any) => {
   return (
     <div>
       <Swiper
@@ -38,15 +38,20 @@ const RightSlider = () => {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover"
           }}
-        ></SwiperSlide>
-        <SwiperSlide
+        >
+          <iframe
+            src={`https://dpmatka.in/dd.php?sportId=${sportId}&eventId=${eventId}`}
+            className="w-full h-full bg-black"
+          ></iframe>
+        </SwiperSlide>
+        {/* <SwiperSlide
           style={{
             backgroundImage: `url(${img2})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover"
           }}
-        ></SwiperSlide>
+        ></SwiperSlide> */}
         {/* <SwiperSlide
           style={{
             backgroundImage: `url(https://assets.cdnppb.net/lac/2023/06/27/f86c9e67b53c_ds107934_bingo_v1.jpg)`,

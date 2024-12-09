@@ -164,7 +164,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
     });
   };
   return (
-    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{minHeight: `${window.innerHeight-330}px`}}>
+    <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
       {competitions?.length > 0 ? competitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
@@ -237,7 +237,8 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
       side: side,
       sportId: tab
     }
-    const updatedBets = [obj, ...bets];
+    console.log(obj)
+    const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
   }

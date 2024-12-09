@@ -645,4 +645,17 @@ export const getUpdatedFancyMarket = async (eventId: any) => {
     }
 };
 
+export const getExtraMarketsByEventIdApi = async (eventId: any) => {
+    try {
+        const response = await axios.get(`${URL}/redis/get-extra-eventId?eventId=${eventId}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
 export default URL;

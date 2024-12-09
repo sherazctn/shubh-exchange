@@ -16,7 +16,7 @@ import { SiBetfair } from "react-icons/si";
 import { RxCross2 } from "react-icons/rx";
 import { IoMenuSharp } from "react-icons/io5";
 import { PiHandDeposit } from "react-icons/pi";
-import { FaHandHoldingDollar, FaIndianRupeeSign } from "react-icons/fa6";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
@@ -156,13 +156,13 @@ const Navbar = () => {
               <MdOutlineSportsScore className="w-[17px] h-[17px] text-[--text-color]" />
               In-Play
             </a>
-            <a
+            {/* <a
               href={"/casino"}
               className={`menu ${pageNav === "casino" && "active"} flex items-center gap-[4px]`}
             >
               <MdOutlineCasino className="w-[17px] h-[17px] text-[--text-color]" />
               Casino
-            </a>
+            </a> */}
           </ul>
           {authentication ? (
             <div className="min-w-[270px] bg-[#ffffff5e] rounded-full flex justify-between">
@@ -259,12 +259,12 @@ const Navbar = () => {
             >
               In-Play
             </a>
-            <li
+            {/* <li
               className="menu w-[max-content]"
               style={{ borderColor: "white" }}
             >
               Casino
-            </li>
+            </li> */}
             {!authentication && (
               <button
                 className="navbar-btn"
