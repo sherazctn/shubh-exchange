@@ -38,7 +38,7 @@ const RightSection = ({ sportId, eventId }: any) => {
           style={{ backgroundColor: webColor }}
           onClick={() => setShowCasino(!showCasino)}
         >
-          Live Casino Games
+          Live Match
         </button>
         {showCasino && <RightSlider sportId={sportId} eventId={eventId} />}
       </div>

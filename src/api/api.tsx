@@ -69,6 +69,7 @@ export const AuthCheckApi = async (token: string) => {
                 'Content-Type': 'application/json'
             }
         });
+        console.log("response ", response);
         return response;
     } catch (error: any) {
         if (error?.status === 400) {
@@ -648,6 +649,24 @@ export const getUpdatedFancyMarket = async (eventId: any) => {
 export const getExtraMarketsByEventIdApi = async (eventId: any) => {
     try {
         const response = await axios.get(`${URL}/redis/get-extra-eventId?eventId=${eventId}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
+export const updateUserApi = async (data: any) => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.put(`${URL}/user/update`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         return { status: true, data: response?.data };
     } catch (error: any) {
         if (error?.status === 400) {

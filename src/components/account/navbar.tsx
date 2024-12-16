@@ -1,22 +1,43 @@
 import { Drawer } from "antd";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { FaHome, FaUser } from "react-icons/fa";
-import { IoIosNotifications, IoMdSettings } from "react-icons/io";
-// import { IoMoon, IoSunnySharp } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { PiHandDeposit } from "react-icons/pi";
-// import { updateDarkTheme } from "../../features/features";
-// import { updateColorScheme } from "../../features/features";
+import { FaHome, FaUser } from "react-icons/fa";
+// import { IoMoon, IoSunnySharp } from "react-icons/io5";
+import { IoIosNotifications, IoMdSettings } from "react-icons/io";
+
+import { updateUserApi } from "../../api/api";
 
 const Navbar = ({ pageName, colors }: any) => {
   const navigate = useNavigate();
   // const colorScheme = useSelector((state: any) => state.colorScheme);
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const user = useSelector((state: any) => state?.user);
+  const [oddsPrice, setOddsPrice] = useState([]);
+  const [prevPrice, setPrevPrice] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
+  useEffect(() => {
+    setOddsPrice(user?.oddsPrice || [1000, 2000, 3000, 4000, 5000]);
+    setPrevPrice(user?.oddsPrice || [1000, 2000, 3000, 4000, 5000]);
+  }, [user]);
+  const onChangePrice = (index: number, price: number) => {
+    setOddsPrice((prev: any) =>
+      prev.map((item: any, i: any) => (i === index ? price : item))
+    );
+  };
+  const fn_update = async () => {
+    const response = await updateUserApi({ oddsPrice: oddsPrice });
+    if (response?.status) {
+      toast.success("Data Updated")
+    } else {
+      toast.error(response?.message || "Something went wrong")
+    }
+  }
   return (
     <>
       <div className="mt-[20px] mx-[10px] sm:mx-[20px] flex flex-col-reverse sm:flex-row gap-[5px] items-center justify-between">
@@ -26,7 +47,7 @@ const Navbar = ({ pageName, colors }: any) => {
         >
           {pageName}
         </p>
-        <div className="flex items-center gap-[15px]">
+        <div className="flex flex-col sm:flex-row items-center gap-[15px]">
           <div
             className="w-[max-content] h-[60px] rounded-full flex items-center px-[14px]"
             style={{ backgroundColor: panelMainColor }}
@@ -94,37 +115,15 @@ const Navbar = ({ pageName, colors }: any) => {
         open={openDrawer}
         style={{ fontFamily: "Roboto" }}
       >
-        {/* <p className="text-[15px] font-[600]">Select Theme</p>
-        <div className="mt-[10px] flex gap-[10px]">
-          <div
-            className={`w-[30px] h-[30px] rounded-full cursor-pointer ${
-              colorScheme === "color1" && "border border-[black]"
-            }`}
-            style={{ backgroundColor: colors.color1 }}
-            onClick={() => dispatch(updateColorScheme("color1"))}
-          ></div>
-          <div
-            className={`w-[30px] h-[30px] rounded-full cursor-pointer ${
-              colorScheme === "color2" && "border border-[black]"
-            }`}
-            style={{ backgroundColor: colors.color2 }}
-            onClick={() => dispatch(updateColorScheme("color2"))}
-          ></div>
-        </div>
-        <hr className="my-[20px]" /> */}
         <p className="text-[15px] font-[600]">Account Info</p>
         <div className="mt-[10px]">
           <div className="flex h-[22px]">
             <p className="w-[120px] font-[500]">Name</p>
-            <p>Test</p>
+            <p>{user?.username}</p>
           </div>
           <div className="flex h-[22px]">
-            <p className="w-[120px] font-[500]">Username</p>
-            <p>test228</p>
-          </div>
-          <div className="flex h-[22px]">
-            <p className="w-[120px] font-[500]">Mobile</p>
-            <p>+91 203 1234434</p>
+            <p className="w-[120px] font-[500]">Mobile #</p>
+            <p>{user?.phone}</p>
           </div>
         </div>
         <hr className="my-[20px]" />
@@ -135,14 +134,27 @@ const Navbar = ({ pageName, colors }: any) => {
             <p>INR</p>
           </div>
           <div className="flex h-[22px]">
-            <p className="w-[120px] font-[500]">Odds Format</p>
-            <p>--</p>
-          </div>
-          <div className="flex h-[22px]">
             <p className="w-[120px] font-[500]">Time Zone</p>
             <p>GMT+0500</p>
           </div>
+          <div>
+          </div>
         </div>
+        <hr className="my-[20px]" />
+        <p className="text-[15px] font-[600]">Odds Price Hints</p>
+        <div className="flex flex-col gap-[7px] mt-[10px]">
+          {oddsPrice && oddsPrice?.map((i: number, index: number) => (
+            <input
+              min={1}
+              value={i}
+              type="number"
+              onChange={(e: any) => onChangePrice(index, parseInt(e.target.value))}
+              className="bg-gray-200 w-full px-[10px] h-[25px] font-[500] rounded-[5px]"
+            />
+          ))}
+          <button className={`h-[35px] rounded-[5px] font-[500] mt-[5px] ${prevPrice === oddsPrice ? "bg-gray-200 cursor-not-allowed hidden" : "bg-gray-300 cursor-pointer"}`} onClick={fn_update}>Update</button>
+        </div>
+        <hr className="my-[20px]" />
         <button
           onClick={() => {
             navigate("/");

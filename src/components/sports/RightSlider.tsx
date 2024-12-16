@@ -1,66 +1,47 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import React, { useEffect } from 'react';
 
-import img1 from "../../assets/slide-img-1.png";
-import img2 from "../../assets/slide-img-2.png";
+interface RightSliderProps {
+  sportId: string | number;
+  eventId: string | number;
+}
 
-const RightSlider = ({ sportId, eventId }: any) => {
+const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
+  useEffect(() => {
+    // Attempt to disable right-click prevention
+    const handleContextMenu = (e: MouseEvent) => {
+      e.stopPropagation();
+      return true;
+    };
+
+    const iframe = document.querySelector('iframe');
+    if (iframe) {
+      iframe.addEventListener('contextmenu', handleContextMenu);
+    }
+
+    return () => {
+      if (iframe) {
+        iframe.removeEventListener('contextmenu', handleContextMenu);
+      }
+    };
+  }, []);
+
   return (
-    <div>
-      <Swiper
-        pagination={{
-          dynamicBullets: true,
-        }}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
-        modules={[Pagination, Autoplay]}
-        className="sports-right-swiper h-[170px] sm:h-[300px]"
-        spaceBetween={50}
-        slidesPerView={1}
-      >
-        {/* <SwiperSlide
-          style={{
-            backgroundImage: `url(https://media.cybernews.com/images/featured-big/2022/06/Best-VPNs-for-Betfair.jpg)`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover"
-          }}
-        ></SwiperSlide> */}
-        <SwiperSlide
-          style={{
-            backgroundImage: `url(${img1})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover"
-          }}
-        >
-          <iframe
-            src={`https://dpmatka.in/dd.php?sportId=${sportId}&eventId=${eventId}`}
-            className="w-full h-full bg-black"
-          ></iframe>
-        </SwiperSlide>
-        {/* <SwiperSlide
-          style={{
-            backgroundImage: `url(${img2})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover"
-          }}
-        ></SwiperSlide> */}
-        {/* <SwiperSlide
-          style={{
-            backgroundImage: `url(https://assets.cdnppb.net/lac/2023/06/27/f86c9e67b53c_ds107934_bingo_v1.jpg)`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover"
-          }}
-        ></SwiperSlide> */}
-      </Swiper>
+    <div className="w-full max-w-[450px] mx-auto rounded-[7px]">
+      <div className="relative pt-[56.25%]">
+        <iframe 
+          src={`https://dpmatka.in/dd.php?sportId=${sportId}&eventId=${eventId}`}
+          className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowFullScreen
+          frameBorder="0"
+          referrerPolicy="no-referrer"
+          scrolling="no"
+          sandbox="allow-scripts allow-same-origin allow-presentation"
+        ></iframe>
+      </div>
     </div>
   );
 };

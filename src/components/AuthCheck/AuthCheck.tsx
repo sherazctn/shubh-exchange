@@ -1,10 +1,11 @@
 import Cookies from 'js-cookie';
-import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { authenticate, updatePanelMainColor, updatePanelSecColor, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
-import { AuthCheckApi, CheckAdminApi, panelColorApi, webColorApi } from '../../api/api';
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import Loader from '../Loader';
+import { AuthCheckApi, CheckAdminApi, panelColorApi, webColorApi } from '../../api/api';
+import { authenticate, updatePanelMainColor, updatePanelSecColor, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
 
 import img from "../../assets/block-website.png";
 import { FaExclamationTriangle } from 'react-icons/fa';
@@ -53,6 +54,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
             }
             dispatch(authenticate(response.status ? true : false));
             if (response?.status) {
+                dispatch(updateUser(response?.data?.user))
                 dispatch(updateWallet(response?.data?.wallet))
                 dispatch(updateUsername(response?.data?.username))
             }

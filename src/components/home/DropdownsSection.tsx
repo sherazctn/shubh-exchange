@@ -15,6 +15,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
 
   const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
+  const user = useSelector((state: any) => state.user);
   const wallet = useSelector((state: any) => state.wallet);
   const webColor = useSelector((state: any) => state.websiteColor);
   const liveMarkets = useSelector((state: any) => state.liveMarkets);
@@ -28,6 +29,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
   const [prevOdds, setPrevOdds] = useState<any>([]);
   const [longPress, setLongPress] = useState(false);
   const [competitionsId, setCompetitionsId] = useState<any>([]);
+  const [oddsPrice, setOddsPrice] = useState([]);
   const sportName = id === 1 ? "soccer" : id === 2 ? "tennnis" : "cricket";
 
   const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
@@ -184,6 +186,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
     fn_getLiveMarkets();
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (user?.oddsPrice) {
+      setOddsPrice(user?.oddsPrice || [1000, 2000, 3000, 4000, 5000]);
+    }
+  }, [user, authentication]);
+
   return (
     <div className="mt-[15px]">
       <div
@@ -303,10 +311,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -320,10 +328,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -337,10 +345,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -354,10 +362,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -371,10 +379,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -422,10 +430,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -439,10 +447,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -456,10 +464,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -473,10 +481,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -490,10 +498,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -542,10 +550,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -559,10 +567,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -576,10 +584,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -593,10 +601,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -610,10 +618,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -661,10 +669,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -678,10 +686,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -695,10 +703,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -712,10 +720,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -729,10 +737,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -781,10 +789,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -798,10 +806,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -815,10 +823,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -832,10 +840,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -849,10 +857,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -887,7 +895,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size || "-"}
                                 </p>
                                 {showAmounts === `${event?.market_id}-${event?.odd?.runners?.[1]?.selectionId}-2` && (
-                                  <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                                  <div className="absolute right-0 top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
                                     <button
                                       style={{ backgroundColor: webColor }}
                                       className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
@@ -900,10 +908,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -917,10 +925,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -934,10 +942,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -951,10 +959,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -968,10 +976,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -1022,10 +1030,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1039,10 +1047,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1056,10 +1064,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1073,10 +1081,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1090,10 +1098,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -1141,10 +1149,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1158,10 +1166,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1175,10 +1183,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1192,10 +1200,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1209,10 +1217,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -1282,10 +1290,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1299,10 +1307,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1316,10 +1324,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1333,10 +1341,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1350,10 +1358,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}
@@ -1388,7 +1396,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size || "-"}
                                 </p>
                                 {showAmounts === `${event?.market_id}-${event?.odd?.runners?.[1]?.selectionId}-2` && (
-                                  <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                                  <div className="absolute right-0 top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
                                     <button
                                       style={{ backgroundColor: webColor }}
                                       className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
@@ -1401,10 +1409,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        1000
+                                        oddsPrice?.[0] || 1000
                                       )}
                                     >
-                                      1000
+                                      {oddsPrice?.[0] || 1000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1418,10 +1426,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        2000
+                                        oddsPrice?.[1] || 2000
                                       )}
                                     >
-                                      2000
+                                      {oddsPrice?.[1] || 2000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1435,10 +1443,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        3000
+                                        oddsPrice?.[2] || 3000
                                       )}
                                     >
-                                      3000
+                                      {oddsPrice?.[2] || 3000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1452,10 +1460,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        4000
+                                        oddsPrice?.[3] || 4000
                                       )}
                                     >
-                                      4000
+                                      {oddsPrice?.[3] || 4000}
                                     </button>
                                     <button
                                       style={{ backgroundColor: webColor }}
@@ -1469,10 +1477,10 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.match_id,
                                         event?.market_id,
                                         event?.marketname,
-                                        5000
+                                        oddsPrice?.[4] || 5000
                                       )}
                                     >
-                                      5000
+                                      {oddsPrice?.[4] || 5000}
                                     </button>
                                   </div>
                                 )}

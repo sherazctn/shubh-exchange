@@ -28,6 +28,7 @@ const initialState = {
   selectedEvent: {},
   liveMarkets: {},
   slipTab: "slip",
+  user: {},
 };
 
 export const featuresSlice = createSlice({
@@ -115,6 +116,9 @@ export const featuresSlice = createSlice({
     updateSlipTab: (state, action) => {
       state.slipTab = action.payload;
     },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
 });
 
@@ -145,7 +149,8 @@ export const {
   updateEventData,
   updateSelectedEvent,
   updateLiveMarkets,
-  updateSlipTab
+  updateSlipTab,
+  updateUser
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;
