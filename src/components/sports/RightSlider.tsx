@@ -1,7 +1,10 @@
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { MdFullscreen } from "react-icons/md";
+
+import { Modal } from 'antd';
 
 interface RightSliderProps {
   sportId: string | number;
@@ -9,6 +12,8 @@ interface RightSliderProps {
 }
 
 const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     // Attempt to disable right-click prevention
     const handleContextMenu = (e: MouseEvent) => {
@@ -29,9 +34,12 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
   }, []);
 
   return (
-    <div className="w-full max-w-[450px] mx-auto rounded-[7px]">
+    <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
+      <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[999] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
+        <MdFullscreen className="text-[23px]" />
+      </div>
       <div className="relative pt-[56.25%]">
-        <iframe 
+        <iframe
           src={`https://dpmatka.in/dd.php?sportId=${sportId}&eventId=${eventId}`}
           className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
@@ -42,6 +50,30 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
           sandbox="allow-scripts allow-same-origin allow-presentation"
         ></iframe>
       </div>
+      <Modal
+        title=""
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(!isModalOpen)}
+        onCancel={() => setIsModalOpen(!isModalOpen)}
+        centered
+        width={"99%"}
+        footer={null}
+        className="custom-modal"
+        wrapClassName="custom-modal-mask"
+      >
+        <div className="relative pt-[56.25%]">
+          <iframe
+            src={`https://dpmatka.in/dd.php?sportId=${sportId}&eventId=${eventId}`}
+            className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowFullScreen
+            frameBorder="0"
+            referrerPolicy="no-referrer"
+            scrolling="no"
+            sandbox="allow-scripts allow-same-origin allow-presentation"
+          ></iframe>
+        </div>
+      </Modal>
     </div>
   );
 };

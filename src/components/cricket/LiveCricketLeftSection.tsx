@@ -15,11 +15,11 @@ import { HiMiniInformationCircle } from "react-icons/hi2";
 import { getUpdatedBookmaker, getUpdatedFancyMarket, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
-  const divHeight = `${window.innerHeight - 60}px`;
+
   const [tabs, setTabs] = useState("Main");
-  const user = useSelector((state: any) => state.user);
   const [oddsPrice, setOddsPrice] = useState([]);
-  // const [tiedMatch, setTiedMatch] = useState(true);
+  const divHeight = `${window.innerHeight - 60}px`;
+  const user = useSelector((state: any) => state.user);
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -1852,60 +1852,4 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
   } else {
     return null;
   }
-};
-
-const TiedMatch = ({ tiedMatch, setTiedMatch, webColor, drawMatchData }: any) => {
-  return (
-    <div className="bg-white shadow-sm rounded-[7px]">
-      <div
-        className="h-[47px] flex justify-between border-b cursor-pointer"
-        onClick={() => setTiedMatch(!tiedMatch)}
-      >
-        <div className="text-[--text-color] flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
-          Tied Match
-        </div>
-        <div className="flex gap-[7px] items-center pe-[10px]">
-          {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-            <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-            CashOut
-          </div> */}
-          <HiMiniInformationCircle className="text-[20px]" />
-          <IoIosArrowUp
-            className={`${!tiedMatch && "-rotate-180"
-              } transition-all duration-300`}
-          />
-        </div>
-      </div>
-      {tiedMatch && (
-        <div>
-          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-              <BsGraphUp />
-              <p className="text-[15px] font-[500]">Yes</p>
-            </div>
-            <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center">
-              {drawMatchData?.ExchangePrices?.AvailableToBack?.map((i: any) => (
-                <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
-                  <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                    {i?.price}
-                  </p>
-                  <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                    {i?.size}
-                  </p>
-                </div>
-              ))}
-              {drawMatchData?.ExchangePrices?.AvailableToLay?.map((i: any) => (
-                <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
-                  <p className="font-[800] text-center text-[15px]">{i?.price}</p>
-                  <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                    {i?.size}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 };

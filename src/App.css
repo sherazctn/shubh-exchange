@@ -450,3 +450,30 @@
 .scale-up-down:active {
   scale: 0.93;
 }
+
+.custom-modal .ant-modal-close {
+  background-color: white; /* Change background color to white */
+  z-index: 1051; /* Increase z-index */
+  border: 2px solid black;
+}
+
+.custom-modal .ant-modal-close:hover {
+  background-color: white;
+  z-index: 1051;
+}
+
+.custom-modal .ant-modal-close-x {
+  color: black; /* Change the color of the close icon if needed */
+}
+
+.custom-modal:where(.css-dev-only-do-not-override-49qm).ant-modal-root .ant-modal-mask{
+  background-color: black;
+}
+
+.custom-modal:where(.css-dev-only-do-not-override-49qm).ant-modal .ant-modal-content{
+  padding: 3px !important;
+}
+
+.custom-modal-mask {
+  background-color: rgba(0, 0, 0, 0.9) !important; /* Set to a darker black, adjust opacity if needed */
+}
