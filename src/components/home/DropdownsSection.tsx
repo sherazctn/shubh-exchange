@@ -243,9 +243,9 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                           }))
                         }}
                         href={`/match?sportId=${id}&eventId=${event?.match_id}`}
-                        className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+                        className="min-h-[65px] border-b sm:pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[2px] sm:px-[11px] cursor-pointer"
                       >
-                        <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
+                        <div className="flex md:w-auto items-center gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
                           {adminGamesData && (
                             <img
                               alt={text}
@@ -261,7 +261,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                           </div>
                         </div>
-                        <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
+                        <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] items-center mb-[2px] sm:mb-0 sm:min-h-[65px] md:min-h-auto">
                           <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
                             Live
                             <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
@@ -269,7 +269,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                           {event?.odd?.numberOfRunners === 3 ? (
                             <>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.price,
@@ -388,7 +388,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 )}
                               </div>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price,
@@ -508,7 +508,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               </div>
 
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[2]?.ex?.availableToBack[0]?.price,
@@ -627,7 +627,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 )}
                               </div>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.price,
@@ -747,7 +747,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               </div>
 
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price,
@@ -866,7 +866,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 )}
                               </div>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,
@@ -988,7 +988,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                           ) : (
                             <>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.price,
@@ -1107,7 +1107,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 )}
                               </div>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price,
@@ -1227,7 +1227,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               </div>
 
                               <div
-                                className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
+                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
                               >
                                 <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                                   -
@@ -1237,7 +1237,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 </p>
                               </div>
                               <div
-                                className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
+                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
                               >
                                 <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                                   -
@@ -1248,7 +1248,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               </div>
 
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price,
@@ -1367,7 +1367,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                 )}
                               </div>
                               <div
-                                className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                                className={`h-[43px] sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative ${prevOdds?.[index]?.events?.[i]?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                                 onClick={(e) => handleBetClicked(
                                   e,
                                   event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price,

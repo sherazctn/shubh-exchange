@@ -119,7 +119,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>
+      <div className="navbar h-[70px] sm:h-[60px] px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>
         {/* company name */}
         <div className="flex items-center gap-[10px]">
           {webLogo !== "" && (
@@ -127,7 +127,7 @@ const Navbar = () => {
               <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
             </div>
           )}
-          <a href={"/"} className="text-[22px] sm:text-[28px] font-[700] text-[--text-color]">
+          <a href={"/"} className="text-[22px] sm:text-[28px] font-[700] text-[--text-color] mt-[-18px] sm:mt-0">
             {webName}
           </a>
         </div>
@@ -199,10 +199,13 @@ const Navbar = () => {
           )}
         </div>
         {/* mobile menu btn */}
-        <div className="flex gap-[10px] md:hidden">
-          <div className="flex justify-center items-center md:hidden w-[38px] h-[38px] rounded-[5px] bg-[--text-color] cursor-pointer">
+        <div className={`flex gap-[10px] md:hidden ${authentication && "mt-[-18px]"}`}>
+          <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
+            Deposit
+          </div>
+          <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer">
             <IoMenuSharp
-              className="text-[25px]"
+              className="text-[20px]"
               style={{ color: webColor }}
               onClick={() => dispatch(updateMobileMenu(true))}
             />
@@ -210,13 +213,18 @@ const Navbar = () => {
           {authentication && (
             <div>
               <button
-                className="navbar-profile"
+                className="navbar-profile w-[30px] h-[30px] sm:h-[38px] sm:w-[38px]"
                 style={{ color: webColor }}
                 onMouseEnter={() => setAccountDropdown(true)}
                 onMouseLeave={() => setAccountDropdown(false)}
               >
                 <FaUser />
               </button>
+            </div>
+          )}
+          {authentication && (
+            <div className="text-white text-[13px] font-[600] absolute text-nowrap top-[48px] bg-black w-full left-0 flex justify-end items-center px-[10px] py-[1px]">
+              <p>Balance: <FaIndianRupeeSign className="inline-block text-[14px]" />{wallet}</p>
             </div>
           )}
         </div>
@@ -297,7 +305,7 @@ const Navbar = () => {
           <div
             onMouseEnter={() => setAccountDropdown(true)}
             onMouseLeave={() => setAccountDropdown(false)}
-            className="bg-white absolute top-[49px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
+            className="bg-white absolute top-[59px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
           >
             <a
               href={"/account/dashboard"}

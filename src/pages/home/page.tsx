@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Footer from "../../components/footer/page";
 import HeroSection from "../../components/home/HeroSection";
 import CardsSection from "../../components/home/cardsSection";
-// import CasinoSlider from "../../components/home/CasinoSlider";
 import { updateMobileMenu, updatePageNav } from "../../features/features";
 import CricketDropdownsSection from "../../components/home/DropdownsSection";
 
@@ -30,7 +29,7 @@ const Home = () => {
   }, [redisGames]);
   return (
     <div
-      className={`content pt-[68px] sm:pt-[78px] ${showSidebar
+      className={`content pt-[78px] sm:pt-[78px] ${showSidebar
         ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]"
         : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"
         } pe-[10px] sm:pe-[20px]`}

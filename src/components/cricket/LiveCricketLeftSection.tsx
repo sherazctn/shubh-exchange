@@ -57,16 +57,16 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
       className="w-[100%] lg:me-[15px] overflow-auto pt-[15px]"
       style={{ maxHeight: divHeight }}
     >
-      <div className="min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
-        <p className="text-[20px] sm:text-[23px] text-center">{selectedEvent?.competitionName}</p>
-        <p className="text-[19px] sm:text-[22px] text-center">{selectedEvent?.eventName}</p>
-        <button className="live-match-btn">{getEventDisplayText()}</button>
+      <div className="sm:min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[10px] sm:p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
+        <p className="text-[20px] sm:text-[23px] text-center hidden sm:block">{selectedEvent?.competitionName}</p>
+        <p className="text-[17px] sm:text-[22px] font-[700] sm:font-[500] text-center">{selectedEvent?.eventName}</p>
+        <button className="live-match-btn mt-[3px] sm:mt-[10px]">{getEventDisplayText()}</button>
       </div>
       <div className="w-full mb-[10px] block lg:hidden">
         <RightSlider sportId={sportId} eventId={eventId} />
       </div>
       {/* tabs */}
-      <div className="flex gap-[10px] overflow-auto mb-[10px]">
+      {/* <div className="flex gap-[10px] overflow-auto mb-[10px]">
         <div
           className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[max-content] px-[15px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "Main" ? `text-[--text-color]` : ""
             }`}
@@ -101,33 +101,11 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
         >
           Other Markets
         </div>
-        {/* <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "bookmaker" ? "text-[--text-color]" : ""
-            }`}
-          style={{ backgroundColor: tabs === "bookmaker" ? webColor : "white" }}
-          onClick={() => setTabs("bookmaker")}
-        >
-          Bookmaker
-        </div>
-        <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "line" ? "text-[--text-color]" : ""
-            }`}
-          style={{ backgroundColor: tabs === "line" ? webColor : "white" }}
-          onClick={() => setTabs("line")}
-        >
-          Line
-        </div>
-        <div
-          className={`h-[47px] pt-[1px] rounded-[7px] text-[14px] min-w-[90px] flex-1 flex justify-center items-center cursor-pointer font-[600] ${tabs === "fancy" ? "text-[--text-color]" : ""
-            }`}
-          style={{ backgroundColor: tabs === "fancy" ? webColor : "white" }}
-          onClick={() => setTabs("fancy")}
-        >
-          Fancy
-        </div> */}
-      </div>
+      </div> */}
       <div className="flex flex-col gap-[10px]" style={{ minHeight: `${window.innerHeight - 490}px` }}>
         {markets?.map((item: any) => {
+          const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
+          return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} />
           if (tabs === "Main") {
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
             if (item?.marketName !== "Match Odds" && item?.marketName !== "Tied Match") return;
@@ -1029,7 +1007,8 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
             dispatch(updateBets(updatedBets));
           }
           if (tabs === "Main") {
-            setData(response?.data?.slice(0, 5));
+            // setData(response?.data?.slice(0, 5));
+            setData(response?.data);
           } else {
             setData(response?.data);
           }
@@ -1180,10 +1159,6 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
             FANCY MARKET
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-              <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-              CashOut
-            </div> */}
             <HiMiniInformationCircle className="text-[20px]" />
             <IoIosArrowUp
               className={`transition-all duration-300`}
@@ -1344,14 +1319,14 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
             }
           })}
         </div>
-        {tabs === "Main" && (
+        {/* {tabs === "Main" && (
           <p
             className="px-[10px] py-[3px] text-[14px] font-[500] hover:underline cursor-pointer w-[max-content]"
             onClick={() => setTabs("fancy")}
           >
             See More
           </p>
-        )}
+        )} */}
       </div>
     );
   } else {
