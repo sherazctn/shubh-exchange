@@ -86,15 +86,21 @@ const LiveCricket = () => {
 
   const fn_getExtraMarkets = async () => {
     const response = await getExtraMarketsByEventIdApi(eventId);
-    if (response?.status) {
-      setExtraMarkets(response?.data);
-    }
+      if (response?.status) {
+        setExtraMarkets(response?.data);
+      }
+    setInterval(async () => {
+      const response = await getExtraMarketsByEventIdApi(eventId);
+      if (response?.status) {
+        setExtraMarkets(response?.data);
+      }
+    }, 2000);
   };
 
   return (
     <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]" : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"} pe-[10px] sm:pe-[20px] flex`}>
       <LiveCricketLeftSection extraMarkets={extraMarkets} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
-      <RightSection sportId={sportId} eventId={eventId}  />
+      <RightSection sportId={sportId} eventId={eventId} />
     </div>
   );
 };

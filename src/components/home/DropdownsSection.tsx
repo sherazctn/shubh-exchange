@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,6 +22,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
   const adminGamesData = useSelector((state: any) => state.redisGames);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const timerRef = useRef<any>();
   const location = useLocation();
   const [loader, setLoader] = useState(true);
   const [showAmounts, setAmount] = useState("");
@@ -31,6 +32,35 @@ const CricketDropdownsSection = ({ text, id }: any) => {
   const [competitionsId, setCompetitionsId] = useState<any>([]);
   const [oddsPrice, setOddsPrice] = useState([]);
   const sportName = id === 1 ? "soccer" : id === 2 ? "tennnis" : "cricket";
+
+  const handleStart = (e: any, selectionId: any, marketId: any, num: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Prevent default behavior like text selection or scrolling
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.userSelect = 'none';
+      e.currentTarget.style.webkitUserSelect = 'none';
+      e.currentTarget.style.touchAction = 'none';
+    }
+
+    timerRef.current = setTimeout(() => {
+      setLongPress(true);
+      setAmount(`${marketId}-${selectionId}-${num}`);
+    }, 2000);
+
+    // Add listeners to cancel the long press if the user releases the touch or mouse early
+    document.addEventListener('mouseup', handleEnd, { passive: false });
+    document.addEventListener('touchend', handleEnd, { passive: false });
+    document.addEventListener('touchmove', handleEnd, { passive: false });
+  };
+
+  const handleEnd = (e: any) => {
+    clearTimeout(timerRef.current);
+    document.removeEventListener('mouseup', handleEnd);
+    document.removeEventListener('touchend', handleEnd);
+    document.removeEventListener('touchmove', handleEnd);
+  };
 
   const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
     e.preventDefault();
@@ -61,58 +91,14 @@ const CricketDropdownsSection = ({ text, id }: any) => {
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
-  }
-
-  const handleMouseDown = (e: any, selectionId: any, marketId: any, num: any) => {
-    let timer: NodeJS.Timeout;
-
-    timer = setTimeout(() => {
-      setLongPress(true);
-      setAmount(`${marketId}-${selectionId}-${num}`);
-    }, 1000);
-
-    const handleMouseUp = () => {
-      clearTimeout(timer);
-      document.removeEventListener('mouseup', handleMouseUp);
-
-      e.stopPropagation();
-    };
-
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleLongPress = (e: any, selectionId: any, marketId: any, num: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (e.currentTarget instanceof HTMLElement) {
-      e.currentTarget.style.userSelect = 'none';
-      e.currentTarget.style.webkitUserSelect = 'none';
-      e.currentTarget.style.touchAction = 'none';
-    }
-
-    let timer: NodeJS.Timeout;
-
-    const startLongPress = () => {
-      setLongPress(true);
-      setAmount(`${marketId}-${selectionId}-${num}`);
-    };
-
-    const cancelLongPress = () => {
-      clearTimeout(timer);
-      document.removeEventListener('pointerup', cancelLongPress);
-    };
-
-    timer = setTimeout(startLongPress, 1000);
-
-    document.addEventListener('pointerup', cancelLongPress, { passive: false });
   };
 
   useEffect(() => {
     if (longPress) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setLongPress(false);
       }, 2000);
+      return () => clearTimeout(timeout);
     }
   }, [longPress]);
 
@@ -280,16 +266,8 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
-                                  event?.odd?.runners?.[0]?.selectionId,
-                                  event?.market_id,
-                                  1
-                                )}
-                                onTouchStart={(e) => handleLongPress(e,
-                                  event?.odd?.runners?.[0]?.selectionId,
-                                  event?.market_id,
-                                  1
-                                )}
+                                onMouseDown={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id, 1)}
+                                onTouchStart={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id, 1)}
                               >
                                 <p className={`font-[800] text-center text-[12px] sm:text-[14px]`}>
                                   {event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.price || "-"}
@@ -399,16 +377,8 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
-                                  event?.odd?.runners?.[0]?.selectionId,
-                                  event?.market_id,
-                                  2
-                                )}
-                                onTouchStart={(e) => handleLongPress(e,
-                                  event?.odd?.runners?.[0]?.selectionId,
-                                  event?.market_id,
-                                  2
-                                )}
+                                onMouseDown={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id, 2)}
+                                onTouchStart={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id,2)}
                               >
                                 <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                                   {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price || "-"}
@@ -519,12 +489,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   event?.market_id,
                                   1
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   event?.market_id,
                                   1
@@ -638,12 +608,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   event?.market_id,
                                   2
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   event?.market_id,
                                   2
@@ -758,12 +728,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   1
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   1
@@ -877,12 +847,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   2
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   2
@@ -999,12 +969,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   event?.market_id,
                                   1
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   event?.market_id,
                                   1
@@ -1118,12 +1088,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   event?.market_id,
                                   2
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   event?.market_id,
                                   2
@@ -1259,12 +1229,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   1
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   1
@@ -1378,12 +1348,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.market_id,
                                   event?.marketname
                                 )}
-                                onMouseDown={(e) => handleMouseDown(e,
+                                onMouseDown={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   2
                                 )}
-                                onTouchStart={(e) => handleLongPress(e,
+                                onTouchStart={(e) => handleStart(e,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   event?.market_id,
                                   2

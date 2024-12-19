@@ -35,7 +35,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
 
   return (
     <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-      <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[999] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
+      <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[99] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
         <MdFullscreen className="text-[23px]" />
       </div>
       <div className="relative pt-[56.25%]">

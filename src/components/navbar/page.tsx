@@ -1,7 +1,6 @@
 import { Modal } from "antd";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,17 +13,15 @@ import { authenticate, updateBets, updateMobileMenu, updateMobileSidebar, update
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
 import { RxCross2 } from "react-icons/rx";
-import { IoMenuSharp } from "react-icons/io5";
 import { PiHandDeposit } from "react-icons/pi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
-import { MdKeyboardDoubleArrowRight, MdOutlineCasino, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   const pageNav = useSelector((state: any) => state.navPage);
@@ -127,7 +124,7 @@ const Navbar = () => {
               <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
             </div>
           )}
-          <a href={"/"} className="text-[22px] sm:text-[28px] font-[700] text-[--text-color] mt-[-18px] sm:mt-0">
+          <a href={"/"} className={`text-[22px] sm:text-[28px] font-[700] text-[--text-color] ${authentication && "mt-[-18px] sm:mt-0"}`}>
             {webName}
           </a>
         </div>
@@ -201,15 +198,13 @@ const Navbar = () => {
         {/* mobile menu btn */}
         <div className={`flex gap-[10px] md:hidden ${authentication && "mt-[-18px]"}`}>
           <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
-            Deposit
+            <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit
           </div>
-          <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer">
-            <IoMenuSharp
-              className="text-[20px]"
-              style={{ color: webColor }}
-              onClick={() => dispatch(updateMobileMenu(true))}
-            />
-          </div>
+          {!authentication && (
+            <div className="flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={() => setLoginModal(true)}>
+              <FaUser className="mt-[-1px] me-[4px]" />Login
+            </div>
+          )}
           {authentication && (
             <div>
               <button
@@ -305,7 +300,7 @@ const Navbar = () => {
           <div
             onMouseEnter={() => setAccountDropdown(true)}
             onMouseLeave={() => setAccountDropdown(false)}
-            className="bg-white absolute top-[59px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col"
+            className={`bg-white absolute top-[40px] sm:top-[47px] shadow-lg border border-gray-300 right-[20px] rounded-[7px] flex flex-col z-[999999]`}
           >
             <a
               href={"/account/dashboard"}

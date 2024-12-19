@@ -34,7 +34,7 @@ const BetSlip = () => {
     useEffect(() => {
         fn_getOpenBets();
         if (inputRef.current && window.innerWidth > 400) {
-            inputRef.current.focus();
+            // inputRef.current.focus();
         }
     }, [bettingSlip, slipTab]);
 
@@ -251,12 +251,12 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                 />
                             )}
                         </div>
-                        <p className="flex text-[11px] mt-[5px] font-[500] gap-[15px] items-center text-[red]">
+                        {/* <p className="flex text-[11px] mt-[5px] font-[500] gap-[15px] items-center text-[red]">
                             <span>Min Bet: 10</span>
                             <span>Max Bet: 100k</span>
                             <span>Max Profit: 2.5M</span>
-                        </p>
-                        <div className="text-[11px] mt-[2px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
+                        </p> */}
+                        <div className="text-[11px] mt-[10px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
                             {bets.map((bet: any, index: number) => (
                                 <div key={index} className="flex gap-[5px] flex-nowrap overflow-auto">
                                     <button
@@ -367,7 +367,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                 </p>
                             </div>
                         </div>
-                        <p className="text-[14px] mt-[-4px] text-end">Plateform Charger: <span className="font-[500]">{item?.adminCommision || 0}%</span></p>
+                        {/* <p className="text-[14px] mt-[-4px] text-end">Plateform Charger: <span className="font-[500]">{item?.adminCommision || 0}%</span></p> */}
                     </div>
                 )) : (
                     <div className="flex justify-center flex-col items-center gap-[30px] mt-[40px]">
