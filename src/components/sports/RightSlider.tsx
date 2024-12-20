@@ -46,7 +46,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
             frameBorder="0"
-            referrerPolicy="no-referrer"
             scrolling="no"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           ></iframe>
@@ -69,7 +68,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
               frameBorder="0"
-              referrerPolicy="no-referrer"
               scrolling="no"
               sandbox="allow-scripts allow-same-origin allow-presentation"
             ></iframe>
@@ -84,7 +82,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
             frameBorder="0"
-            referrerPolicy="no-referrer"
             scrolling="no"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           ></iframe>
