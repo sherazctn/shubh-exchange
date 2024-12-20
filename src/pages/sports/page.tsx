@@ -21,7 +21,7 @@ const Sports = () => {
       } pe-[10px] sm:pe-[20px] flex`}
     >
       <LeftSection />
-      <RightSection />
+      {/* <RightSection /> */}
     </div>
   );
 };

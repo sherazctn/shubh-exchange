@@ -310,6 +310,13 @@ const Navbar = () => {
               Dashboard
             </a>
             <a
+              href={"/account/deposit-withdraw"}
+              className="border-b flex-1 flex items-center gap-[5px] w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
+            >
+              <PiHandDeposit className="scale-[1.15]" />
+              Deposit
+            </a>
+            <a
               href={"/account/wallet"}
               className="border-b text-[13px] flex items-center gap-[5px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300"
             >
