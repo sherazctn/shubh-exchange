@@ -219,19 +219,21 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             competitionName: competition?.competitionName,
                             eventId: event?.match_id,
                             eventName: event?.matchName,
-                            date: event?.date || event?.openDate
+                            date: event?.date || event?.openDate,
+                            inPlay: true
                           }));
                           localStorage.setItem('selectedEvent', JSON.stringify({
                             competitionName: competition?.competitionName,
                             eventId: event?.match_id,
                             eventName: event?.matchName,
-                            date: event?.date || event?.openDate
+                            date: event?.date || event?.openDate,
+                            inPlay: true
                           }))
                         }}
                         href={`/match?sportId=${id}&eventId=${event?.match_id}`}
                         className="min-h-[65px] border-b sm:pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[2px] sm:px-[11px] cursor-pointer"
                       >
-                        <div className="flex md:w-auto items-center gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
+                        <div className="flex md:w-auto items-center gap-2 sm:gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
                           {adminGamesData && (
                             <img
                               alt={text}
@@ -239,7 +241,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                               className="w-[25px] h-[25px] rounded-full object-cover"
                             />
                           )}
-                          <p className="text-[14px]">
+                          <p className="text-[12px] sm:text-[14px]">
                             {event?.matchName}
                           </p>
                           <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>

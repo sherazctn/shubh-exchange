@@ -316,7 +316,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                 <div key={index} className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                   <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                     <BsGraphUp />
-                    <p className="text-[15px] font-[500]">{item?.runnerName}</p>
+                    <p className="text-[13px] sm:text-[15px] font-[500]">{item?.runnerName}</p>
                   </div>
                   <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                     {[2, 1, 0].map((index) => {
@@ -730,7 +730,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -910,7 +910,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -1123,7 +1123,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -1303,7 +1303,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -1516,7 +1516,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -1696,7 +1696,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -1929,7 +1929,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                       <div
@@ -1976,9 +1976,9 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                           </div>
                         )}
                       </div>
-                      <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                        <p className="text-[11px]">Min Bet: {item?.min}.00K</p>
-                        <p className="text-[11px]">Max Bet: {item?.max}.00K</p>
+                      <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
+                        <p className="text-[11px]">Min Bet: {item?.min}.00 INR</p>
+                        <p className="text-[11px]">Max Bet: {item?.max}.00 INR</p>
                       </div>
                     </div>
                   </div>
@@ -2249,7 +2249,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                               {singleExtraMarket !== "cricketcasino" && (
@@ -2299,9 +2299,9 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                                 )}
                               </div>
 
-                              <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                                <p className="text-[11px]">Min Bet: {item?.min}.00K</p>
-                                <p className="text-[11px]">Max Bet: {item?.max}.00K</p>
+                              <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
+                                <p className="text-[11px]">Min Bet: {item?.min}.00 INR</p>
+                                <p className="text-[11px]">Max Bet: {item?.max}.00 INR</p>
                               </div>
                             </div>
                           </div>
@@ -2310,7 +2310,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2340,7 +2340,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2372,7 +2372,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                               <div
@@ -2516,7 +2516,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2546,7 +2546,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2579,7 +2579,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                           item?.section?.map((i: any) => (
                             <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                               <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                                <p className="text-[15px] font-[500] capitalize">{i?.nat}</p>
+                                <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
                               </div>
                               <div className="flex flex-col">
                                 <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
@@ -2606,9 +2606,9 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                                     )}
                                   </div>
 
-                                  <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                                    <p className="text-[11px]">Min Bet: {i?.min}.00K</p>
-                                    <p className="text-[11px]">Max Bet: {i?.max}.00K</p>
+                                  <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
+                                    <p className="text-[11px]">Min Bet: {i?.min}.00 INR</p>
+                                    <p className="text-[11px]">Max Bet: {i?.max}.00 INR</p>
                                   </div>
                                 </div>
                               </div>
@@ -2619,7 +2619,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2649,7 +2649,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                         return (
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                               <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2845,12 +2845,12 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
                     if (item?.status?.toLowerCase() !== "suspended" && item?.status !== "ball running") {
                       return (
                         item?.section?.map((i: any) => (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[15px] font-[500] capitalize">{i?.nat}</p>
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
                             </div>
                             <div className="flex flex-col">
-                              <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
+                              <div className="flex flex-nowrap sm:flex-wrap sm:gap-[11px] justify-center items-center relative">
                                 <div
                                   className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
                                   onClick={(e) => handleBetClicked(e, i?.odds?.[0]?.odds, i?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
@@ -2874,9 +2874,9 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
                                   )}
                                 </div>
 
-                                <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                                  <p className="text-[11px]">Min Bet: {i?.min}.00K</p>
-                                  <p className="text-[11px]">Max Bet: {i?.max}.00K</p>
+                                <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
+                                  <p className="text-[11px] text-nowrap">Min Bet: {i?.min}.00 INR</p>
+                                  <p className="text-[11px] text-nowrap">Max Bet: {i?.max}.00 INR</p>
                                 </div>
                               </div>
                             </div>
@@ -2887,7 +2887,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
                       return (
                         <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                           <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                            <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                            <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                           </div>
                           <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                             <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2917,7 +2917,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
                       return (
                         <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                           <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                            <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                            <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                           </div>
                           <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                             <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">

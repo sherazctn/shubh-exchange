@@ -15,7 +15,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // Attempt to disable right-click prevention
     const handleContextMenu = (e: MouseEvent) => {
       e.stopPropagation();
       return true;
@@ -74,19 +73,21 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId }) => {
           </div>
         </Modal>
       </div>
-      {/* <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-        <div className="relative pt-[56.25%] mt-[7px]">
-          <iframe
-            src={`https://dpmatka.in/sr.php?eventid=${eventId}&sportid=${sportId}`}
-            className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowFullScreen
-            frameBorder="0"
-            scrolling="no"
-            sandbox="allow-scripts allow-same-origin allow-presentation"
-          ></iframe>
+      {sportId !== "4" && (
+        <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
+          <div className="relative pt-[56.25%] mt-[7px]">
+            <iframe
+              src={`https://dpmatka.in/sr.php?eventid=${eventId}&sportid=${sportId}`}
+              className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              frameBorder="0"
+              scrolling="no"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+            ></iframe>
+          </div>
         </div>
-      </div> */}
+      )}
     </>
   );
 };
