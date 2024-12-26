@@ -86,9 +86,9 @@ const LiveCricket = () => {
 
   const fn_getExtraMarkets = async () => {
     const response = await getExtraMarketsByEventIdApi(eventId);
-      if (response?.status) {
-        setExtraMarkets(response?.data);
-      }
+    if (response?.status) {
+      setExtraMarkets(response?.data);
+    }
     setInterval(async () => {
       const response = await getExtraMarketsByEventIdApi(eventId);
       if (response?.status) {

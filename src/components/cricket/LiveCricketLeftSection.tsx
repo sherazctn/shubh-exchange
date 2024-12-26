@@ -12,7 +12,7 @@ import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../.
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, placeBetsApi } from "../../api/api";
+import { fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
 
@@ -20,6 +20,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   const [oddsPrice, setOddsPrice] = useState([]);
   const divHeight = `${window.innerHeight - 60}px`;
   const user = useSelector((state: any) => state.user);
+  const [cricketScore, setCricketScore] = useState({});
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -46,11 +47,27 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
     return format(eventDate, "dd MMM yyyy, hh:mm a");
   };
 
+  const fn_getCricketScore = async () => {
+    const response = await fn_getCricketScoreApi(eventId);
+    if (response?.status) {
+      setCricketScore(response?.data);
+    }
+  }
+
   useEffect(() => {
     if (user?.oddsPrice) {
       setOddsPrice(user?.oddsPrice || [1000, 2000, 3000, 4000, 5000]);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (sportId === "4") {
+      fn_getCricketScore();
+      setInterval(() => {
+        fn_getCricketScore();
+      }, 1500);
+    }
+  }, []);
 
   return (
     <div
@@ -63,7 +80,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
         <button className="live-match-btn mt-[3px] sm:mt-[10px]">{getEventDisplayText()}</button>
       </div>
       <div className="w-full mb-[10px] block lg:hidden">
-        <RightSlider sportId={sportId} eventId={eventId} />
+        <RightSlider sportId={sportId} eventId={eventId} cricketScore={cricketScore} />
       </div>
       {/* tabs */}
       {/* <div className="flex gap-[10px] overflow-auto mb-[10px]">

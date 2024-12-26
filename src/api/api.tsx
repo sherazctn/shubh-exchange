@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "http://backend.shubhexchange.com";
+const URL = "https://backend.shubhexchange.com";
 
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -610,6 +610,19 @@ export const getSingleSportMarketsApi = async (id: any) => {
 export const getPopularCricketEventsApi = async () => {
     try {
         const response = await axios.get(`${URL}/redis/popular-events/cricket`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
+
+export const fn_getCricketScoreApi = async (eventId: string) => {
+    try {
+        const response = await axios.get(`${URL}/redis/get-cricket-score?eventId=${eventId}`);
         return { status: true, data: response?.data };
     } catch (error: any) {
         if (error?.status === 400) {

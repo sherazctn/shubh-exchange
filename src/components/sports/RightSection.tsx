@@ -5,7 +5,7 @@ import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 import RightSlider from "./RightSlider";
 
 import { updateSelectedEvent } from "../../features/features";
-import URL, { getPopularCricketEventsApi } from "../../api/api";
+import URL, { fn_getCricketScoreApi, getPopularCricketEventsApi } from "../../api/api";
 
 const RightSection = ({ sportId, eventId }: any) => {
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const RightSection = ({ sportId, eventId }: any) => {
   const [showCasino, setShowCasino] = useState(true);
   const [popularEvents, setPopularEvents] = useState(true);
   const [popularEventsData, setPopularEventsData] = useState([]);
+  const [cricketScore, setCricketScore] = useState({});
 
   const webColor = useSelector((state: any) => state.websiteColor);
 
@@ -26,8 +27,21 @@ const RightSection = ({ sportId, eventId }: any) => {
     }
   }
 
+  const fn_getCricketScore = async () => {
+    const response = await fn_getCricketScoreApi(eventId);
+    if (response?.status) {
+      setCricketScore(response?.data);
+    }
+  }
+
   useEffect(() => {
     fn_getPopularEvents();
+    if (sportId === "4") {
+      fn_getCricketScore();
+      setInterval(() => {
+        fn_getCricketScore();
+      }, 1500);
+    }
   }, []);
 
   return (
@@ -40,7 +54,7 @@ const RightSection = ({ sportId, eventId }: any) => {
         >
           Live Match
         </button>
-        {showCasino && <RightSlider sportId={sportId} eventId={eventId} />}
+        {showCasino && <RightSlider cricketScore={cricketScore} sportId={sportId} eventId={eventId} />}
       </div>
       <div className="rounded-[7px] p-[7px] bg-white mt-[7px]">
         <button
