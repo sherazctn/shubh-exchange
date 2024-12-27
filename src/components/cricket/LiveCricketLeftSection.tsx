@@ -75,12 +75,12 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
       style={{ maxHeight: divHeight }}
     >
       <div className="sm:min-h-[120px] text-[--text-color] rounded-[7px] mb-[10px] p-[10px] sm:p-[15px] flex flex-col justify-center items-center" style={{ backgroundColor: webColor }}>
-        <p className="text-[20px] sm:text-[23px] text-center hidden sm:block">{selectedEvent?.competitionName}</p>
-        <p className="text-[17px] sm:text-[22px] font-[700] sm:font-[500] text-center">{selectedEvent?.eventName}</p>
+        <p className="text-[19px] text-center hidden sm:block">{selectedEvent?.competitionName}</p>
+        <p className="text-[17px] sm:text-[23px] font-[700] sm:font-[500] text-center">{selectedEvent?.eventName}</p>
         <button className="live-match-btn mt-[3px] sm:mt-[10px]">{getEventDisplayText()}</button>
       </div>
       <div className="w-full mb-[10px] block lg:hidden">
-        <RightSlider sportId={sportId} eventId={eventId} cricketScore={cricketScore} />
+        <RightSlider sportId={sportId} eventId={eventId} cricketScore={cricketScore} selectedEvent={selectedEvent} />
       </div>
       {/* tabs */}
       {/* <div className="flex gap-[10px] overflow-auto mb-[10px]">

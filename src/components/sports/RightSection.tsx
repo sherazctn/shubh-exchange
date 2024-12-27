@@ -7,7 +7,7 @@ import RightSlider from "./RightSlider";
 import { updateSelectedEvent } from "../../features/features";
 import URL, { fn_getCricketScoreApi, getPopularCricketEventsApi } from "../../api/api";
 
-const RightSection = ({ sportId, eventId }: any) => {
+const RightSection = ({ sportId, eventId, selectedEvent }: any) => {
   const dispatch = useDispatch();
   const divHeight = `${window.innerHeight - 60}px`;
   const [showCasino, setShowCasino] = useState(true);
@@ -54,7 +54,7 @@ const RightSection = ({ sportId, eventId }: any) => {
         >
           Live Match
         </button>
-        {showCasino && <RightSlider cricketScore={cricketScore} sportId={sportId} eventId={eventId} />}
+        {showCasino && <RightSlider cricketScore={cricketScore} sportId={sportId} eventId={eventId} selectedEvent={selectedEvent} />}
       </div>
       <div className="rounded-[7px] p-[7px] bg-white mt-[7px]">
         <button

@@ -165,11 +165,11 @@ const Navbar = () => {
             <div className="min-w-[270px] bg-[#ffffff5e] rounded-full flex justify-between">
               <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white flex-nowrap">
                 <span className="text-[11px] leading-[10px] font-[500]">Balance</span>
-                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{wallet}</span>
+                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{Number(wallet).toFixed(2)}</span>
               </p>
               <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
                 <span className="text-[11px] leading-[10px] font-[500]">Availabe To Bet</span>
-                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{wallet}</span>
+                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{Number(wallet).toFixed(2)}</span>
               </p>
               <p className="flex flex-col justify-center px-[13px] gap-[3px] pt-[2px] text-white">
                 <span className="text-[11px] leading-[10px] font-[500]">Username</span>
@@ -219,7 +219,7 @@ const Navbar = () => {
           )}
           {authentication && (
             <div className="text-white text-[13px] font-[600] absolute text-nowrap top-[48px] bg-black w-full left-0 flex justify-end items-center px-[10px] py-[1px]">
-              <p>Balance: <FaIndianRupeeSign className="inline-block text-[14px]" />{wallet}</p>
+              <p>Balance: <FaIndianRupeeSign className="inline-block text-[14px]" />{Number(wallet).toFixed(2)}</p>
             </div>
           )}
         </div>
