@@ -18,10 +18,11 @@ const CurrentBetTable1 = ({ colors, data }: any) => {
             >
               <td className="ps-[5px] w-[100px]">Sr No.<SortingArrows /></td>
               <td className="min-w-[250px]">Market Name</td>
+              <td>Market Name</td>
               {/* <td>Runner Name</td> */}
               <td>Side</td>
               <td>Bet Amount<SortingArrows /></td>
-              <td>Price</td>
+              <td>Odd</td>
               <td>Created Date</td>
             </tr>
           </thead>
@@ -46,8 +47,9 @@ const TableRows = ({ colors, item, index }: any) => {
       style={{ borderColor: colors.line, color: colors.subText }}
     >
       <td className="ps-[5px]">{index}</td>
-      <td>{item?.gameName}</td>
+      <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${item?.selectionName})`}</td>
       {/* <td>{item?.runner}</td> */}
+      <td className="capitalize">{item?.marketName}</td>
       <td>{item?.side}</td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{item?.odd}</td>

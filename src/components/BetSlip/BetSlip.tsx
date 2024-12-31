@@ -308,28 +308,28 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{item?.amount}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.amount).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Profit Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{item?.profit}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.profit).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Current Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{wallet}</span>
+                                        <span className="min-w-[45px] text-end">{Number(wallet).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-green-600 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
                                     <span>Net Amount:<TiArrowSortedUp className="inline-block text-[18px] ms-[5px]" /></span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{item?.afterWin}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.afterWin).toFixed(2)}</span>
                                     </span>
                                 </p>
                             </div>
@@ -341,28 +341,28 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                     <span>Bet Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{item?.amount}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.amount).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Loss Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{item?.loss}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.loss).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] items-center justify-between">
                                     <span>Current Amount:</span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="w-[45px] text-end">{wallet}</span>
+                                        <span className="min-w-[45px] text-end">{Number(wallet).toFixed(2)}</span>
                                     </span>
                                 </p>
                                 <p className="flex text-[13px] text-red-500 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
                                     <span>Net Amount:<TiArrowSortedDown className="inline-block text-[18px] ms-[5px]" /></span>
                                     <span className="flex items-center">
                                         <FaIndianRupeeSign className="mt-[-2px] text-[12px]" />
-                                        <span className="w-[45px] text-end">{item?.afterLoss}</span>
+                                        <span className="min-w-[45px] text-end">{Number(item?.afterLoss).toFixed(2)}</span>
                                     </span>
                                 </p>
                             </div>

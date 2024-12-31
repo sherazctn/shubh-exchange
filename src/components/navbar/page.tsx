@@ -120,9 +120,9 @@ const Navbar = () => {
         {/* company name */}
         <div className="flex items-center gap-[10px]">
           {webLogo !== "" && (
-            <div className="h-[47px] w-[47px] inline-block rounded-full">
-              <img src={`${URL}/${webLogo}`} alt="" className="rounded-full" />
-            </div>
+            <a href="/" className="inline-block">
+              <img src={`${URL}/${webLogo}`} alt="" className={`${authentication ? "h-[30px] mt-[-20px] sm:mt-0 sm:h-[40px]" : "h-[30px] sm:h-[40px]"}`} />
+            </a>
           )}
           <a href={"/"} className={`text-[22px] sm:text-[28px] font-[700] text-[--text-color] ${authentication && "mt-[-18px] sm:mt-0"}`}>
             {webName}

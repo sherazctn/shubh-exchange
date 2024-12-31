@@ -11,12 +11,15 @@ import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { BsBank } from "react-icons/bs";
 import { ImCreditCard } from "react-icons/im";
 
-import { webNameApi } from "../../api/api";
+import { webLogoApi, webNameApi } from "../../api/api";
 import { updateSmallsidebar } from "../../features/features";
+
+import img from "../../assets/Shubh_Exchange.png"
 
 const Sidebar = ({ colors, path }: any) => {
   const dispatch = useDispatch();
   const [webName, setWebName] = useState("");
+  const [webLogo, setWebLogo] = useState("");
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
@@ -26,8 +29,15 @@ const Sidebar = ({ colors, path }: any) => {
       setWebName(response?.data[0].name)
     }
   };
+  const fn_webLogo = async () => {
+    const response = await webLogoApi();
+    if (response?.status) {
+      setWebLogo(response?.data[0].image)
+    }
+  };
   useEffect(() => {
     fn_webName();
+    fn_webLogo();
   }, [])
   return (
     <div
@@ -41,11 +51,17 @@ const Sidebar = ({ colors, path }: any) => {
         onClick={() => dispatch(updateSmallsidebar(!smallSidebar))}
         style={{ color: panelSecColor }}
       />
+      { }
       {!smallSidebar && (
         <p
           className="text-[25px] text-center font-[500] mt-[40px] min-h-[35px]"
           style={{ color: panelSecColor }}
         >
+          {webLogo !== "" && (
+            <a href="/" className="inline-block">
+              <img src={img} alt="" className="h-[30px] sm:h-[40px]" />
+            </a>
+          )}
           {webName}
         </p>
       )}

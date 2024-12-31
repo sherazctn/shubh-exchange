@@ -31,8 +31,8 @@ const BetHistory = ({ colors }: any) => {
   const fn_getUserBets = async () => {
     const response = await getBetsByUserApi(token);
     if (response?.status) {
-      setData(response?.data?.reverse().filter((item: any) => item?.status !== "pending"));
-      setOriginal(response?.data?.reverse().filter((item: any) => item?.status !== "pending"));
+      setData(response?.data?.reverse().filter((item: any) => item?.status === "win" || item?.status === "loss"));
+      setOriginal(response?.data?.reverse().filter((item: any) => item?.status === "win" || item?.status === "loss"));
     }
     setLoader(false);
   };

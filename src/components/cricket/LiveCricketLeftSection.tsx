@@ -148,8 +148,8 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           {tabs === "Main" && (
             <>
               <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} />
-              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} />
-              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} />
+              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
+              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
             </>
           )}
           {(tabs === "Main" || tabs === "fancy") && (
@@ -158,12 +158,12 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
             </>
           )}
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} />
+            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
           )}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-[10px] mt-[10px]">
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} />
+            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
           )}
         </div>
         {/* {tabs === "all" && (
@@ -209,7 +209,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     }
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -234,6 +234,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       profit,
       side: side,
       sportId: sportId,
+      selectionName: selectionName
     }
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -277,7 +278,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     }
   }, [longPress]);
 
-  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number) => {
+  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
@@ -298,7 +299,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       odd: odd,
       profit,
       side: side,
-      sportId: sportId
+      sportId: sportId,
+      selectionName: selectionName
     }
     const response = await placeBetsApi([obj]);
     if (response?.status) {
@@ -343,7 +345,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                         <div
                           key={index}
                           className={`h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-                          onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Back")}
+                          onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Back", item?.runnerName)}
                           onMouseDown={(e) => handleStart(e,
                             item?.selectionId,
                             index,
@@ -372,7 +374,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Back",
-                                  oddsPrice?.[0] || 1000
+                                  oddsPrice?.[0] || 1000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[0] || 1000}
@@ -386,7 +389,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Back",
-                                  oddsPrice?.[1] || 2000
+                                  oddsPrice?.[1] || 2000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[1] || 2000}
@@ -400,7 +404,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Back",
-                                  oddsPrice?.[2] || 3000
+                                  oddsPrice?.[2] || 3000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[2] || 3000}
@@ -414,7 +419,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Back",
-                                  oddsPrice?.[3] || 4000
+                                  oddsPrice?.[3] || 4000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[3] || 4000}
@@ -428,7 +434,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Back",
-                                  oddsPrice?.[4] || 5000
+                                  oddsPrice?.[4] || 5000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[4] || 5000}
@@ -445,7 +452,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                         <div
                           key={index}
                           className={`h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-                          onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Lay")}
+                          onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Lay", item?.runnerName)}
                           onMouseDown={(e) => handleStart(e,
                             item?.selectionId,
                             index,
@@ -474,7 +481,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Lay",
-                                  oddsPrice?.[0] || 1000
+                                  oddsPrice?.[0] || 1000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[0] || 1000}
@@ -488,7 +496,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Lay",
-                                  oddsPrice?.[1] || 2000
+                                  oddsPrice?.[1] || 2000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[1] || 2000}
@@ -502,7 +511,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Lay",
-                                  oddsPrice?.[2] || 3000
+                                  oddsPrice?.[2] || 3000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[2] || 3000}
@@ -516,7 +526,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Lay",
-                                  oddsPrice?.[3] || 4000
+                                  oddsPrice?.[3] || 4000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[3] || 4000}
@@ -530,7 +541,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                                   `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`,
                                   item?.selectionId,
                                   "Lay",
-                                  oddsPrice?.[4] || 5000
+                                  oddsPrice?.[4] || 5000,
+                                  item?.runnerName
                                 )}
                               >
                                 {oddsPrice?.[4] || 5000}
@@ -971,7 +983,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
   }
 };
 
-const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
+const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -997,7 +1009,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
     }, 500);
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -1014,7 +1026,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
       amount: 10,
       eventId: eventId,
       gameId: runnerId,
-      gameName: runnerName,
+      gameName: eventName,
       loss,
       marketId: runnerId,
       marketName: data?.[0]?.mname.toLowerCase() === "bookmaker" ? "bookmaker 2" : data?.[0]?.mname,
@@ -1022,6 +1034,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
       profit,
       side: side,
       sportId: "4",
+      selectionName: selectionName
     }
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -1064,7 +1077,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
     }
   }, [longPress]);
 
-  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number) => {
+  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
@@ -1078,14 +1091,15 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
       amount: amount,
       eventId: eventId,
       gameId: selectionId,
-      gameName: gameName,
+      gameName: eventName,
       loss,
       marketId: selectionId,
       marketName: "bookmaker",
       odd: odd,
       profit,
       side: side,
-      sportId: "4"
+      sportId: "4",
+      selectionName: selectionName
     }
     const response = await placeBetsApi([obj]);
     if (response?.status) {
@@ -1162,7 +1176,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
 
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back")}
+                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           1
@@ -1184,7 +1198,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -1193,7 +1207,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -1202,7 +1216,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -1211,7 +1225,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -1220,7 +1234,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -1230,7 +1244,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                       </div>
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay")}
+                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           2
@@ -1252,7 +1266,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -1261,7 +1275,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -1270,7 +1284,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -1279,7 +1293,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -1288,7 +1302,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -1805,7 +1819,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
     }, 500);
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -1830,6 +1844,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
       profit,
       side: side,
       sportId: "4",
+      selectionName: selectionName
     }
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -1885,7 +1900,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
     };
   }, [eventId, tabs, bets]);
 
-  const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string) => {
+  const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
@@ -1907,6 +1922,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
       profit,
       side: side,
       sportId: "4",
+      selectionName: selectionName
     };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
@@ -1951,7 +1967,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                     <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                        onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay")}
+                        onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
                         onMouseDown={(e) => handleStart(e, item, '1')}
                         onTouchStart={(e) => handleStart(e, item, '1')}
                       >
@@ -1963,17 +1979,17 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                         </p>
                         {showAmounts === `${item?.mid}-${item?.sid}-1` && (
                           <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay")}>{oddsPrice?.[0] || 1000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.l1, "Lay")}>{oddsPrice?.[1] || 2000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.l1, "Lay")}>{oddsPrice?.[2] || 3000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.l1, "Lay")}>{oddsPrice?.[3] || 4000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.l1, "Lay")}>{oddsPrice?.[4] || 5000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[0] || 1000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[1] || 2000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[2] || 3000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[3] || 4000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[4] || 5000}</button>
                           </div>
                         )}
                       </div>
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back")}
+                        onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e, item, '2')}
                         onTouchStart={(e) => handleStart(e, item, '2')}
                       >
@@ -1985,11 +2001,11 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                         </p>
                         {showAmounts === `${item?.mid}-${item?.sid}-2` && (
                           <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.b1, "Back")}>{oddsPrice?.[0] || 1000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.b1, "Back")}>{oddsPrice?.[1] || 2000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.b1, "Back")}>{oddsPrice?.[2] || 3000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.b1, "Back")}>{oddsPrice?.[3] || 4000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.b1, "Back")}>{oddsPrice?.[4] || 5000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[0] || 1000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[1] || 2000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[2] || 3000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[3] || 4000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[4] || 5000}</button>
                           </div>
                         )}
                       </div>
@@ -2109,7 +2125,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
   }
 };
 
-const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
+const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
@@ -2119,7 +2135,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
 
   const [hideMarkets, setHideMarkets] = useState<string[]>([]);
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -2136,7 +2152,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
       amount: 10,
       eventId: eventId,
       gameId: runnerId,
-      gameName: runnerName,
+      gameName: eventName,
       loss,
       marketId: runnerId,
       marketName: marketName,
@@ -2144,6 +2160,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
       profit,
       side: side,
       sportId: "4",
+      selectionName: selectionName
     }
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -2202,7 +2219,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
       amount: amount,
       eventId: eventId,
       gameId: `${item?.mid}-${item?.sid}`,
-      gameName: runnerName,
+      gameName: eventName,
       loss,
       marketId: `${item?.mid}-${item?.sid}`,
       marketName: marketName,
@@ -2210,6 +2227,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
       profit,
       side: side,
       sportId: "4",
+      selectionName: runnerName
     };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
@@ -2272,7 +2290,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                               {singleExtraMarket !== "cricketcasino" && (
                                 <div
                                   className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                  onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay",)}
+                                  onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
                                   onMouseDown={(e) => handleStart(e, item, '1')}
                                   onTouchStart={(e) => handleStart(e, item, '1')}
                                 >
@@ -2284,7 +2302,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                                   </p>
                                   {showAmounts === `${item?.mid}-${item?.sid}-1` && (
                                     <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                      <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[0] || 1000}</button>
+                                      <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", singleExtraMarket, item?.nat, )}>{oddsPrice?.[0] || 1000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[1] || 2000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[2] || 3000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[3] || 4000}</button>
@@ -2295,7 +2313,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                               )}
                               <div
                                 className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '2')}
                                 onTouchStart={(e) => handleStart(e, item, '2')}
                               >
@@ -2394,7 +2412,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                             <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                onClick={(e) => handleBetClicked(e, item?.b3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '1')}
                                 onTouchStart={(e) => handleStart(e, item, '1')}
                               >
@@ -2416,7 +2434,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                onClick={(e) => handleBetClicked(e, item?.b2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '2')}
                                 onTouchStart={(e) => handleStart(e, item, '2')}
                               >
@@ -2439,7 +2457,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
 
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '3')}
                                 onTouchStart={(e) => handleStart(e, item, '3')}
                               >
@@ -2461,7 +2479,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay",)}
+                                onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '4')}
                                 onTouchStart={(e) => handleStart(e, item, '4')}
                               >
@@ -2484,7 +2502,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
 
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay",)}
+                                onClick={(e) => handleBetClicked(e, item?.l2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '5')}
                                 onTouchStart={(e) => handleStart(e, item, '5')}
                               >
@@ -2506,7 +2524,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay",)}
+                                onClick={(e) => handleBetClicked(e, item?.l3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
                                 onMouseDown={(e) => handleStart(e, item, '6')}
                                 onTouchStart={(e) => handleStart(e, item, '6')}
                               >
@@ -2602,7 +2620,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
                                 <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
                                     onMouseDown={(e) => handleStart(e, item, i?.sid)}
                                     onTouchStart={(e) => handleStart(e, item, i?.sid)}
                                   >
@@ -2707,7 +2725,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId }: any) => {
   }
 };
 
-const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
+const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
@@ -2734,7 +2752,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
       amount: 10,
       eventId: eventId,
       gameId: runnerId,
-      gameName: runnerName,
+      gameName: eventName,
       loss,
       marketId: runnerId,
       marketName: marketName,
@@ -2742,6 +2760,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
       profit,
       side: side,
       sportId: "4",
+      selectionName: runnerName
     }
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -2800,7 +2819,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
       amount: amount,
       eventId: eventId,
       gameId: `${item?.mid}-${item?.sid}`,
-      gameName: runnerName,
+      gameName: eventName,
       loss,
       marketId: `${item?.mid}-${item?.sid}`,
       marketName: marketName,
@@ -2808,6 +2827,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId }: any) => {
       profit,
       side: side,
       sportId: "4",
+      selectionName: runnerName
     };
     const response = await placeBetsApi([obj]);
     if (response?.status) {

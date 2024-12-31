@@ -43,7 +43,7 @@ const TableRows = ({ colors, item, index }: any) => {
             style={{ borderColor: colors.line, color: colors.subText }}
         >
             <td className="ps-[5px]">{index}</td>
-            <td>{item?.gameName}</td>
+            <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${item?.selectionName})`}</td>
             <td>{formatDate(item?.createdAt)}</td>
             <td>{item?.profit}</td>
             <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : item?.status === "abandoned" ? "orange" : "black" }}>

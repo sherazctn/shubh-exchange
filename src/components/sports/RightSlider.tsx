@@ -39,12 +39,12 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
   return (
     <>
       <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-        <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[99] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
+        {/* <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[99] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
           <MdFullscreen className="text-[23px]" />
-        </div>
+        </div> */}
         <div className="relative pt-[56.25%]">
           <iframe
-            src={`https://dpmatka.in/dcasino/nntv.php?MatchID=${eventId}`}
+            src={`https://oyeslive.co.in/tv1/live.php?event_id=${eventId}`}
             className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
@@ -66,7 +66,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
         >
           <div className="relative pt-[56.25%]">
             <iframe
-              src={`https://dpmatka.in/dcasino/nntv.php?MatchID=${eventId}`}
+              src={`https://oyeslive.co.in/tv1/live.php?event_id=${eventId}`}
               className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
@@ -92,7 +92,22 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
           </div>
         </div>
       )}
-      {sportId === "4" && cricketScore?.data && (
+      {sportId === "4" && (
+        <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
+          <div className="relative pt-[56.25%] mt-[7px]">
+            <iframe
+              src={`https://dpmatka.in/ppanim.php?eventId=${eventId}`}
+              className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              frameBorder="0"
+              scrolling="no"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+            ></iframe>
+          </div>
+        </div>
+      )}
+      {sportId === "5" && cricketScore?.data && (
         <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative mt-[7px] p-[7px] flex flex-col gap-[5px]">
           <p className="text-center uppercase text-[16px] font-[600] border-b pb-[10px] mb-[5px]">{selectedEvent?.competitionName}</p>
           {/* first team score */}
@@ -100,9 +115,11 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
             <p className="flex">{cricketScore?.data?.spnnation1}{cricketScore?.data?.activenation1 === "1" && <GoDotFill className="text-[#e34242] animate-pulse scale-[0.7] ml-[-2px]" />}</p>
             <div>
               <div className="flex gap-[4px]">
-                {cricketScore?.data?.score1?.replace(/\s+/g, '').split("&")?.map((score: string) => {
+                {cricketScore?.data?.score1 !== "" ? cricketScore?.data?.score1?.replace(/\s+/g, '').split("&")?.map((score: string) => {
                   return (<p>{score.split("(")[0]} <span className="text-[11px] font-[400] text-purple-600">({score.split("(")[1]}</span> {cricketScore?.data?.score1?.replace(/\s+/g, '').split("&")?.length > 1 && cricketScore?.data?.score1?.replace(/\s+/g, '').split("&")[0] === score && "&"}</p>)
-                })}
+                }) : (
+                  <p className="font-[400] text-[14px] text-black">Yet To Bat</p>
+                )}
               </div>
               {cricketScore?.data?.spnrunrate1 !== "" && (
                 <p className="text-[12px] text-gray-400 font-[400] text-right">CRR {cricketScore?.data?.spnrunrate1}</p>
@@ -114,9 +131,11 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
             <p className="flex">{cricketScore?.data?.spnnation2}{cricketScore?.data?.activenation2 === "1" && <GoDotFill className="text-[#e34242] animate-pulse scale-[0.7] ml-[-2px]" />}</p>
             <div>
               <div className="flex gap-[4px]">
-                {cricketScore?.data?.score2?.replace(/\s+/g, '').split("&")?.map((score: string) => {
+                {cricketScore?.data?.score2 !== "" ? cricketScore?.data?.score2?.replace(/\s+/g, '').split("&")?.map((score: string) => {
                   return (<p>{score.split("(")[0]} <span className="text-[11px] font-[400] text-purple-600">({score.split("(")[1]}</span> {cricketScore?.data?.score2?.replace(/\s+/g, '').split("&")?.length > 1 && cricketScore?.data?.score2?.replace(/\s+/g, '').split("&")[0] === score && "&"}</p>)
-                })}
+                }) : (
+                  <p className="font-[400] text-[14px] text-black">Yet To Bat</p>
+                )}
               </div>
               {cricketScore?.data?.spnrunrate2 !== "" && (
                 <p className="text-[12px] text-gray-400 font-[400] text-right">CRR {cricketScore?.data?.spnrunrate2}</p>
