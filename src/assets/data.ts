@@ -4,6 +4,13 @@ import casinoImg3 from "../assets/casino-3.png"
 import casinoImg4 from "../assets/casino-4.png"
 import casinoImg5 from "../assets/casino-5.png"
 
+export const voiceLanguage = [
+  { name: 'en', line: 'Bet has been placed', label: "English" },
+  { name: 'hi', line: 'सट्टा लगाया गया है', label: "Hindi" },
+  // { name: 'bn', line: 'বাজি ধরা হয়েছে', label: "Bengali" },
+  // { name: 'ur', line: 'شرط لگا دی گئی ہے', label: "Urdu" }
+]
+
 export const CricketOptions = [
   {
     id: 1,

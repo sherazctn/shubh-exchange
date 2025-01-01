@@ -1,5 +1,6 @@
-import "./index.css";
+import './i18n';
 import 'swiper/css';
+import "./index.css";
 import 'swiper/css/pagination';
 
 import React from "react";

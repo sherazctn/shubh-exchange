@@ -1,4 +1,5 @@
 import toast from "react-hot-toast"
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -13,6 +14,7 @@ import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import emptySlip from "../../assets/empty-slip.png";
 
 import Loader from "../Loader"
+import { voiceLanguage } from "../../assets/data";
 import URL, { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
 import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features"
 
@@ -47,14 +49,27 @@ const BetSlip = () => {
         }
     }
 
+    const handleSelectClick = (event: React.MouseEvent<HTMLSelectElement, MouseEvent>) => {
+        event.stopPropagation();
+    };
+
+    const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        localStorage.setItem('voiceLanguage', event.target.value)
+    };
+
     return (
         <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[505px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-460px]" : bettingSlip === "hide" ? "bottom-[-505px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
             <div
-                className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color]"
+                className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color] relative"
                 onClick={() => dispatch(updateBettingSlip(bettingSlip === "close" ? "open" : "close"))}
             >
                 <p className="font-[600]">Betting Slip</p>
                 <MdOutlineKeyboardArrowDown className={`text-[22px] transition-all duration-1000 ${bettingSlip === "close" ? "rotate-180" : "rotate-0"}`} />
+                <select className="bg-[black] absolute right-[40px] rounded-[5px] text-[15px] h-[23px] px-[5px]" onClick={handleSelectClick} onChange={handleLanguageChange}>
+                    {voiceLanguage?.map((lan, index) => (
+                        <option value={index} selected={Number(localStorage.getItem('voiceLanguage')) === index ? true : false} className="capitalize">{lan.label}</option>
+                    ))}
+                </select>
             </div>
             <div className="p-[5px] bg-gray-200 rounded-t-[7px]">
                 <div>
@@ -77,12 +92,13 @@ const BetSlip = () => {
 export default BetSlip;
 
 const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { webColor: string, inputRef: any, fn_getOpenBets: any, updateSlipTab: any }) => {
+
     const dispatch = useDispatch();
-    const redisGames = useSelector((state: any) => state.redisGames);
+    const [loader, setLoader] = useState(false);
 
     const bets = useSelector((state: any) => state.bets);
     const wallet = useSelector((state: any) => state.wallet);
-    const [loader, setLoader] = useState(false);
+    const redisGames = useSelector((state: any) => state.redisGames);
 
     const fn_keyDown = (e: any, index: number) => {
         e.preventDefault();
@@ -176,6 +192,12 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
         const response = await placeBetsApi(bets);
         if (response?.status) {
             setLoader(false);
+            const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+            const lan = voiceLanguage[selectedLanguage];
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = lan.line || 'Bet has been placed';
+            msg.lang = lan.name || 'en';
+            window.speechSynthesis.speak(msg);
             fn_getOpenBets();
             dispatch(updateBets([]));
             dispatch(updateSlipTab("open"));

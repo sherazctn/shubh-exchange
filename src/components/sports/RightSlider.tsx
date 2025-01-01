@@ -6,7 +6,7 @@ import { Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { GoDotFill } from "react-icons/go";
-import { MdFullscreen } from "react-icons/md";
+// import { MdFullscreen } from "react-icons/md";
 
 interface RightSliderProps {
   sportId: string | number;
@@ -92,7 +92,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
           </div>
         </div>
       )}
-      {sportId === "4" && (
+      {sportId === "5" && (
         <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
           <div className="relative pt-[56.25%] mt-[7px]">
             <iframe
@@ -107,7 +107,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
           </div>
         </div>
       )}
-      {sportId === "5" && cricketScore?.data && (
+      {sportId === "4" && cricketScore?.data && (
         <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative mt-[7px] p-[7px] flex flex-col gap-[5px]">
           <p className="text-center uppercase text-[16px] font-[600] border-b pb-[10px] mb-[5px]">{selectedEvent?.competitionName}</p>
           {/* first team score */}

@@ -25,13 +25,13 @@ import BonusStatement from "./pages/account/bonusStatement/page";
 import AccountStatement from "./pages/account/accountStatement/page";
 
 import Bets from "./pages/account/Bets/page";
-import CurrentBets from "./pages/account/Bets/CurrentBets/page";
+import PaymentInfo from "./pages/account/paymentInfo/page";
 import BetHistory from "./pages/account/Bets/BetHistory/page";
 import ProfitLoss from "./pages/account/Bets/ProfitLoss/page";
+import CurrentBets from "./pages/account/Bets/CurrentBets/page";
 import FDProfitLoss from "./pages/account/Bets/FDProftLoss/page";
-import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
-import PaymentInfo from "./pages/account/paymentInfo/page";
+import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
 
 function App() {
