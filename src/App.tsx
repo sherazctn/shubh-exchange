@@ -8,6 +8,8 @@ import useColorScheme from "./hooks/useColorScheme";
 import { retrieveGamesDataToRedisApi } from "./api/api";
 import { updateRedisGamesData } from "./features/features";
 
+import Notification from "./Notification";
+
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
 import BetSlip from "./components/BetSlip/BetSlip";
@@ -35,6 +37,7 @@ import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
 
 function App() {
+
   const location = useLocation();
   const dispatch = useDispatch();
   const colorScheme = useSelector((state: any) => state.colorScheme);
@@ -63,6 +66,7 @@ function App() {
 
   return (
     <>
+      <Notification />
       {!isAccountPage && <Navbar />}
       {!isAccountPage && <BetSlip />}
       <div className="main-section">
