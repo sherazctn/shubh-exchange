@@ -8,7 +8,7 @@ import useColorScheme from "./hooks/useColorScheme";
 import { retrieveGamesDataToRedisApi } from "./api/api";
 import { updateRedisGamesData } from "./features/features";
 
-import Notification from "./Notification";
+// import Notification from "./Notification";
 
 import Navbar from "./components/navbar/page";
 import Sidebar from "./components/sidebar/page";
@@ -66,7 +66,7 @@ function App() {
 
   return (
     <>
-      <Notification />
+      {/* <Notification /> */}
       {!isAccountPage && <Navbar />}
       {!isAccountPage && <BetSlip />}
       <div className="main-section">
