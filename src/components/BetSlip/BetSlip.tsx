@@ -43,7 +43,7 @@ const BetSlip = () => {
     const fn_getOpenBets = async () => {
         const response = await getOpenBetsByUserApi(token);
         if (response?.status) {
-            setOpenBets(response?.data?.reverse());
+            setOpenBets(response?.data);
         } else {
             setOpenBets([]);
         }
