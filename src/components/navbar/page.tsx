@@ -103,7 +103,7 @@ const Navbar = () => {
     dispatch(authenticate(false));
     dispatch(updateBets([]));
     setAccountDropdown(false);
-    return toast.success("Logout Successfullty");
+    return toast.success("Logout Successfully");
   }
 
   const fn_depositClicked = () => {
