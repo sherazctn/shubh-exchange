@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Footer from "../../components/footer/page";
 import HeroSection from "../../components/home/HeroSection";
 import CardsSection from "../../components/home/cardsSection";
+import CasinoSlider from "../../components/home/CasinoSlider";
 import { updateMobileMenu, updatePageNav } from "../../features/features";
 import CricketDropdownsSection from "../../components/home/DropdownsSection";
 
@@ -39,7 +40,7 @@ const Home = () => {
       {sportIds?.find(id => id == "4") && (<CricketDropdownsSection text={`Live Cricket Matches`} id={"4"} />)}
       {sportIds?.find(id => id == "2") && (<CricketDropdownsSection text={`Live Tennis Matches`} id={"2"} />)}
       {sportIds?.find(id => id == "1") && (<CricketDropdownsSection text={`Live Soccer Matches`} id={"1"} />)}
-      {/* <CasinoSlider /> */}
+      <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />
       <Footer />
     </div>

@@ -1,204 +1,104 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useState, useRef } from 'react';
+import { Autoplay } from 'swiper/modules';
+import { MdWatchLater } from 'react-icons/md';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
 
-import casino1 from "../../assets/casino-1.png";
-import casino2 from "../../assets/casino-2.png";
-import casino3 from "../../assets/casino-3.png";
-import casino4 from "../../assets/casino-4.png";
-import casino5 from "../../assets/casino-5.png";
+import { CasinoBoxes, CasinoUpperBoxes } from '../../assets/data';
 
 const CasinoSlider = () => {
-    const [img1, setImg1] = useState(false);
-    const [img2, setImg2] = useState(false);
-    const [img3, setImg3] = useState(false);
-    const [img4, setImg4] = useState(false);
-    const [img5, setImg5] = useState(false);
-    const [img6, setImg6] = useState(false);
-    const [img7, setImg7] = useState(false);
-    const [img8, setImg8] = useState(false);
-    const [img9, setImg9] = useState(false);
-    const [img10, setImg10] = useState(false);
-    const [img11, setImg11] = useState(false);
-    const [img12, setImg12] = useState(false);
-    const [img13, setImg13] = useState(false);
-    const [img14, setImg14] = useState(false);
-    const [img15, setImg15] = useState(false);
+    const toastRef = useRef<string | null>(null);
+    const [casinoBoxes, setCasinoBoxes] = useState(CasinoBoxes);
+    const [hoveredSlide, setHoveredSlide] = useState<number | null>(null);
+
+    const handleMouseEnter = (id: number) => {
+        setCasinoBoxes((prevBoxes) =>
+            prevBoxes.map((item) =>
+                item.id === id ? { ...item, hover: true } : item
+            )
+        );
+    };
+    const handleMouseLeave = (id: number) => {
+        setCasinoBoxes((prevBoxes) =>
+            prevBoxes.map((item) =>
+                item.id === id ? { ...item, hover: false } : item
+            )
+        );
+    };
     return (
         <>
             <p className="text-[18px] font-[500] mt-[15px]">Live Casino</p>
             <div className="relative mt-[10px]">
                 <Swiper
                     slidesPerView="auto"
-                    spaceBetween={30}
-                    modules={[Navigation, Autoplay]}
-                    navigation={{
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    }}
+                    spaceBetween={10}
+                    modules={[Autoplay]}
                     autoplay={{
-                        delay: 3000,
+                        delay: 2000,
                         disableOnInteraction: false,
                     }}
+                    loop={true}
                     className="mySwiper"
                 >
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg1(true)} onMouseLeave={() => setImg1(false)}>
-                            <img alt='img' src={casino1} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img1 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img1 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
+                    {CasinoUpperBoxes?.map((box) => (
+                        <SwiperSlide 
+                            key={box.id} 
+                            style={{ width: '300px', cursor: 'pointer' }}
+                            onMouseEnter={() => setHoveredSlide(box.id)}
+                            onMouseLeave={() => setHoveredSlide(null)}
+                            onClick={() => {
+                                if (toastRef.current) {
+                                    toast.dismiss(toastRef.current);
+                                }
+                                toastRef.current = toast.error('Coming Soon', {
+                                    icon: <MdWatchLater style={{ color: 'orange' }} />,
+                                    duration: 4000,
+                                    position: 'top-center'
+                                });
+                            }}
+                        >
+                            <div className={`h-[165px] w-[300px] rounded-[5px] relative ${hoveredSlide === box.id ? 'blur-[3px]' : ''}`}>
+                                <img alt='img' src={box.img} className='w-[300px] h-[165px] rounded-[5px] object-center object-cover' />
+                                <div className='absolute w-full h-[35px] bg-gray-800 left-0 bottom-0 rounded-b-[5px] flex justify-center items-center'>
+                                    <p className='text-[13px] font-[500] text-center text-white'>{box.label}</p>
+                                </div>
                             </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg2(true)} onMouseLeave={() => setImg2(false)}>
-                            <img alt='img' src={casino2} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img2 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img2 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg3(true)} onMouseLeave={() => setImg3(false)}>
-                            <img alt='img' src={casino3} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img3 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img3 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg4(true)} onMouseLeave={() => setImg4(false)}>
-                            <img alt='img' src={casino4} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img4 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img4 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg5(true)} onMouseLeave={() => setImg5(false)}>
-                            <img alt='img' src={casino5} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img5 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img5 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg6(true)} onMouseLeave={() => setImg6(false)}>
-                            <img alt='img' src={casino1} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img6 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img6 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg7(true)} onMouseLeave={() => setImg7(false)}>
-                            <img alt='img' src={casino2} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img7 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img7 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg8(true)} onMouseLeave={() => setImg8(false)}>
-                            <img alt='img' src={casino3} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img8 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img8 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg9(true)} onMouseLeave={() => setImg9(false)}>
-                            <img alt='img' src={casino4} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img9 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img9 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg10(true)} onMouseLeave={() => setImg10(false)}>
-                            <img alt='img' src={casino5} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img10 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img10 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg11(true)} onMouseLeave={() => setImg11(false)}>
-                            <img alt='img' src={casino1} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img11 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img11 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg12(true)} onMouseLeave={() => setImg12(false)}>
-                            <img alt='img' src={casino2} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img12 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img12 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg13(true)} onMouseLeave={() => setImg13(false)}>
-                            <img alt='img' src={casino3} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img13 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img13 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg14(true)} onMouseLeave={() => setImg14(false)}>
-                            <img alt='img' src={casino4} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img14 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img14 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide style={{ width: '200px' }}>
-                        <div className="min-h-[250px] w-[200px] rounded-[10px] relative" onMouseEnter={() => setImg15(true)} onMouseLeave={() => setImg15(false)}>
-                            <img alt='img' src={casino5} className='w-[200px] h-[250px] rounded-[10px] object-center object-cover' />
-                            <div className={`absolute left-0 top-0 h-[250px] w-[200px] rounded-[10px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${img15 ? 'opacity-100' : 'opacity-0'}`}>
-                                <button className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${img15 ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-                                    Play
-                                </button>
-                            </div>
-                        </div>
-                    </SwiperSlide>
+                        </SwiperSlide>
+                    ))}
                 </Swiper>
-
-                {/* Navigation buttons */}
-                <div className="swiper-button-prev"></div>
-                <div className="swiper-button-next"></div>
+            </div>
+            <div className="relative mt-[10px]">
+                <div className="w-[100%] xl:me-[15px] pt-[15px] grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5px] sm:gap-[10px] h-[max-content]">
+                    {casinoBoxes?.map((item) => (
+                        <div
+                            key={item.id}
+                            className="rounded-[10px] relative"
+                            onMouseEnter={() => handleMouseEnter(item.id)}
+                            onMouseLeave={() => handleMouseLeave(item.id)}
+                        >
+                            <img alt={item.label} src={item.img} className="w-full rounded-[5px] object-cover" />
+                            <div className={`absolute left-0 top-0 h-full w-full rounded-[5px] bg-black bg-opacity-75 flex justify-center items-center transition-opacity duration-300 ${item.hover ? 'opacity-100' : 'opacity-0'}`}>
+                                <button 
+                                    className={`bg-black w-[75px] h-[30px] text-[14px] font-[500] text-white rounded-full border border-gray-600 transition-transform duration-300 ${item.hover ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                                    onClick={() => {
+                                        if (toastRef.current) {
+                                            toast.dismiss(toastRef.current);
+                                        }
+                                        toastRef.current = toast.error('Coming Soon', {
+                                            icon: <MdWatchLater style={{ color: 'orange' }} />,
+                                            duration: 4000,
+                                            position: 'top-center'
+                                        });
+                                    }}
+                                >
+                                    Play
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );

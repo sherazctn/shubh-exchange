@@ -1,5 +1,4 @@
 import toast from "react-hot-toast"
-import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -17,6 +16,7 @@ import Loader from "../Loader"
 import { voiceLanguage } from "../../assets/data";
 import URL, { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
 import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features"
+import { HiSpeakerWave } from "react-icons/hi2";
 
 
 const BetSlip = () => {
@@ -70,6 +70,7 @@ const BetSlip = () => {
                         <option value={index} selected={Number(localStorage.getItem('voiceLanguage')) === index ? true : false} className="capitalize">{lan.label}</option>
                     ))}
                 </select>
+                <HiSpeakerWave className="absolute right-[125px] text-white" />
             </div>
             <div className="p-[5px] bg-gray-200 rounded-t-[7px]">
                 <div>

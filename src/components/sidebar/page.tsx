@@ -1,6 +1,10 @@
 import aos from "aos";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+
+import casino from "../../assets/casino.png"
+import avitor from "../../assets/aviator-icon.png"
 
 import Loader from "../Loader";
 import URL, { retrieveEventsDataToRedisApi, retrieveGamesDataToRedisApi } from "../../api/api";
@@ -9,12 +13,13 @@ import { updateEventData, updateMobileSidebar, updateSelectedEvent, updateSideba
 import { FiSearch } from "react-icons/fi";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight, MdWatchLater } from "react-icons/md";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const toastRef = useRef<string | null>(null);
   const screenHeight = `${window.innerHeight}px`;
   const [openOptions, setOpenOption] = useState<any>([]);
   const savedEventData = localStorage.getItem('eventData');
@@ -23,6 +28,8 @@ const Sidebar = () => {
   const webColor = useSelector((state: any) => state.websiteColor);
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
+  const [toastShown, setToastShown] = useState(false);
+
   const fn_getEvents = async () => {
     const response = await retrieveEventsDataToRedisApi();
     const gameResponse = await retrieveGamesDataToRedisApi();
@@ -36,6 +43,7 @@ const Sidebar = () => {
     }
     setLoader(false);
   };
+
   useEffect(() => {
     if (savedEventData) {
       setLoader(false);
@@ -54,6 +62,7 @@ const Sidebar = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
   useEffect(() => {
     if (redisGames) {
       const sportId = redisGames?.map((gm: any) => gm?.id);
@@ -62,6 +71,7 @@ const Sidebar = () => {
     }
     fn_getEvents();
   }, [redisGames]);
+
   return (
     <div
       className={`sidebar top-0 shadow-lg md:shadow-none transition-all duration-500 ${showSidebar ? "w-[270px]" : "w-[67px] ms-2"
@@ -129,6 +139,54 @@ const Sidebar = () => {
               <BsFillExclamationCircleFill className="text-[20px]" />No Game is playing
             </div>
           )}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="Aviator"
+                  src={avitor}
+                  className="w-[25px] h-[25px] rounded-full object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Aviator</p>}
+              </div>
+            </div>
+          </div>
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="Casino"
+                  src={casino}
+                  className="w-[25px] h-[25px] rounded-full object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Casino</p>}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

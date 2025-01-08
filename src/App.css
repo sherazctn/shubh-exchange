@@ -177,7 +177,7 @@
 
 .home-cards-section {
   flex: 1;
-  min-height: 77px;
+  min-height: 110px;
   border-radius: 7px;
   background-color: white;
   border: 1px solid rgba(128, 128, 128, 0.123);

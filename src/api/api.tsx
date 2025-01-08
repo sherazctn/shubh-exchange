@@ -5,7 +5,6 @@ import { messaging, getToken } from "../firebase";
 const URL = "https://backend.shubhexchange.com";
 // const URL = "http://62.72.57.126:8001";
 
-
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
     const optionsTime: any = { hour: '2-digit', minute: '2-digit', hour12: true };
