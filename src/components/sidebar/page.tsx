@@ -3,8 +3,17 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 
-import casino from "../../assets/casino.png"
-import avitor from "../../assets/aviator-icon.png"
+import casino from "../../assets/Casino.svg"
+import matka from "../../assets/Matka.svg"
+import avitor from "../../assets/Aviator.svg"
+import horseRiding from "../../assets/Horse Racing.svg"
+import basketBall from "../../assets/Basket Ball.svg"
+import rugby from "../../assets/Rugby.svg"
+import boxingIcon from "../../assets/Boxing.svg"
+import baseball from "../../assets/Baseball.svg"
+import golfIcon from "../../assets/Golf.svg"
+import snooker from "../../assets/Snooker.svg"
+import eSports from "../../assets/e-Sports.svg"
 
 import Loader from "../Loader";
 import URL, { retrieveEventsDataToRedisApi, retrieveGamesDataToRedisApi } from "../../api/api";
@@ -28,7 +37,6 @@ const Sidebar = () => {
   const webColor = useSelector((state: any) => state.websiteColor);
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
-  const [toastShown, setToastShown] = useState(false);
 
   const fn_getEvents = async () => {
     const response = await retrieveEventsDataToRedisApi();
@@ -139,30 +147,7 @@ const Sidebar = () => {
               <BsFillExclamationCircleFill className="text-[20px]" />No Game is playing
             </div>
           )}
-          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
-            <div
-              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
-              onClick={() => {
-                if (toastRef.current) {
-                  toast.dismiss(toastRef.current);
-                }
-                toastRef.current = toast.error('Coming Soon', {
-                  icon: <MdWatchLater style={{ color: 'orange' }} />,
-                  duration: 4000,
-                  position: 'top-center'
-                });
-              }}
-            >
-              <div className="flex items-center gap-2.5">
-                <img
-                  alt="Aviator"
-                  src={avitor}
-                  className="w-[25px] h-[25px] rounded-full object-cover"
-                />
-                {showSidebar && <p className="font-[600] text-[15px] capitalize">Aviator</p>}
-              </div>
-            </div>
-          </div>
+          {/* casino */}
           <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
             <div
               className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
@@ -184,6 +169,256 @@ const Sidebar = () => {
                   className="w-[25px] h-[25px] rounded-full object-cover"
                 />
                 {showSidebar && <p className="font-[600] text-[15px] capitalize">Casino</p>}
+              </div>
+            </div>
+          </div>
+          {/* matka */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="matka"
+                  src={matka}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Matka</p>}
+              </div>
+            </div>
+          </div>
+          {/* aviator */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="Aviator"
+                  src={avitor}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Aviator</p>}
+              </div>
+            </div>
+          </div>
+          {/* horse racing */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="horseRiding"
+                  src={horseRiding}
+                  className="w-[25px] h-[25px] object-cover scale-[1.2]"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Horse Racing</p>}
+              </div>
+            </div>
+          </div>
+          {/* basket ball */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="basketBall"
+                  src={basketBall}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Basket Ball</p>}
+              </div>
+            </div>
+          </div>
+          {/* rugby */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="rugby"
+                  src={rugby}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Rugby</p>}
+              </div>
+            </div>
+          </div>
+          {/* boxing */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="boxingIcon"
+                  src={boxingIcon}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Boxing</p>}
+              </div>
+            </div>
+          </div>
+          {/* baseball */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="baseball"
+                  src={baseball}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Baseball</p>}
+              </div>
+            </div>
+          </div>
+          {/* golf */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="golfIcon"
+                  src={golfIcon}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Golf</p>}
+              </div>
+            </div>
+          </div>
+          {/* snooker */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="snooker"
+                  src={snooker}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">Snooker</p>}
+              </div>
+            </div>
+          </div>
+          {/* e-Sports */}
+          <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+            <div
+              className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
+              onClick={() => {
+                if (toastRef.current) {
+                  toast.dismiss(toastRef.current);
+                }
+                toastRef.current = toast.error('Coming Soon', {
+                  icon: <MdWatchLater style={{ color: 'orange' }} />,
+                  duration: 4000,
+                  position: 'top-center'
+                });
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  alt="eSports"
+                  src={eSports}
+                  className="w-[25px] h-[25px] object-cover"
+                />
+                {showSidebar && <p className="font-[600] text-[15px] capitalize">e-Sports</p>}
               </div>
             </div>
           </div>

@@ -17,7 +17,7 @@ import { PiHandDeposit } from "react-icons/pi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
-import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
 
 const Navbar = () => {
@@ -196,13 +196,18 @@ const Navbar = () => {
           )}
         </div>
         {/* mobile menu btn */}
-        <div className={`flex gap-[10px] md:hidden ${authentication && "mt-[-18px]"}`}>
+        <div className={`flex gap-[6px] sm:gap-[10px] md:hidden ${authentication && "mt-[-18px]"}`}>
           <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
             <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit
           </div>
           {!authentication && (
-            <div className="flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={() => setLoginModal(true)}>
-              <FaUser className="mt-[-1px] me-[4px]" />Login
+            <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[30px] bg-[--text-color] cursor-pointer text-[13px] font-[600]" onClick={() => setLoginModal(true)}>
+              <FaUser className="mt-[-1px]" />
+            </div>
+          )}
+          {!authentication && (
+            <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[30px] bg-[--text-color] cursor-pointer text-[17px]" onClick={() => setSignupModal(true)}>
+              <FaUserPlus className="mt-[-1px] ml-[4px]" />
             </div>
           )}
           {authentication && (

@@ -1,8 +1,20 @@
 import aos from "aos";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
+import casino from "../../assets/Casino.svg"
+import matka from "../../assets/Matka.svg"
+import avitor from "../../assets/Aviator.svg"
+import horseRiding from "../../assets/Horse Racing.svg"
+import basketBall from "../../assets/Basket Ball.svg"
+import rugby from "../../assets/Rugby.svg"
+import boxingIcon from "../../assets/Boxing.svg"
+import baseball from "../../assets/Baseball.svg"
+import golfIcon from "../../assets/Golf.svg"
+import snooker from "../../assets/Snooker.svg"
+import eSports from "../../assets/e-Sports.svg"
 
 import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
@@ -13,11 +25,13 @@ import Footer from "../footer/page";
 import allSport from "../../assets/inplay.png";
 import URL, { getAvailableGames, getInplayMarketsApi } from "../../api/api";
 import { updateBets, updateBettingSlip, updateSelectedEvent, updateSlipTab } from "../../features/features";
+import { MdWatchLater } from "react-icons/md";
 
 const LeftSection = () => {
   const location = useLocation();
   const divHeight = `${window.innerHeight - 60}px`;
   const [tab, setTab] = useState("all");
+  const toastRef = useRef<string | null>(null);
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -75,6 +89,17 @@ const LeftSection = () => {
     return () => clearInterval(intervalId);
   };
 
+  const fn_comingsoon = () => {
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+    toastRef.current = toast.error('Coming Soon', {
+      icon: <MdWatchLater style={{ color: 'orange' }} />,
+      duration: 4000,
+      position: 'top-center'
+    });
+  }
+
   return (
     <div
       className="w-[100%] xl:me-[15px] overflow-auto pt-[15px]"
@@ -97,7 +122,7 @@ const LeftSection = () => {
                   src={allSport}
                   className="w-[24px] h-[24px] rounded-full object-cover"
                 />
-                <p className="font-[500] text-[14px] capitalize">All</p>
+                <p className="font-[500] text-[13px] capitalize">All</p>
               </div>
 
               {/* Dynamic Tabs */}
@@ -130,9 +155,152 @@ const LeftSection = () => {
                     src={`${URL}/${item?.image}`}
                     className="w-[27px] h-[27px] rounded-full object-cover"
                   />
-                  <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
+                  <p className="font-[500] text-[13px] capitalize">{item?.name}</p>
                 </div>
               ))}
+              {/* casino */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={casino}
+                  className="w-[27px] h-[27px] rounded-full object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Casino</p>
+              </div>
+              {/* matka */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={matka}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Matka</p>
+              </div>
+              {/* aviator */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={avitor}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Aviator</p>
+              </div>
+              {/* horse riding */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={horseRiding}
+                  className="w-[27px] h-[27px] object-cover scale-[1.2]"
+                />
+                <p className="font-[500] text-[13px] capitalize">Horse Riding</p>
+              </div>
+              {/* basket ball */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={basketBall}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Basket Ball</p>
+              </div>
+              {/* rugby */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={rugby}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Rugby</p>
+              </div>
+              {/* boxing */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={boxingIcon}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Boxing</p>
+              </div>
+              {/* baseball */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={baseball}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Baseball</p>
+              </div>
+              {/* golf */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={golfIcon}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Golf</p>
+              </div>
+              {/* snooker */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={snooker}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">Snooker</p>
+              </div>
+              {/* e-sports */}
+              <div
+                className={`sports-left-top-tabs shadow-sm bg-white`}
+                style={{ borderColor: webColor }}
+                onClick={fn_comingsoon}
+              >
+                <img
+                  alt="img"
+                  src={eSports}
+                  className="w-[27px] h-[27px] object-cover"
+                />
+                <p className="font-[500] text-[13px] capitalize">e-Sports</p>
+              </div>
             </>
           ) : (
             <p>No Game is Playing</p>
