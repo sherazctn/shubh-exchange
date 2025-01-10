@@ -70,7 +70,7 @@ const CasinoSlider = () => {
                 </Swiper>
             </div>
             <div className="relative mt-[10px]">
-                <div className="w-[100%] xl:me-[15px] pt-[15px] grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5px] sm:gap-[10px] h-[max-content]">
+                <div className="w-[100%] xl:me-[15px] pt-[15px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5px] sm:gap-[10px] h-[max-content]">
                     {casinoBoxes?.map((item) => (
                         <div
                             key={item.id}

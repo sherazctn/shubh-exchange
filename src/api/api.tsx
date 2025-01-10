@@ -34,8 +34,10 @@ export const CheckAdminApi = async () => {
 export const SignUpApi = async (data: any) => {
     try {
         const fcmToken = await getToken(messaging, { vapidKey: "BDejpOAWOM3yEwFQ9LbqQTpbG8SvOnaMGmNq6nwYISbSD7lhh99aKePX9HVRKg-aREsls8nNRpeHMyETF3cryyQ" });
-        Cookies.set('userFcmToken', fcmToken);
-        const response = await axios.post(`${URL}/user`, { ...data, fcmToken });
+        if (fcmToken) {
+            Cookies.set('userFcmToken', fcmToken);
+        }
+        const response = await axios.post(`${URL}/user`, { ...data, fcmToken: fcmToken || "" });
         if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Created Successfully", data: response?.data?.data };
@@ -52,8 +54,10 @@ export const SignUpApi = async (data: any) => {
 export const SignInApi = async (data: any) => {
     try {
         const fcmToken = await getToken(messaging, { vapidKey: "BDejpOAWOM3yEwFQ9LbqQTpbG8SvOnaMGmNq6nwYISbSD7lhh99aKePX9HVRKg-aREsls8nNRpeHMyETF3cryyQ" });
-        Cookies.set('userFcmToken', fcmToken);
-        const response = await axios.post(`${URL}/user/login`, { ...data, fcmToken });
+        if (fcmToken) {
+            Cookies.set('userFcmToken', fcmToken);
+        }
+        const response = await axios.post(`${URL}/user/login`, { ...data, fcmToken: fcmToken || "" });
         if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Logged In Successfully", data: response?.data?.data };

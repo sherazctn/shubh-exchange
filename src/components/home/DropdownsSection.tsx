@@ -217,20 +217,20 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                         onClick={() => {
                           dispatch(updateSelectedEvent({
                             competitionName: competition?.competitionName,
-                            eventId: event?.match_id,
+                            eventId: event?.eventId,
                             eventName: event?.matchName,
                             date: event?.date || event?.openDate,
                             inPlay: true
                           }));
                           localStorage.setItem('selectedEvent', JSON.stringify({
                             competitionName: competition?.competitionName,
-                            eventId: event?.match_id,
+                            eventId: event?.eventId,
                             eventName: event?.matchName,
                             date: event?.date || event?.openDate,
                             inPlay: true
                           }))
                         }}
-                        href={`/match?sportId=${id}&eventId=${event?.match_id}`}
+                        href={`/match?sportId=${id}&eventId=${event?.eventId}`}
                         className="min-h-[65px] border-b sm:pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[2px] sm:px-[11px] cursor-pointer"
                       >
                         <div className="flex md:w-auto items-center gap-2 sm:gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
@@ -264,7 +264,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   "Back",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -288,7 +288,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -305,7 +305,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -322,7 +322,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -339,7 +339,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -356,7 +356,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -375,7 +375,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   "Lay",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -399,7 +399,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -416,7 +416,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -433,7 +433,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -450,7 +450,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -467,7 +467,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -487,7 +487,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   "Back",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -519,7 +519,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -536,7 +536,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -553,7 +553,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -570,7 +570,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -587,7 +587,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -606,7 +606,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[2]?.selectionId,
                                   "Lay",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -638,7 +638,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -655,7 +655,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -672,7 +672,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -689,7 +689,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -706,7 +706,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[2]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -726,7 +726,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   "Back",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -758,7 +758,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -775,7 +775,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -792,7 +792,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -809,7 +809,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -826,7 +826,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -845,7 +845,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   "Lay",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -877,7 +877,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -894,7 +894,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -911,7 +911,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -928,7 +928,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -945,7 +945,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -967,7 +967,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   "Back",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -999,7 +999,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -1016,7 +1016,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -1033,7 +1033,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -1050,7 +1050,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -1067,7 +1067,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -1086,7 +1086,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[0]?.selectionId,
                                   "Lay",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -1118,7 +1118,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -1135,7 +1135,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -1152,7 +1152,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -1169,7 +1169,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -1186,7 +1186,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[0]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -1227,7 +1227,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   "Back",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -1259,7 +1259,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -1276,7 +1276,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -1293,7 +1293,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -1310,7 +1310,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -1327,7 +1327,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Back",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
@@ -1346,7 +1346,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.matchName,
                                   event?.odd?.runners?.[1]?.selectionId,
                                   "Lay",
-                                  event?.match_id,
+                                  event?.eventId,
                                   event?.market_id,
                                   event?.marketname
                                 )}
@@ -1378,7 +1378,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[0] || 1000
@@ -1395,7 +1395,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[1] || 2000
@@ -1412,7 +1412,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[2] || 3000
@@ -1429,7 +1429,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[3] || 4000
@@ -1446,7 +1446,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                         event?.matchName,
                                         event?.odd?.runners?.[1]?.selectionId,
                                         "Lay",
-                                        event?.match_id,
+                                        event?.eventId,
                                         event?.market_id,
                                         event?.marketname,
                                         oddsPrice?.[4] || 5000
