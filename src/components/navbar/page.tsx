@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -39,6 +39,7 @@ const Navbar = () => {
   const [webLogo, setWebLogo] = useState("");
   const webColor = useSelector((state: any) => state.websiteColor);
   const wallet = useSelector((state: any) => state.wallet);
+  const exposure = useSelector((state: any) => state.exposure);
   const username = useSelector((state: any) => state.username);
 
   useEffect(() => {
@@ -87,6 +88,7 @@ const Navbar = () => {
       setPasswordType("password");
       dispatch(authenticate(true));
       dispatch(updateWallet(response?.data?.wallet || 0));
+      dispatch(updateExposure(response?.data?.exposure || 0));
       dispatch(updateUsername(response?.data?.username));
       setLoginModal(false);
       setLoader(false);
@@ -162,14 +164,14 @@ const Navbar = () => {
             </a> */}
           </ul>
           {authentication ? (
-            <div className="min-w-[270px] bg-[#ffffff5e] rounded-full flex justify-between">
+            <div className="min-w-[270px] bg-[#ffffff5e] rounded-[5px] flex justify-between">
               <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white flex-nowrap">
                 <span className="text-[11px] leading-[10px] font-[500]">Balance</span>
                 <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{Number(wallet).toFixed(2)}</span>
               </p>
               <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
-                <span className="text-[11px] leading-[10px] font-[500]">Availabe To Bet</span>
-                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{Number(wallet).toFixed(2)}</span>
+                <span className="text-[11px] leading-[10px] font-[500]">Exp</span>
+                <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{exposure <= 0 ? Number(exposure).toFixed(2) : `-${Number(exposure).toFixed(2)}`}</span>
               </p>
               <p className="flex flex-col justify-center px-[13px] gap-[3px] pt-[2px] text-white">
                 <span className="text-[11px] leading-[10px] font-[500]">Username</span>
@@ -375,8 +377,9 @@ const Navbar = () => {
         footer={null}
         style={{ fontFamily: "Roboto" }}
       >
-        <div className="flex justify-center font-[800] text-[30px] sm:text-[35px] gap-[8px]">
-          {webName}
+        <div className="flex justify-center font-[700] text-[30px] sm:text-[35px] gap-[8px]">
+          {/* {webName} */}
+          Login
         </div>
         <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
           <div className="flex flex-col gap-[3px]">

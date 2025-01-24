@@ -5,14 +5,12 @@ import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
 import RightSlider from "../sports/RightSlider";
-import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features";
-
-// import cashoutImg from "../../assets/cashout.png";
+import { updateBets, updateBettingSlip, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features";
 
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, placeBetsApi } from "../../api/api";
+import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
 
@@ -24,6 +22,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
   const webColor = useSelector((state: any) => state.websiteColor);
+  const pendingBets = useSelector((state: any) => state.pendingBets);
 
   const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
 
@@ -123,7 +122,8 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
         <div className="flex flex-col gap-[10px]">
           {markets?.map((item: any) => {
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
-            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} />
+            if (item?.marketName === "Tied Match") return;
+            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} />
             if (tabs === "Main") {
               const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
               if (item?.marketName !== "Match Odds" && item?.marketName !== "Tied Match") return;
@@ -147,14 +147,14 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           })}
           {tabs === "Main" && (
             <>
-              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} />
-              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
-              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
+              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} />
+              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
+              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
             </>
           )}
           {(tabs === "Main" || tabs === "fancy") && (
             <>
-              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} />
+              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
             </>
           )}
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
@@ -178,14 +178,19 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId }: any) => {
+const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId, pendingBets }: any) => {
   const timerRef = useRef<any>();
   const dispatch = useDispatch();
   const [showAmounts, setAmount] = useState("");
   const [longPress, setLongPress] = useState(false);
   const [prevOdds, setPrevOdds] = useState<any>({});
   const wallet = useSelector((state: any) => state.wallet);
+  const expCalculation = useSelector((state: any) => state.expCalculation);
   const authentication = useSelector((state: any) => state.authentication);
+
+  const [totalCal, setTotalCal] = useState<any>(null);
+
+  const recentExp = useSelector((state: any) => state.recentExp);
 
   useEffect(() => {
     if (Object.keys(market)?.length > 0 && Object.keys(prevOdds)?.length === 0) {
@@ -196,6 +201,17 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       }, 400);
     }
   }, [market]);
+
+  useEffect(() => {
+    if (pendingBets?.length > 0) {
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketId === market.marketId)
+      const result: any = fn_calculatingBets(specificMarketBets);
+      if (result) {
+        console.log("result ", result);
+        setTotalCal(result);
+      }
+    }
+  }, [pendingBets]);
 
   const fn_controlOddsView = (e: any, id: string) => {
     e.preventDefault();
@@ -209,13 +225,14 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     }
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
+  const handleBetClicked = async (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
     if (showAmounts !== "") setAmount("");
     if (!authentication) return toast.error("Login Yourself")
     if (!odd) return;
+    if (odd >= 4) return toast.error("Odds above 4 not accepted");
     if (!runnerName) return;
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
@@ -224,6 +241,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       afterLoss: wallet - 10,
       afterWin: wallet + profit,
       amount: 10,
+      stake: 10,
       eventId: eventId,
       gameId: runnerId,
       gameName: runnerName,
@@ -231,11 +249,16 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       marketId: market.marketId,
       marketName: market.marketName,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) - 1) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) - 1) * 10).toFixed(2)),
       side: side,
       sportId: sportId,
       selectionName: selectionName
     }
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === market.marketId);
+    const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+    console.log("updatedCalculation ==> ", updatedCalculation)
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
@@ -333,9 +356,23 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
               const prevOdd = prevOdds?.odds?.runners?.find((run: any) => run?.selectionId === item?.selectionId);
               return (
                 <div key={index} className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                  <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                  <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                     <BsGraphUp />
                     <p className="text-[13px] sm:text-[15px] font-[500]">{item?.runnerName}</p>
+                    <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                      <p>
+                        {totalCal?.profitableRunner == item?.selectionId && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                        {totalCal?.profitableRunner != item?.selectionId && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                        {totalCal?.profitableRunner == item?.selectionId && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                        {totalCal?.profitableRunner != item?.selectionId && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                      </p>
+                      <p>
+                        {recentExp?.recentObjDetails?.marketId === market.marketId && recentExp?.profitableRunner == item?.selectionId && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                        {recentExp?.recentObjDetails?.marketId === market.marketId && recentExp?.profitableRunner != item?.selectionId && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                        {recentExp?.recentObjDetails?.marketId === market.marketId && recentExp?.profitableRunner == item?.selectionId && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                        {recentExp?.recentObjDetails?.marketId === market.marketId && recentExp?.profitableRunner != item?.selectionId && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                     {[2, 1, 0].map((index) => {
@@ -565,7 +602,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
   }
 };
 
-const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
+const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -577,7 +614,20 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const [totalCal, setTotalCal] = useState<any>(null);
   const [viewBookmaker, setViewBookmaker] = useState(true);
+  const recentExp = useSelector((state: any) => state.recentExp);
+
+  useEffect(() => {
+    if (pendingBets?.length > 0) {
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker");
+      const result: any = fn_calculatingBets(specificMarketBets);
+      if (result) {
+        console.log("result ", result);
+        setTotalCal(result);
+      }
+    }
+  }, [pendingBets]);
 
   const fn_updateBookmaker = async () => {
     if (intervalRef.current) {
@@ -631,17 +681,24 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
       afterLoss: wallet - 10,
       afterWin: wallet + profit,
       amount: 10,
+      stake: 10,
       eventId: eventId,
       gameId: runnerId,
       gameName: runnerName,
       loss,
       marketId: runnerId,
       marketName: "bookmaker",
-      odd: odd,
-      profit,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
       side: side,
       sportId: "4",
-    }
+    };
+    console.log("obj ==> ", obj);
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker");
+    const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+    console.log("updatedCalculation ==> ", updatedCalculation);
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
@@ -758,8 +815,22 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
               if (item?.s === "ACTIVE") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                        </p>
+                        <p>
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -983,7 +1054,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId }: any) => {
   }
 };
 
-const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
+const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -994,7 +1065,20 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const [totalCal, setTotalCal] = useState<any>(null);
   const [viewBookmaker, setViewBookmaker] = useState(true);
+  const recentExp = useSelector((state: any) => state.recentExp);
+
+  useEffect(() => {
+    if (pendingBets?.length > 0) {
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+      const result: any = fn_calculatingBets(specificMarketBets);
+      if (result) {
+        console.log("result ", result);
+        setTotalCal(result);
+      }
+    }
+  }, [pendingBets]);
 
   const fn_updateBookmaker = async () => {
     if (intervalRef.current) {
@@ -1024,18 +1108,25 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
       afterLoss: wallet - 10,
       afterWin: wallet + profit,
       amount: 10,
+      stake: 10,
       eventId: eventId,
       gameId: runnerId,
       gameName: eventName,
       loss,
       marketId: runnerId,
       marketName: data?.[0]?.mname.toLowerCase() === "bookmaker" ? "bookmaker 2" : data?.[0]?.mname,
-      odd: odd,
-      profit,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: selectionName
-    }
+    };
+    console.log("obj ==> ", obj);
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+    const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+    console.log("updatedCalculation ==> ", updatedCalculation);
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
@@ -1153,8 +1244,22 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
               if (item?.s === "ACTIVE") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                        </p>
+                        <p>
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -1333,8 +1438,22 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
               } else {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                        </p>
+                        <p>
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] justify-center items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -1378,7 +1497,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName }: any) => {
   }
 };
 
-const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
+const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -1389,7 +1508,20 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const [totalCal, setTotalCal] = useState<any>(null);
   const [viewBookmaker, setViewBookmaker] = useState(true);
+  const recentExp = useSelector((state: any) => state.recentExp);
+
+  useEffect(() => {
+    if (pendingBets?.length > 0) {
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+      const result: any = fn_calculatingBets(specificMarketBets);
+      if (result) {
+        console.log("result ", result);
+        setTotalCal(result);
+      }
+    }
+  }, [pendingBets]);
 
   const fn_updateBookmaker = async () => {
     if (intervalRef.current) {
@@ -1404,7 +1536,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
     }, 500);
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -1424,12 +1556,20 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
       gameName: runnerName,
       loss,
       marketId: runnerId,
-      marketName: "bookmaker",
+      marketName: data?.[0]?.mname.toLowerCase() === "bookmaker" ? "bookmaker 2" : data?.[0]?.mname,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
       side: side,
       sportId: "4",
+      selectionName: selectionName,
+      stake: 10
     }
+    console.log("obj ==> ", obj);
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" || (bet?.marketId?.includes("-") && bet?.marketName != "fancy"));
+    const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+    console.log("updatedCalculation ==> ", updatedCalculation);
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
@@ -1546,8 +1686,22 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
               if (item?.s === "ACTIVE") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                          {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                        </p>
+                        <p>
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                       <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
@@ -1569,7 +1723,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
 
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back")}
+                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           1
@@ -1637,7 +1791,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
                       </div>
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay")}
+                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.net)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           2
@@ -1771,10 +1925,10 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId }: any) => {
   }
 };
 
-const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) => {
-  const timerRef = useRef<any>(null);
+const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets }: any) => {
   const dispatch = useDispatch();
-  const [data, setData] = useState([]);
+  const timerRef = useRef<any>(null);
+  const [data, setData] = useState<any>([]);
   const [showAmounts, setAmount] = useState("");
   const [longPress, setLongPress] = useState(false);
   const bets = useSelector((state: any) => state.bets);
@@ -1783,6 +1937,13 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
   const authentication = useSelector((state: any) => state.authentication);
 
   const [viewFancy, setViewFancy] = useState(true);
+  const recentExp = useSelector((state: any) => state.recentExp);
+
+  const fn_totalCal = (marketId: any): any => {
+    const filteredPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === marketId);
+    const result: any = fancy_calculatingBets(filteredPendingBets);
+    return result;
+  };
 
   const fn_updateFancyMarket = async () => {
     if (intervalRef.current) {
@@ -1834,22 +1995,29 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
       afterLoss: wallet - 10,
       afterWin: wallet + profit,
       amount: 10,
+      stake: 10,
       eventId: eventId,
       gameId: runnerId,
       gameName: eventName,
       loss,
       marketId: runnerId,
       marketName: "fancy",
-      odd: odd,
-      profit,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: selectionName
-    }
+    };
+    console.log("obj ==> ", obj);
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "fancy" && bet?.marketId == runnerId) || [];
+    console.log("updatedPendingBets ", updatedPendingBets);
+    const updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
-  }
+  };
 
   const handleStart = (e: any, item: any, num: any) => {
     e.preventDefault();
@@ -1931,7 +2099,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
     } else {
       return toast.error(response?.message);
     }
-  }
+  };
 
   if (data?.length > 0) {
     return (
@@ -1961,13 +2129,25 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
               if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running" && item?.gstatus !== "Starting Soon.") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
+                          {/* {fn_totalCal(`${item?.mid}-${item?.sid}`)?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && fn_totalCal(`${item?.mid}-${item?.sid}`)?.side === "Back" && (<span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>)}
+                          {fn_totalCal(`${item?.mid}-${item?.sid}`)?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && fn_totalCal(`${item?.mid}-${item?.sid}`)?.side === "Lay" && (<span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>)} */}
+                        </p>
+                        <p>
+                          {recentExp?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                          {recentExp?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
+                      {/* lay odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                        onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
+                        onClick={(e) => handleBetClicked(e, item?.ls1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`)}
                         onMouseDown={(e) => handleStart(e, item, '1')}
                         onTouchStart={(e) => handleStart(e, item, '1')}
                       >
@@ -1987,9 +2167,10 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                           </div>
                         )}
                       </div>
+                      {/* back odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
+                        onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.l1}`)}
                         onMouseDown={(e) => handleStart(e, item, '2')}
                         onTouchStart={(e) => handleStart(e, item, '2')}
                       >
@@ -2009,6 +2190,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
                           </div>
                         )}
                       </div>
+                      {/* range */}
                       <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
                         <p className="text-[11px]">Min Bet: {item?.min}.00 INR</p>
                         <p className="text-[11px]">Max Bet: {item?.max}.00 INR</p>
@@ -2019,8 +2201,13 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
               } else if (item?.gstatus === "SUSPENDED") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2049,8 +2236,13 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName }: any) 
               } else if (item?.gstatus === "Ball Running") {
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                        <p>
+                          <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -2239,6 +2431,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
   }
 
   const fn_controlMarketView = (marketName: string) => {
+    console.log("marketName ", marketName);
     const findMarket = hideMarkets?.find((m) => m === marketName);
     if (findMarket) {
       const filterRemaining = hideMarkets?.filter((m) => m !== marketName);
@@ -2302,7 +2495,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   </p>
                                   {showAmounts === `${item?.mid}-${item?.sid}-1` && (
                                     <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                      <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", singleExtraMarket, item?.nat, )}>{oddsPrice?.[0] || 1000}</button>
+                                      <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", singleExtraMarket, item?.nat,)}>{oddsPrice?.[0] || 1000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[1] || 2000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[2] || 3000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.l1, "Lay", singleExtraMarket, item?.nat)}>{oddsPrice?.[3] || 4000}</button>

@@ -130,8 +130,9 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
             footer={null}
             style={{ fontFamily: "Roboto" }}
         >
-            <div className="flex justify-center font-[800] text-[30px] sm:text-[35px] gap-[8px]">
-                {webName}
+            <div className="flex justify-center font-[700] text-[30px] sm:text-[35px] gap-[8px]">
+                {/* {webName} */}
+                Signup
             </div>
             {!otpForm ? (
                 <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">

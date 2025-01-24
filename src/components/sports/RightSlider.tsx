@@ -44,7 +44,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
         </div> */}
         <div className="relative pt-[56.25%]">
           <iframe
-            src={`https://oyeslive.co.in/tv1/live.php?event_id=${eventId}`}
+            src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
             className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
@@ -66,7 +66,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
         >
           <div className="relative pt-[56.25%]">
             <iframe
-              src={`https://oyeslive.co.in/tv1/live.php?event_id=${eventId}`}
+              src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
               className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen

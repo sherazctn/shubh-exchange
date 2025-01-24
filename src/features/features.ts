@@ -14,6 +14,7 @@ const initialState = {
   panelMainColor: "",
   panelSecColor: "",
   wallet: 0,
+  exposure: 0,
   adminId: "",
   bets: [],
   username: "",
@@ -29,6 +30,9 @@ const initialState = {
   liveMarkets: {},
   slipTab: "slip",
   user: {},
+  expCalculation: [],
+  pendingBets: [],
+  recentExp: {}
 };
 
 export const featuresSlice = createSlice({
@@ -73,6 +77,9 @@ export const featuresSlice = createSlice({
     },
     updateWallet: (state, action) => {
       state.wallet = action.payload;
+    },
+    updateExposure: (state, action) => {
+      state.exposure = action.payload;
     },
     updateAdminId: (state, action) => {
       state.adminId = action.payload;
@@ -119,6 +126,15 @@ export const featuresSlice = createSlice({
     updateUser: (state, action) => {
       state.user = action.payload;
     },
+    updateExpCalculation: (state, action) => {
+      state.expCalculation = action.payload;
+    },
+    updatePendingBets: (state, action) => {
+      state.pendingBets = action.payload;
+    },
+    updateRecentExp : (state, action) => {
+      state.recentExp = action.payload;
+    }
   },
 });
 
@@ -136,6 +152,7 @@ export const {
   updatePanelMainColor,
   updatePanelSecColor,
   updateWallet,
+  updateExposure,
   updateAdminId,
   updateBets,
   updateUsername,
@@ -150,7 +167,10 @@ export const {
   updateSelectedEvent,
   updateLiveMarkets,
   updateSlipTab,
-  updateUser
+  updateUser,
+  updateExpCalculation,
+  updatePendingBets,
+  updateRecentExp
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

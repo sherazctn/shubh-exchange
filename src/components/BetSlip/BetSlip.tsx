@@ -14,10 +14,9 @@ import emptySlip from "../../assets/empty-slip.png";
 
 import Loader from "../Loader"
 import { voiceLanguage } from "../../assets/data";
-import URL, { getOpenBetsByUserApi, placeBetsApi } from "../../api/api"
-import { updateBets, updateBettingSlip, updateSlipTab, updateWallet } from "../../features/features"
+import URL, { fancy_marketOddsFormulation, getOpenBetsByUserApi, marketOddsFormulation, placeBetsApi } from "../../api/api"
+import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features"
 import { HiSpeakerWave } from "react-icons/hi2";
-
 
 const BetSlip = () => {
     const dispatch = useDispatch();
@@ -88,7 +87,7 @@ const BetSlip = () => {
             </div>
         </div>
     )
-}
+};
 
 export default BetSlip;
 
@@ -96,10 +95,13 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
 
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false);
+    const pendingBets = useSelector((state: any) => state.pendingBets);
 
     const bets = useSelector((state: any) => state.bets);
     const wallet = useSelector((state: any) => state.wallet);
+    const exposure = useSelector((state: any) => state.exposure);
     const redisGames = useSelector((state: any) => state.redisGames);
+    const expCalculation = useSelector((state: any) => state.expCalculation);
 
     const fn_keyDown = (e: any, index: number) => {
         e.preventDefault();
@@ -152,27 +154,70 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
         const updatedBets = bets.map((bet: any, i: any) => {
             if (i === index) {
                 const amount = parseInt(value);
-                const profit = parseFloat((amount * (bet.odd - 1)).toFixed(2));
+                let profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd - 1)).toFixed(2))) : amount;
+                let exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd - 1)).toFixed(2))) : -amount;
+                if (bet?.marketName === "bookmaker" || bet?.marketId?.includes("-")) {
+                    profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd / 100)).toFixed(2))) : amount;
+                    exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd / 100)).toFixed(2))) : -amount;
+                }
                 const loss = amount;
-
-                return {
+                const newObj = {
                     ...bet,
                     amount: amount,
                     afterWin: wallet + profit,
                     afterLoss: wallet - loss,
                     profit: profit,
-                    loss: loss
+                    loss: loss,
+                    stake: amount,
+                    exposure: exposure
                 };
+                const updatedPendingBets = pendingBets?.filter((bet: any) => {
+                    if (bet?.marketName !== "fancy") {
+                        const marketId = newObj.marketId?.includes("-") ? newObj.marketId?.split("-")?.[0] : newObj?.marketId;
+                        const compareMarketId = bet.marketId?.includes("-") ? bet.marketId?.split("-")?.[0] : bet?.marketId;
+                        return compareMarketId == marketId;
+                    } else {
+                        return bet?.marketId == newObj?.marketId
+                    }
+                });
+                if (newObj?.marketName !== "fancy") {
+                    const updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
+                    dispatch(updateRecentExp(updatedCalculation));
+                    return {
+                        ...bet,
+                        amount: amount,
+                        afterWin: wallet + profit,
+                        afterLoss: wallet - loss,
+                        profit: profit,
+                        loss: loss,
+                        stake: amount,
+                        exposure: exposure
+                    };
+                } else {
+                    const updatedCalculation = fancy_marketOddsFormulation(newObj, updatedPendingBets);
+                    dispatch(updateRecentExp(updatedCalculation));
+                    return {
+                        ...bet,
+                        amount: amount,
+                        afterWin: wallet + profit,
+                        afterLoss: wallet - loss,
+                        profit: profit,
+                        loss: loss,
+                        stake: amount,
+                        exposure: exposure
+                    };
+                }
             }
             return bet;
         });
-
+        console.log("updatedBets ==> ", bets);
         dispatch(updateBets(updatedBets));
     }
 
     const fn_closeBet = (index: any) => {
         const updatedBets = bets.filter((_: any, i: any) => i !== index);
         dispatch(updateBets(updatedBets));
+        dispatch(updateRecentExp({}));
     }
 
     const fn_placeBet = async () => {
@@ -180,9 +225,9 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
         const bettedAmount = bets?.reduce((acc: any, i: any) => {
             return acc + i?.amount
         }, 0);
-        if (bettedAmount > wallet) {
+        if (Math.abs(exposure) + bets?.[0]?.side === "Back" ? bettedAmount : Math.abs(bets?.[0]?.exposure) > wallet) {
             return toast.error("Not Enough Balance");
-        }
+        };
         const suspendedBet = bets?.find(
             (b: any) => b?.status && (b?.status !== "active" && b?.status !== "ACTIVE")
         );
@@ -203,7 +248,12 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
             dispatch(updateBets([]));
             dispatch(updateSlipTab("open"));
             dispatch(updateWallet(response?.wallet));
-
+            dispatch(updateRecentExp({}));
+            const res = await getOpenBetsByUserApi(null);
+            if (res?.status) {
+                dispatch(updatePendingBets(res?.data));
+                console.log(res?.data);
+            }
             return toast.success(response?.message);
         } else {
             setLoader(false);
@@ -214,21 +264,64 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
     const fn_setAmount = (amount: number, index: number) => {
         const updatedBets = bets.map((bet: any, i: any) => {
             if (i === index) {
-                const profit = parseFloat((amount * (bet.odd - 1)).toFixed(2));
+                let profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd - 1)).toFixed(2))) : amount;
+                let exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd - 1)).toFixed(2))) : -amount;
+                if (bet?.marketName === "bookmaker" || bet?.marketId?.includes("-")) {
+                    profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd / 100)).toFixed(2))) : amount;
+                    exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd / 100)).toFixed(2))) : -amount;
+                }
                 const loss = amount;
-
-                return {
+                const newObj = {
                     ...bet,
                     amount: amount,
                     afterWin: wallet + profit,
                     afterLoss: wallet - loss,
                     profit: profit,
-                    loss: loss
+                    loss: loss,
+                    stake: amount,
+                    exposure: exposure
+                };
+                const updatedPendingBets = pendingBets?.filter((bet: any) => {
+                    if (bet?.marketName !== "fancy") {
+                        const marketId = newObj.marketId?.includes("-") ? newObj.marketId?.split("-")?.[0] : newObj?.marketId;
+                        const compareMarketId = bet.marketId?.includes("-") ? bet.marketId?.split("-")?.[0] : bet?.marketId;
+                        return compareMarketId == marketId;
+                    } else {
+                        return bet?.marketId == newObj?.marketId
+                    }
+                });
+                const updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
+                dispatch(updateRecentExp(updatedCalculation));
+                if (newObj?.marketName !== "fancy") {
+                    const updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
+                    dispatch(updateRecentExp(updatedCalculation));
+                    return {
+                        ...bet,
+                        amount: amount,
+                        afterWin: wallet + profit,
+                        afterLoss: wallet - loss,
+                        profit: profit,
+                        loss: loss,
+                        stake: amount,
+                        exposure: exposure
+                    };
+                } else {
+                    const updatedCalculation = fancy_marketOddsFormulation(newObj, updatedPendingBets);
+                    dispatch(updateRecentExp(updatedCalculation));
+                    return {
+                        ...bet,
+                        amount: amount,
+                        afterWin: wallet + profit,
+                        afterLoss: wallet - loss,
+                        profit: profit,
+                        loss: loss,
+                        stake: amount,
+                        exposure: exposure
+                    };
                 };
             }
             return bet;
         });
-
         dispatch(updateBets(updatedBets));
     };
 
@@ -250,7 +343,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                             <input
                                 min={1}
                                 value={item?.odd}
-                                onChange={(e) => fn_changeOddInput(e.target.value, index)}
+                                // onChange={(e) => fn_changeOddInput(e.target.value, index)}
                                 type="number"
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
@@ -282,6 +375,12 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                         <div className="text-[11px] mt-[10px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
                             {bets.map((bet: any, index: number) => (
                                 <div key={index} className="flex gap-[5px] flex-nowrap overflow-auto">
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_setAmount(1000, index)}
+                                    >
+                                        1000
+                                    </button>
                                     <button
                                         className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
                                         onClick={() => fn_setAmount(5000, index)}

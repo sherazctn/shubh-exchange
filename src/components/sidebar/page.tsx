@@ -455,7 +455,8 @@ const Events = ({
   return (
     <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
       {/* header */}
-      <div
+      <a
+        href={`/all-sports?game=${game?.sportName}`}
         className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!option
           ? "hover:scale-[1.02]"
           : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
@@ -463,14 +464,6 @@ const Events = ({
             ? "justify-between"
             : "justify-center border-none rounded-b-[7px]"
           }`}
-        onClick={() => {
-          if (!option) {
-            setOpenOption((prev: any) => [...prev, game?.sportId])
-          } else {
-            const updatedOptions = openOptions.filter((item: any) => item !== game?.sportId);
-            setOpenOption(updatedOptions);
-          }
-        }}
       >
         <div className="flex items-center gap-2.5">
           {adminGamesData && (
@@ -483,14 +476,26 @@ const Events = ({
           {showSidebar && <p className="font-[600] text-[15px] capitalize">{game?.sportName}</p>}
         </div>
         {showSidebar && (
-          <div className="flex items-center gap-2.5">
-            <div className="px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[3px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
+          <div
+            className="flex items-center gap-2.5"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              if (!option) {
+                setOpenOption((prev: any) => [...prev, game?.sportId])
+              } else {
+                const updatedOptions = openOptions.filter((item: any) => item !== game?.sportId);
+                setOpenOption(updatedOptions);
+              }
+            }}
+          >
+            <div className="px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[1px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
               {game?.competitions.length}
             </div>
             {!option ? <IoIosArrowDown /> : <IoIosArrowUp />}
           </div>
         )}
-      </div>
+      </a>
       {/* options */}
       {showSidebar && option && (
         <div className="w-[90%] border border-gray-300 bg-gray-200 border-b rounded-b-[7px] py-[6px] px-[5px] flex flex-col">
