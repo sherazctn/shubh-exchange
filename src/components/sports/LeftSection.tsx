@@ -198,18 +198,18 @@ const List = ({ event, webColor, tab, compName }: any) => {
 
   return (
     <a
-      href={`/match?sportId=${tab}&eventId=${event?.match_id}`}
+      href={`/match?sportId=${tab}&eventId=${event?.eventId}`}
       className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
       onClick={() => {
         dispatch(updateSelectedEvent({
           competitionName: compName,
-          eventId: event?.match_id,
+          eventId: event?.eventId,
           eventName: event?.matchName,
           date: event?.date || event?.openDate
         }));
         localStorage.setItem('selectedEvent', JSON.stringify({
           competitionName: compName,
-          eventId: event?.match_id,
+          eventId: event?.eventId,
           eventName: event?.matchName,
           date: event?.date || event?.openDate
         }))

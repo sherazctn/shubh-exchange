@@ -530,17 +530,15 @@ const OpenBet = ({ openBets }: any) => {
                 <div>
                     <table className="w-full">
                         <tr className="h-[40px] bg-gray-100 text-[13px] font-[500]">
-                            <td className="w-[50%]"></td>
+                            <td className=""></td>
                             <td>Odds</td>
                             <td>Stake</td>
-                            {/* <td>P/L(<FaIndianRupeeSign className="inline-block" />)</td> */}
                         </tr>
                         {openBets?.map((item: any) => (
-                            <tr className={`h-[40px] text-[13px] font-[500] border-b ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
-                                <td className="flex items-center gap-[3px]"><img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />{item?.gameName}</td>
+                            <tr className={`text-[13px] font-[500] border-b h-[40px] ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
+                                <td className="ps-[5px]"><img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px] inline-block me-[5px]" />{item?.gameName}</td>
                                 <td>{item?.odd}</td>
-                                <td className="flex items-center gap-[2px]"><FaIndianRupeeSign />{item?.amount}</td>
-                                {/* <td>{item?.profit}/{item?.amount}</td> */}
+                                <td className=""><FaIndianRupeeSign className="inline-block mt-[-1px] me-[2px]" />{item?.amount}</td>
                             </tr>
                         ))}
                     </table>

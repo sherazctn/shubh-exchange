@@ -20,6 +20,10 @@ import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
 
+import indianFlag from "../../assets/indian_flag.webp";
+import bangaliFlag from "../../assets/bangladesh_flag.png";
+import bangaliFlag2 from "../../assets/bangladesh_flag_2.png";
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
@@ -41,6 +45,16 @@ const Navbar = () => {
   const wallet = useSelector((state: any) => state.wallet);
   const exposure = useSelector((state: any) => state.exposure);
   const username = useSelector((state: any) => state.username);
+
+  const countries = [
+    { name: "India", flag: indianFlag },
+    { name: "Bangladesh", flag: bangaliFlag },
+  ];
+  const [showCountry, setShowCountry] = useState(false);
+  const [clickedCountry, setClickedCountry] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<any>(countries[0]);
+
+  const rootWebsite = window.location.origin;
 
   useEffect(() => {
     fn_webName();
@@ -119,6 +133,110 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar h-[70px] sm:h-[60px] px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>
+        {/* country website */}
+        <div className={`h-[45px] w-[150px] bg-white absolute bottom-[-45px] border border-black rounded-l-full px-[10px] flex justify-center items-center transition-all duration-200 ${!showCountry ? "right-[-100px]" : "right-[-15px]"}`}>
+          <div className="relative w-full">
+            <button
+              className="w-full bg-transparent text-[15px] font-[500] flex items-center justify-between gap-2 cursor-pointer"
+              type="button"
+              onMouseEnter={() => setShowCountry(true)}
+              onMouseLeave={() => {
+                setShowCountry(false);
+                setClickedCountry(false);
+              }}
+              onClick={() => setClickedCountry(!clickedCountry)}
+            >
+              {rootWebsite === "https://shubhbet.com" ? (
+                <div className="flex items-center gap-2">
+                  <img
+                    src={bangaliFlag}
+                    width={30}
+                    height={30}
+                    className="object-cover rounded-full w-[30px] h-[30px] border"
+                  />
+                  <span>Bangladesh</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <img
+                    src={indianFlag}
+                    width={30}
+                    height={30}
+                    className="object-cover rounded-full w-[30px] h-[30px] border"
+                  />
+                  <span>India</span>
+                </div>
+              )}
+            </button>
+            {clickedCountry && (
+              <ul
+                className="absolute left-0 top-[29px] w-full bg-white border mt-0.5 rounded-md shadow-md z-10 p-[5px]"
+                onMouseEnter={() => {
+                  setShowCountry(true)
+                  setClickedCountry(true);
+                }}
+                onMouseLeave={() => {
+                  setShowCountry(false);
+                  setClickedCountry(false);
+                }}
+              >
+                {rootWebsite === "https://shubhbet.com" ? (
+                  <>
+                    <a
+                      href={"https://shubhexchange.com"}
+                      target="__blank"
+                      className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px] mb-[5px]"
+                    >
+                      <img
+                        src={indianFlag}
+                        width={20}
+                        className="object-contain"
+                      />
+                      India
+                    </a>
+                    <a
+                      href={"#"}
+                      className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px]"
+                    >
+                      <img
+                        src={bangaliFlag2}
+                        width={20}
+                        className="object-contain"
+                      />
+                      Bangladesh
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <a
+                      href={"#"}
+                      className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px] mb-[5px]"
+                    >
+                      <img
+                        src={indianFlag}
+                        width={20}
+                        className="object-contain"
+                      />
+                      India
+                    </a>
+                    <a
+                      href={"https://shubhbet.com"}
+                      target="__blank"
+                      className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px]"
+                    >
+                      <img
+                        src={bangaliFlag2}
+                        width={20}
+                        className="object-contain"
+                      />
+                      Bangladesh
+                    </a>
+                  </>
+                )}
+              </ul>
+            )}
+          </div>
+        </div>
         {/* company name */}
         <div className="flex items-center gap-[10px]">
           {webLogo !== "" && (
@@ -367,7 +485,7 @@ const Navbar = () => {
             </div>
           </div>
         )}
-      </div>
+      </div >
       <Modal
         title=""
         centered

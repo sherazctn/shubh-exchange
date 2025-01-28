@@ -1,3 +1,4 @@
+import { Modal } from 'antd';
 import toast from "react-hot-toast";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -1927,6 +1928,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
 
 const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets }: any) => {
   const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
   const timerRef = useRef<any>(null);
   const [data, setData] = useState<any>([]);
   const [showAmounts, setAmount] = useState("");
@@ -1938,6 +1940,21 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
 
   const [viewFancy, setViewFancy] = useState(true);
   const recentExp = useSelector((state: any) => state.recentExp);
+  const [selectedFancyBets, setSelectedFancyBets] = useState([]);
+
+  const fn_closeModal = () => {
+    setShowModal(false);
+  };
+
+  const fn_openModal = (item: any) => {
+    const mId = `${item?.mid}-${item?.sid}`;
+    const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
+    setSelectedFancyBets(checkBet || []);
+    if (checkBet?.length > 0) {
+      // setShowModal(true);
+      setShowModal(false);
+    }
+  };
 
   const fn_totalCal = (marketId: any): any => {
     const filteredPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === marketId);
@@ -2104,6 +2121,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
   if (data?.length > 0) {
     return (
       <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
+        {showModal && <FancyModal showModal={showModal} fn_closeModal={fn_closeModal} webColor={webColor} selectedFancyBets={selectedFancyBets} />}
         {/* header */}
         <div
           className="h-[47px] flex justify-between border-b cursor-pointer"
@@ -2130,7 +2148,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
-                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2202,7 +2220,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2237,7 +2255,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2272,7 +2290,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                      <p className="text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
@@ -3186,3 +3204,29 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
     return null;
   }
 };
+
+const FancyModal = ({ showModal, fn_closeModal, webColor, selectedFancyBets }: any) => {
+  const scores = selectedFancyBets?.map((bet: any) => {
+    const selectionNameArray = bet?.selectionName.split(" ");
+    const score = selectionNameArray?.[selectionNameArray?.length - 1];
+    return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit };
+  });
+  return (
+    <Modal title="" open={showModal} onCancel={fn_closeModal} footer={null} style={{ fontFamily: "Roboto" }} width={500} centered>
+      <p className='text-[19px] font-[600] mt-[-5px]'>Run Amount</p>
+      <table className='table-fixed w-full mt-[10px]'>
+        <tr style={{ backgroundColor: webColor, height: "38px" }}>
+          <td className='text-left ps-[15px] text-white font-[500] text-[16px] border-[1px]' style={{ borderColor: webColor }}>Run</td>
+          <td className='text-right pe-[15px] text-white font-[500] text-[16px] border-r-[1px] border-y-[1px]' style={{ borderColor: webColor }}>Amount</td>
+        </tr>
+        {scores?.map((score: any) => (
+          <tr style={{ height: "30px" }}>
+            <td className='text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300'>{score?.score}</td>
+            <td className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.side === "Back" ? "text-green-500" : "text-red-500"}`}>{score?.side === "Back" ? score?.profit : score?.exposure}</td>
+          </tr>
+        ))}
+
+      </table>
+    </Modal>
+  )
+}
