@@ -225,8 +225,15 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
         const bettedAmount = bets?.reduce((acc: any, i: any) => {
             return acc + i?.amount
         }, 0);
-        if (Math.abs(exposure) + bets?.[0]?.side === "Back" ? bettedAmount : Math.abs(bets?.[0]?.exposure) > wallet) {
-            return toast.error("Not Enough Balance");
+        if (bets?.[0]?.side === "Back") {
+            if ((Math.abs(exposure) + bettedAmount) > wallet) {
+                return toast.error("Not Enough Balance");
+            };
+        }
+        if (bets?.[0]?.side === "Lay") {
+            if ((Math.abs(exposure) + Math.abs(bets?.[0]?.exposure)) > wallet) {
+                return toast.error("Not Enough Balance");
+            };
         };
         const suspendedBet = bets?.find(
             (b: any) => b?.status && (b?.status !== "active" && b?.status !== "ACTIVE")
@@ -526,14 +533,14 @@ const OpenBet = ({ openBets }: any) => {
                             <td className="w-[50%]"></td>
                             <td>Odds</td>
                             <td>Stake</td>
-                            <td>P/L(<FaIndianRupeeSign className="inline-block" />)</td>
+                            {/* <td>P/L(<FaIndianRupeeSign className="inline-block" />)</td> */}
                         </tr>
                         {openBets?.map((item: any) => (
-                            <tr className="h-[40px] text-[13px] font-[500] border-b">
+                            <tr className={`h-[40px] text-[13px] font-[500] border-b ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
                                 <td className="flex items-center gap-[3px]"><img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px]" />{item?.gameName}</td>
                                 <td>{item?.odd}</td>
                                 <td className="flex items-center gap-[2px]"><FaIndianRupeeSign />{item?.amount}</td>
-                                <td>{item?.profit}/{item?.amount}</td>
+                                {/* <td>{item?.profit}/{item?.amount}</td> */}
                             </tr>
                         ))}
                     </table>

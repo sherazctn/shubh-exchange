@@ -18,7 +18,7 @@ const CardsSection = () => {
     aos.init();
   }, []);
   return (
-    <div className="mt-[15px] grid grid-cols-3 lg:grid-cols-6 gap-[8px]">
+    <div className="grid grid-cols-3 lg:grid-cols-6 gap-[8px]">
       <a href="/all-sports?game=cricket" data-aos="zoom-in" data-aos-duration="500" className="home-cards-section shadow-sm">
         <Lottie animationData={cricketAnimation} loop={true} className="h-[50px] sm:h-[60px]" />
         <p className="text-[13px] font-[500]">Cricket</p>
