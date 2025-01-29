@@ -1951,8 +1951,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
     setSelectedFancyBets(checkBet || []);
     if (checkBet?.length > 0) {
-      // setShowModal(true);
-      setShowModal(false);
+      setShowModal(true);
     }
   };
 
@@ -3208,25 +3207,43 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
 const FancyModal = ({ showModal, fn_closeModal, webColor, selectedFancyBets }: any) => {
   const scores = selectedFancyBets?.map((bet: any) => {
     const selectionNameArray = bet?.selectionName.split(" ");
-    const score = selectionNameArray?.[selectionNameArray?.length - 1];
+    const score = parseFloat(selectionNameArray?.[selectionNameArray?.length - 1]);
     return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit };
-  });
+  })?.sort((a: any, b: any) => a.score - b.score);
+
   return (
     <Modal title="" open={showModal} onCancel={fn_closeModal} footer={null} style={{ fontFamily: "Roboto" }} width={500} centered>
-      <p className='text-[19px] font-[600] mt-[-5px]'>Run Amount</p>
-      <table className='table-fixed w-full mt-[10px]'>
+      <p className="text-[19px] font-[600] mt-[-5px]">Run Amount</p>
+      <table className="table-fixed w-full mt-[10px]">
         <tr style={{ backgroundColor: webColor, height: "38px" }}>
-          <td className='text-left ps-[15px] text-white font-[500] text-[16px] border-[1px]' style={{ borderColor: webColor }}>Run</td>
-          <td className='text-right pe-[15px] text-white font-[500] text-[16px] border-r-[1px] border-y-[1px]' style={{ borderColor: webColor }}>Amount</td>
+          <td
+            className="text-left ps-[15px] text-white font-[500] text-[16px] border-[1px]"
+            style={{ borderColor: webColor }}
+          >
+            Run
+          </td>
+          <td
+            className="text-right pe-[15px] text-white font-[500] text-[16px] border-r-[1px] border-y-[1px]"
+            style={{ borderColor: webColor }}
+          >
+            Amount
+          </td>
         </tr>
         {scores?.map((score: any) => (
-          <tr style={{ height: "30px" }}>
-            <td className='text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300'>{score?.score}</td>
-            <td className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.side === "Back" ? "text-green-500" : "text-red-500"}`}>{score?.side === "Back" ? score?.profit : score?.exposure}</td>
+          <tr key={score?.score} style={{ height: "30px" }}>
+            <td className="text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300">
+              {score?.score}
+            </td>
+            <td
+              className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.side === "Back" ? "text-green-500" : "text-red-500"
+                }`}
+            >
+              {score?.side === "Back" ? score?.profit : score?.exposure}
+            </td>
           </tr>
         ))}
-
       </table>
     </Modal>
-  )
-}
+  );
+};
+

@@ -10,9 +10,9 @@ import CricketDropdownsSection from "../../components/home/DropdownsSection";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const showSidebar = useSelector((state: any) => state.showSidebar);
-  const redisGames = useSelector((state: any) => state.redisGames);
   const [sportIds, setSportIds] = useState([]);
+  const redisGames = useSelector((state: any) => state.redisGames);
+  const showSidebar = useSelector((state: any) => state.showSidebar);
   useEffect(() => {
     dispatch(updateMobileMenu(false));
     dispatch(updatePageNav("home"));
