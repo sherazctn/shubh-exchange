@@ -67,6 +67,15 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
     }, [pendingBets]);
 
     useEffect(() => {
+        const currentURL = window.location.href;
+    
+        if (currentURL.includes('www.')) {
+          const newURL = currentURL.replace('www.', '');
+          window.location.href = newURL;
+        }
+      }, []);
+
+    useEffect(() => {
         setLoader(true);
         const fn_checkAuth = async () => {
             const checkAdmin = await CheckAdminApi();

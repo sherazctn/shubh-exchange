@@ -37,7 +37,6 @@ import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
 
 function App() {
-
   const location = useLocation();
   const dispatch = useDispatch();
   const colorScheme = useSelector((state: any) => state.colorScheme);

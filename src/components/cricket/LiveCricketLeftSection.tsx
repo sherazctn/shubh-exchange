@@ -2,7 +2,7 @@ import { Modal } from 'antd';
 import toast from "react-hot-toast";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
+import { format, parseISO, isBefore, isToday, isTomorrow, setDate } from 'date-fns';
 
 import Footer from "../footer/page";
 import RightSlider from "../sports/RightSlider";
@@ -11,7 +11,7 @@ import { updateBets, updateBettingSlip, updateRecentExp, updateSlipTab, updateWa
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
 import { HiMiniInformationCircle } from "react-icons/hi2";
-import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
+import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
 
@@ -1939,6 +1939,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
   const authentication = useSelector((state: any) => state.authentication);
 
   const [viewFancy, setViewFancy] = useState(true);
+  const [oneTimeRendered, setOneTimeRendered] = useState(false);
   const recentExp = useSelector((state: any) => state.recentExp);
   const [selectedFancyBets, setSelectedFancyBets] = useState([]);
 
@@ -1946,10 +1947,18 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     setShowModal(false);
   };
 
-  const fn_openModal = (item: any) => {
+  const fn_openModal = async(item: any) => {
     const mId = `${item?.mid}-${item?.sid}`;
+    setOneTimeRendered(true);
     const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
-    setSelectedFancyBets(checkBet || []);
+    const scores = checkBet?.map((bet: any) => {
+      const selectionNameArray = bet?.selectionName.split(" ");
+      const score = parseFloat(selectionNameArray?.[selectionNameArray?.length - 1]);
+      return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
+    })?.sort((a: any, b: any) => a.score - b.score);
+    const data = await fn_fancyModalCalculation(scores || []) as any;
+    console.log("data ", data);
+    setSelectedFancyBets(data || []);
     if (checkBet?.length > 0) {
       setShowModal(true);
     }
@@ -2074,6 +2083,12 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
   }, [longPress]);
 
   useEffect(() => {
+    setTimeout(() => {
+      setOneTimeRendered(false);
+    }, 1000);
+  }, [oneTimeRendered]);
+
+  useEffect(() => {
     if (eventId) {
       fn_updateFancyMarket();
     }
@@ -2164,7 +2179,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       {/* lay odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                        onClick={(e) => handleBetClicked(e, item?.ls1, item?.nat, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`)}
+                        onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`)}
                         onMouseDown={(e) => handleStart(e, item, '1')}
                         onTouchStart={(e) => handleStart(e, item, '1')}
                       >
@@ -2187,7 +2202,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       {/* back odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.l1}`)}
+                        onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.b1}`)}
                         onMouseDown={(e) => handleStart(e, item, '2')}
                         onTouchStart={(e) => handleStart(e, item, '2')}
                       >
@@ -3205,12 +3220,6 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
 };
 
 const FancyModal = ({ showModal, fn_closeModal, webColor, selectedFancyBets }: any) => {
-  const scores = selectedFancyBets?.map((bet: any) => {
-    const selectionNameArray = bet?.selectionName.split(" ");
-    const score = parseFloat(selectionNameArray?.[selectionNameArray?.length - 1]);
-    return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit };
-  })?.sort((a: any, b: any) => a.score - b.score);
-
   return (
     <Modal title="" open={showModal} onCancel={fn_closeModal} footer={null} style={{ fontFamily: "Roboto" }} width={500} centered>
       <p className="text-[19px] font-[600] mt-[-5px]">Run Amount</p>
@@ -3229,16 +3238,15 @@ const FancyModal = ({ showModal, fn_closeModal, webColor, selectedFancyBets }: a
             Amount
           </td>
         </tr>
-        {scores?.map((score: any) => (
-          <tr key={score?.score} style={{ height: "30px" }}>
+        {selectedFancyBets && selectedFancyBets?.length > 0 && selectedFancyBets?.map((score: any, index: number) => (
+          <tr key={index} style={{ height: "30px" }}>
             <td className="text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300">
               {score?.score}
             </td>
             <td
-              className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.side === "Back" ? "text-green-500" : "text-red-500"
-                }`}
+              className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.profit > 0 ? "text-green-500" : score?.profit < 0 ? "text-red-500" : "text-gray-500"}`}
             >
-              {score?.side === "Back" ? score?.profit : score?.exposure}
+              {score?.profit}
             </td>
           </tr>
         ))}

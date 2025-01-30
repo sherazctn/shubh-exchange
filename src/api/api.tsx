@@ -386,6 +386,88 @@ export const fancy_marketOddsFormulation = (obj: any, pendingBets: any) => {
     };
 };
 
+export const fn_fancyModalCalculation = async (data: any[]) => {
+    if (!data || data.length === 0) return null;
+    // if one record is coming
+    if (data.length === 1) {
+        const singleObj = data[0];
+        const scoreObj = singleObj.side === "Lay"
+            ? [
+                { score: singleObj.score - 1, profit: singleObj.stake },
+                { score: singleObj.score, profit: singleObj.exposure }
+            ]
+            : [
+                { score: singleObj.score - 1, profit: singleObj.exposure },
+                { score: singleObj.score, profit: singleObj.stake }
+            ];
+        return scoreObj;
+    }
+
+    const laysData = data.filter((d) => d.side === "Lay");
+    const backData = data.filter((d) => d.side === "Back");
+
+    const minScore = Math.min(...data.map((d) => d.score));
+    const maxScore = Math.max(...data.map((d) => d.score));
+
+    // if same side and same score are coming
+    if (backData.length === data.length) {
+        if (maxScore === minScore) {
+            return [
+                {
+                    score: maxScore - 1,
+                    profit: backData.reduce((acc, d) => acc + d.exposure, 0),
+                },
+                {
+                    score: maxScore,
+                    profit: backData.reduce((acc, d) => acc + d.profit, 0),
+                },
+            ];
+        };
+        const newData = [];
+        for (let i = minScore - 1; i <= maxScore; i++) {
+            const addProfit = data?.filter((d: any) => i >= d?.score);
+            const subtractProfit = data?.filter((d: any) => i < d?.score);
+            const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
+            const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
+            const obj = {
+                score: i,
+                profit: addProfitValue + subtractProfitValue
+            };
+            newData.push(obj);
+        };
+        return newData;
+    };
+    if (laysData.length === data.length) {
+        if (maxScore === minScore) {
+            return [
+                {
+                    score: maxScore - 1,
+                    profit: laysData.reduce((acc, d) => acc + d.profit, 0),
+                },
+                {
+                    score: maxScore,
+                    profit: laysData.reduce((acc, d) => acc + d.exposure, 0),
+                },
+            ];
+        }
+        const newData = [];
+        for (let i = minScore - 1; i <= maxScore; i++) {
+            const addProfit = data?.filter((d: any) => i < d?.score);
+            const subtractProfit = data?.filter((d: any) => i >= d?.score);
+            const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
+            const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
+            const obj = {
+                score: i,
+                profit: addProfitValue + subtractProfitValue
+            };
+            newData.push(obj);
+        };
+        return newData;
+    };
+
+    return [];
+};
+
 export const formatDate = (dateString: any) => {
     const optionsDate: any = { day: '2-digit', month: 'short', year: 'numeric' };
     const optionsTime: any = { hour: '2-digit', minute: '2-digit', hour12: true };
