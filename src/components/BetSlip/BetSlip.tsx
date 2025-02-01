@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 // import { GoDotFill } from "react-icons/go"
 import { ImCross } from "react-icons/im"
+import { HiSpeakerWave } from "react-icons/hi2";
 import { FaIndianRupeeSign } from "react-icons/fa6"
 import { FaExclamationCircle } from "react-icons/fa"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"
@@ -16,7 +17,6 @@ import Loader from "../Loader"
 import { voiceLanguage } from "../../assets/data";
 import URL, { fancy_marketOddsFormulation, getOpenBetsByUserApi, marketOddsFormulation, placeBetsApi } from "../../api/api"
 import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features"
-import { HiSpeakerWave } from "react-icons/hi2";
 
 const BetSlip = () => {
     const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const BetSlip = () => {
     };
 
     return (
-        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[505px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-460px]" : bettingSlip === "hide" ? "bottom-[-505px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
+        <div className={`bet-slip-main w-full sm:w-[450px] sm:right-[20px] h-[405px] p-[5px] transition-all duration-1000 ${bettingSlip === "close" ? "bottom-[-360px]" : bettingSlip === "hide" ? "bottom-[-405px]" : "bottom-0"}`} style={{ backgroundColor: webColor }}>
             <div
                 className="flex justify-between items-center mt-[7px] mb-[9px] cursor-pointer px-[10px] text-[--text-color] relative"
                 onClick={() => dispatch(updateBettingSlip(bettingSlip === "close" ? "open" : "close"))}
@@ -222,14 +222,20 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
 
     const fn_placeBet = async () => {
         if (bets?.length === 0) return toast.error("Select Match For Bet");
+        if (bets?.[0]?.amount === "" || !bets?.[0]?.amount) {
+            return toast.error("Enter Amount");
+        }
         const bettedAmount = bets?.reduce((acc: any, i: any) => {
             return acc + i?.amount
         }, 0);
+        if (bets?.[0]?.amount > wallet) {
+            return toast.error("Not Enough Balance");
+        };
         if (bets?.[0]?.side === "Back") {
             if ((Math.abs(exposure) + bettedAmount) > wallet) {
                 return toast.error("Not Enough Balance");
             };
-        }
+        };
         if (bets?.[0]?.side === "Lay") {
             if ((Math.abs(exposure) + Math.abs(bets?.[0]?.exposure)) > wallet) {
                 return toast.error("Not Enough Balance");
@@ -333,7 +339,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
     };
 
     return (
-        <div className="flex flex-col justify-between gap-[7px] h-[400px]">
+        <div className="flex flex-col justify-between gap-[7px] h-[300px]">
             {/* bets */}
             <div className="flex flex-1 flex-col gap-[5px] overflow-auto">
                 {bets?.length > 0 ? bets?.map((item: any, index: any) => (
@@ -428,71 +434,23 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                             ))}
                         </div>
 
-                        <div className="flex border-t border-gray-200 my-[10px] pt-[5px]">
+                        <div className="flex border-t border-gray-200 my-[10px] pt-[15px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-green-600 pt-[5px] pb-[7px]">
-                                    After Winning<BsGraphUpArrow className="inline-block mt-[-3px] ms-[6px]" />
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Bet Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.amount).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Profit Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.profit).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(wallet).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] text-green-600 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
-                                    <span>Net Amount:<TiArrowSortedUp className="inline-block text-[18px] ms-[5px]" /></span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.afterWin).toFixed(2)}</span>
-                                    </span>
+                                <p className="text-center text-[14px] font-[600] text-green-600 pt-[5px] pb-[7px]">
+                                    <BsGraphUpArrow className="inline-block mt-[-3px] me-[6px]" />
+                                    After Winning
+                                    {" "}={" "}
+                                    <FaIndianRupeeSign className="text-[14px] inline-block mt-[-2px]" />
+                                    {wallet + bets?.[0]?.profit}
                                 </p>
                             </div>
                             <div className="flex-1 px-[5px]">
-                                <p className="text-center text-[15px] font-[600] text-red-500 pt-[5px] pb-[7px]">
-                                    After Lossing<BsGraphDownArrow className="inline-block mt-[-3px] ms-[6px]" />
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between mt-[5px]">
-                                    <span>Bet Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.amount).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Loss Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.loss).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] items-center justify-between">
-                                    <span>Current Amount:</span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="text-[14px]" />
-                                        <span className="min-w-[45px] text-end">{Number(wallet).toFixed(2)}</span>
-                                    </span>
-                                </p>
-                                <p className="flex text-[13px] text-red-500 font-[500] items-center justify-between border-t mt-[2px] border-b border-gray-300 pt-[3px] pb-[1px]">
-                                    <span>Net Amount:<TiArrowSortedDown className="inline-block text-[18px] ms-[5px]" /></span>
-                                    <span className="flex items-center">
-                                        <FaIndianRupeeSign className="mt-[-2px] text-[12px]" />
-                                        <span className="min-w-[45px] text-end">{Number(item?.afterLoss).toFixed(2)}</span>
-                                    </span>
+                                <p className="text-center text-[14px] font-[600] text-red-500 pt-[5px] pb-[7px]">
+                                    <BsGraphDownArrow className="inline-block mt-[-3px] me-[6px]" />
+                                    After Lossing
+                                    {" "}={" "}
+                                    <FaIndianRupeeSign className="text-[14px] inline-block mt-[-2px]" />
+                                    {wallet + bets?.[0]?.exposure}
                                 </p>
                             </div>
                         </div>
@@ -500,7 +458,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                     </div>
                 )) : (
                     <div className="flex justify-center flex-col items-center gap-[30px] mt-[40px]">
-                        <img src={emptySlip} className="h-[250px]" />
+                        <img src={emptySlip} className="h-[150px]" />
                         <p className="flex items-center gap-[5px] text-[15px] font-[500]]"><FaExclamationCircle className="inline-block text-[22px]" /> Bet Slip is Empty</p>
                     </div>
                 )}
@@ -518,12 +476,15 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
             )}
         </div>
     )
-}
+};
 
 const OpenBet = ({ openBets }: any) => {
     const redisGames = useSelector((state: any) => state.redisGames);
+    function formatSelectionName(name: string): string {
+        return name.replace(/\s\d+$/, "");
+    }
     return (
-        <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[570px]">
+        <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[300px]">
             {openBets?.length === 0 ? (
                 <p className="text-[13px] text-gray-600">You have no matched or unmatched bets.</p>
             ) : (
@@ -535,8 +496,16 @@ const OpenBet = ({ openBets }: any) => {
                             <td>Stake</td>
                         </tr>
                         {openBets?.map((item: any) => (
-                            <tr className={`text-[13px] font-[500] border-b h-[40px] ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
-                                <td className="ps-[5px]"><img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px] inline-block me-[5px]" />{item?.gameName}</td>
+                            <tr className={`text-[13px] font-[500] border-b h-[45px] ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
+                                <td className="ps-[5px] flex items-center h-[45px]">
+                                    <img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px] inline-block me-[5px]" />
+                                    <p className="flex flex-col">
+                                        <span>{item?.gameName}</span>
+                                        <span className="text-[11px] italic mt-[-2px]">
+                                            {item?.marketId?.includes("-") ? formatSelectionName(item?.selectionName) : item?.selectionName}
+                                        </span>
+                                    </p>
+                                </td>
                                 <td>{item?.odd}</td>
                                 <td className=""><FaIndianRupeeSign className="inline-block mt-[-1px] me-[2px]" />{item?.amount}</td>
                             </tr>
@@ -546,4 +515,4 @@ const OpenBet = ({ openBets }: any) => {
             )}
         </div>
     )
-}
+};

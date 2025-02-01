@@ -465,7 +465,43 @@ export const fn_fancyModalCalculation = async (data: any[]) => {
         return newData;
     };
 
-    return [];
+    // if multiple objs are those have different sides
+    console.log("data ==> ", data);
+    const newData = [];
+    for (let i = minScore - 1; i <= maxScore; i++) {
+        // const findSameScore = data?.filter((d: any) => d?.score == i);
+        // const obj = { score: i, profit: 0 };
+        // console.log(i, " findSameScore ", findSameScore);
+        // if (findSameScore?.length > 0) {
+        //     let addingProfitOfSameScore = 0;
+        //     if(findSameScore?.[0]?.side === "Back"){
+        //         addingProfitOfSameScore = findSameScore?.reduce((acc: any, i: any) => acc + i?.exposure, 0); // 200
+        //     };
+        //     if(findSameScore?.[0]?.side === "Lay"){
+        //         addingProfitOfSameScore = findSameScore?.reduce((acc: any, i: any) => acc + i?.profit, 0); // 200
+        //     };
+        //     console.log("addingProfitOfSameScore ", addingProfitOfSameScore);
+        //     const remainingsObj = data?.filter((d: any) => d?.side != findSameScore?.[0]?.side); // []
+        //     const subtractionValue = remainingsObj?.reduce((acc: any, i: any) => acc + i?.exposure, 0); // -200
+        //     console.log("subtractionValue ", subtractionValue);
+        //     obj.profit = addingProfitOfSameScore - subtractionValue;
+        // };
+        // newData.push(obj);
+        const obj = { score: i, profit: 0 };
+        const profit = data?.reduce((acc: any, d: any) => {
+            if (d?.side === "Lay") {
+                console.log("exposure ", d?.exposure);
+                return acc + d?.exposure;
+            } else {
+                console.log("profit ", d?.profit);
+                return -(acc + d?.profit);
+            }
+        }, 0);
+        console.log(i, " obj ", obj);
+        obj.profit = profit;
+        newData.push(obj);
+    };
+    return newData;
 };
 
 export const formatDate = (dateString: any) => {
