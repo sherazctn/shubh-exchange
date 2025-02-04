@@ -469,6 +469,7 @@ export const fn_fancyModalCalculation = async (data: any[]) => {
     console.log("data ==> ", data);
     const newData = [];
     for (let i = minScore - 1; i <= maxScore; i++) {
+        console.log("i ====> ", i);
         // const findSameScore = data?.filter((d: any) => d?.score == i);
         // const obj = { score: i, profit: 0 };
         // console.log(i, " findSameScore ", findSameScore);
@@ -489,14 +490,25 @@ export const fn_fancyModalCalculation = async (data: any[]) => {
         // newData.push(obj);
         const obj = { score: i, profit: 0 };
         const profit = data?.reduce((acc: any, d: any) => {
-            if (d?.side === "Lay") {
-                console.log("exposure ", d?.exposure);
-                return acc + d?.exposure;
+            if (i < minScore) {
+                if (d?.side === "Lay") {
+                    console.log("profit ", d?.profit);
+                    return acc + d?.profit;
+                } else {
+                    console.log("exposure ", d?.exposure);
+                    return acc + d?.exposure;
+                }
             } else {
-                console.log("profit ", d?.profit);
-                return -(acc + d?.profit);
+                if (d?.side === "Lay") {
+                    console.log("exposure ", d?.exposure);
+                    return acc + d?.exposure;
+                } else {
+                    console.log("profit ", d?.profit);
+                    return acc + d?.profit;
+                }
             }
         }, 0);
+        console.log("cal ==> ", profit);
         console.log(i, " obj ", obj);
         obj.profit = profit;
         newData.push(obj);

@@ -356,10 +356,10 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
               <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -832,10 +832,10 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
               <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -1275,10 +1275,10 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
               <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -1731,10 +1731,10 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
               <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -2018,8 +2018,8 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     console.log("data ", data);
     setSelectedFancyBets(data || []);
     if (checkBet?.length > 0) {
-      // setShowModal(true);
-      setShowModal(false);
+      setShowModal(true);
+      // setShowModal(false);
     }
   };
 
@@ -2218,10 +2218,10 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
           <div>
             <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
               <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                <div className="h-[25px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-blue-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                   No
                 </div>
-                <div className="h-[25px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                <div className="h-[25px] w-[55px] border-[2px] border-red-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                   Yes
                 </div>
                 <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
@@ -2577,10 +2577,10 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                       <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                         <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                         <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                        <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                        <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                           Back
                         </div>
-                        <div className={`h-[25px] border w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                        <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                           Lay
                         </div>
                         <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -2590,10 +2590,10 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                   ) : singleExtraMarket === "fancy1" ? (
                     <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
                       <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                        <div className="h-[25px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
                         </div>
-                        <div className="h-[25px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                        <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
                         </div>
                         <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
@@ -2602,10 +2602,10 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                   ) : (
                     <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
                       <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                        <div className="h-[25px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                        <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
                         </div>
-                        <div className="h-[25px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
                         </div>
                         <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
@@ -3268,7 +3268,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                 <div>
                   <div className="min-h-[20px] py-[4px] flex justify-end px-[10px] border-b">
                     <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                      <div className="h-[25px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                      <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                         Back
                       </div>
                     </div>
