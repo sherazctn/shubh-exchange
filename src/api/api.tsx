@@ -410,107 +410,77 @@ export const fn_fancyModalCalculation = async (data: any[]) => {
     const maxScore = Math.max(...data.map((d) => d.score));
 
     // if same side and same score are coming
-    if (backData.length === data.length) {
-        if (maxScore === minScore) {
-            return [
-                {
-                    score: maxScore - 1,
-                    profit: backData.reduce((acc, d) => acc + d.exposure, 0),
-                },
-                {
-                    score: maxScore,
-                    profit: backData.reduce((acc, d) => acc + d.profit, 0),
-                },
-            ];
-        };
-        const newData = [];
-        for (let i = minScore - 1; i <= maxScore; i++) {
-            const addProfit = data?.filter((d: any) => i >= d?.score);
-            const subtractProfit = data?.filter((d: any) => i < d?.score);
-            const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
-            const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
-            const obj = {
-                score: i,
-                profit: addProfitValue + subtractProfitValue
-            };
-            newData.push(obj);
-        };
-        return newData;
-    };
-    if (laysData.length === data.length) {
-        if (maxScore === minScore) {
-            return [
-                {
-                    score: maxScore - 1,
-                    profit: laysData.reduce((acc, d) => acc + d.profit, 0),
-                },
-                {
-                    score: maxScore,
-                    profit: laysData.reduce((acc, d) => acc + d.exposure, 0),
-                },
-            ];
-        }
-        const newData = [];
-        for (let i = minScore - 1; i <= maxScore; i++) {
-            const addProfit = data?.filter((d: any) => i < d?.score);
-            const subtractProfit = data?.filter((d: any) => i >= d?.score);
-            const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
-            const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
-            const obj = {
-                score: i,
-                profit: addProfitValue + subtractProfitValue
-            };
-            newData.push(obj);
-        };
-        return newData;
-    };
+    // if (backData.length === data.length) {
+    //     if (maxScore === minScore) {
+    //         return [
+    //             {
+    //                 score: maxScore - 1,
+    //                 profit: backData.reduce((acc, d) => acc + d.exposure, 0),
+    //             },
+    //             {
+    //                 score: maxScore,
+    //                 profit: backData.reduce((acc, d) => acc + d.profit, 0),
+    //             },
+    //         ];
+    //     };
+    //     const newData = [];
+    //     for (let i = minScore - 1; i <= maxScore; i++) {
+    //         const addProfit = data?.filter((d: any) => i >= d?.score);
+    //         const subtractProfit = data?.filter((d: any) => i < d?.score);
+    //         const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
+    //         const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
+    //         const obj = {
+    //             score: i,
+    //             profit: addProfitValue + subtractProfitValue
+    //         };
+    //         newData.push(obj);
+    //     };
+    //     return newData;
+    // };
+    // if (laysData.length === data.length) {
+    //     if (maxScore === minScore) {
+    //         return [
+    //             {
+    //                 score: maxScore - 1,
+    //                 profit: laysData.reduce((acc, d) => acc + d.profit, 0),
+    //             },
+    //             {
+    //                 score: maxScore,
+    //                 profit: laysData.reduce((acc, d) => acc + d.exposure, 0),
+    //             },
+    //         ];
+    //     }
+    //     const newData = [];
+    //     for (let i = minScore - 1; i <= maxScore; i++) {
+    //         const addProfit = data?.filter((d: any) => i < d?.score);
+    //         const subtractProfit = data?.filter((d: any) => i >= d?.score);
+    //         const addProfitValue = addProfit?.reduce((acc: any, d: any) => acc + d?.profit, 0) || 0;
+    //         const subtractProfitValue = subtractProfit?.reduce((acc: any, d: any) => acc + d?.exposure, 0) || 0;
+    //         const obj = {
+    //             score: i,
+    //             profit: addProfitValue + subtractProfitValue
+    //         };
+    //         newData.push(obj);
+    //     };
+    //     return newData;
+    // };
 
     // if multiple objs are those have different sides
-    console.log("data ==> ", data);
     const newData = [];
     for (let i = minScore - 1; i <= maxScore; i++) {
-        console.log("i ====> ", i);
-        // const findSameScore = data?.filter((d: any) => d?.score == i);
-        // const obj = { score: i, profit: 0 };
-        // console.log(i, " findSameScore ", findSameScore);
-        // if (findSameScore?.length > 0) {
-        //     let addingProfitOfSameScore = 0;
-        //     if(findSameScore?.[0]?.side === "Back"){
-        //         addingProfitOfSameScore = findSameScore?.reduce((acc: any, i: any) => acc + i?.exposure, 0); // 200
-        //     };
-        //     if(findSameScore?.[0]?.side === "Lay"){
-        //         addingProfitOfSameScore = findSameScore?.reduce((acc: any, i: any) => acc + i?.profit, 0); // 200
-        //     };
-        //     console.log("addingProfitOfSameScore ", addingProfitOfSameScore);
-        //     const remainingsObj = data?.filter((d: any) => d?.side != findSameScore?.[0]?.side); // []
-        //     const subtractionValue = remainingsObj?.reduce((acc: any, i: any) => acc + i?.exposure, 0); // -200
-        //     console.log("subtractionValue ", subtractionValue);
-        //     obj.profit = addingProfitOfSameScore - subtractionValue;
-        // };
-        // newData.push(obj);
         const obj = { score: i, profit: 0 };
-        const profit = data?.reduce((acc: any, d: any) => {
-            if (i < minScore) {
-                if (d?.side === "Lay") {
-                    console.log("profit ", d?.profit);
-                    return acc + d?.profit;
-                } else {
-                    console.log("exposure ", d?.exposure);
-                    return acc + d?.exposure;
-                }
-            } else {
-                if (d?.side === "Lay") {
-                    console.log("exposure ", d?.exposure);
-                    return acc + d?.exposure;
-                } else {
-                    console.log("profit ", d?.profit);
-                    return acc + d?.profit;
-                }
+        for (let singleBetIndex = 0; singleBetIndex < data?.length; singleBetIndex++) {
+            const singleBet = data[singleBetIndex];
+            if (singleBet?.side === "Lay" && singleBet?.score > i) {
+                obj.profit = obj.profit + singleBet?.profit;
+            } else if (singleBet?.side === "Back" && singleBet?.score > i) {
+                obj.profit = obj.profit + singleBet?.exposure;
+            } else if (singleBet?.side === "Lay" && singleBet?.score <= i) {
+                obj.profit = obj.profit + singleBet?.exposure;
+            } else if (singleBet?.side === "Back" && singleBet?.score <= i) {
+                obj.profit = obj.profit + singleBet?.profit;
             }
-        }, 0);
-        console.log("cal ==> ", profit);
-        console.log(i, " obj ", obj);
-        obj.profit = profit;
+        };
         newData.push(obj);
     };
     return newData;
