@@ -98,7 +98,7 @@ const LiveCricket = () => {
   };
 
   return (
-    <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[10px] sm:ps-[20px] lg:ps-[285px]" : "ps-[10px] sm:ps-[20px] lg:ps-[85px]"} pe-[10px] sm:pe-[20px] flex`}>
+    <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[2px] sm:ps-[20px] lg:ps-[285px]" : "ps-[2px] sm:ps-[20px] lg:ps-[85px]"} pe-[2px] sm:pe-[20px] flex`}>
       <LiveCricketLeftSection extraMarkets={extraMarkets} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
       <RightSection sportId={sportId} eventId={eventId} selectedEvent={selectedEvent} />
     </div>

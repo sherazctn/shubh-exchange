@@ -159,7 +159,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
             </>
           )}
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
+            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
           )}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-[10px] mt-[10px]">
@@ -346,7 +346,6 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
             {market.marketName}
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            <HiMiniInformationCircle className="text-[20px]" />
             <IoIosArrowUp className={`transition-all duration-300 ${matchOdds.find((m: any) => m === market.marketId) ? "rotate-180" : "rotate-0"}`} />
           </div>
         </div>
@@ -371,7 +370,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
               const prevOdd = prevOdds?.odds?.runners?.find((run: any) => run?.selectionId === item?.selectionId);
               return (
                 <>
-                  <div key={index} className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div key={index} className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <BsGraphUp />
                       <p className="text-[13px] sm:text-[15px] font-[500]">{item?.runnerName}</p>
@@ -815,11 +814,6 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
             BOOKMAKER
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-              <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-              CashOut
-            </div> */}
-            <HiMiniInformationCircle className="text-[20px]" />
             <IoIosArrowUp
               className={`transition-all duration-300 ${viewBookmaker ? "rotate-0" : "rotate-180"}`}
             />
@@ -845,7 +839,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
             {data?.map((item: any) => {
               if (item?.s === "ACTIVE") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -1258,11 +1252,6 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
             {data?.[0]?.mname === "Bookmaker" ? "Bookmaker 2" : data?.[0]?.mname}
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-              <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-              CashOut
-            </div> */}
-            <HiMiniInformationCircle className="text-[20px]" />
             <IoIosArrowUp
               className={`transition-all duration-300 ${viewBookmaker ? "rotate-0" : "rotate-180"}`}
             />
@@ -1288,7 +1277,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
             {data?.map((item: any) => {
               if (item?.s === "ACTIVE") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -1482,7 +1471,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
                 )
               } else {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -1714,11 +1703,6 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
             {data?.[0]?.mname === "Bookmaker" ? "Bookmaker 2" : data?.[0]?.mname}
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-              <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-              CashOut
-            </div> */}
-            <HiMiniInformationCircle className="text-[20px]" />
             <IoIosArrowUp
               className={`transition-all duration-300 ${viewBookmaker ? "rotate-0" : "rotate-180"}`}
             />
@@ -1727,7 +1711,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
         {/* content */}
         {viewBookmaker && (
           <div>
-            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
+            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
               <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                 <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -2207,7 +2191,10 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
             FANCY MARKET
           </div>
           <div className="flex gap-[7px] items-center pe-[10px]">
-            <HiMiniInformationCircle className="text-[20px]" />
+            <div className='flex flex-col items-end gap-[3px]'>
+              <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {data?.[0]?.min} INR</p>
+              <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {data?.[0]?.max} INR</p>
+            </div>
             <IoIosArrowUp
               className={`transition-all duration-300 ${viewFancy ? "rotate-0" : "rotate-180"}`}
             />
@@ -2218,26 +2205,23 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
           <div>
             <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
               <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-blue-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                   No
                 </div>
-                <div className="h-[25px] w-[55px] border-[2px] border-red-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                   Yes
                 </div>
-                <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
               </div>
             </div>
             {data?.map((item: any) => {
               if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running" && item?.gstatus !== "Starting Soon.") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
-                          {/* {fn_totalCal(`${item?.mid}-${item?.sid}`)?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && fn_totalCal(`${item?.mid}-${item?.sid}`)?.side === "Back" && (<span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>)}
-                          {fn_totalCal(`${item?.mid}-${item?.sid}`)?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && fn_totalCal(`${item?.mid}-${item?.sid}`)?.side === "Lay" && (<span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>)} */}
                         </p>
                         <p>
                           {recentExp?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
@@ -2292,17 +2276,12 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                           </div>
                         )}
                       </div>
-                      {/* range */}
-                      <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                        <p className="text-[11px]">Min Bet: {item?.min}.00 INR</p>
-                        <p className="text-[11px]">Max Bet: {item?.max}.00 INR</p>
-                      </div>
                     </div>
                   </div>
                 )
               } else if (item?.gstatus === "SUSPENDED") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -2312,7 +2291,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                      <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                         SUSPENDED
                       </div>
                       <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2331,13 +2310,12 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
                     </div>
                   </div>
                 )
               } else if (item?.gstatus === "Ball Running") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -2347,7 +2325,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                      <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                         Ball Running
                       </div>
                       <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2366,18 +2344,17 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
                     </div>
                   </div>
                 )
               } else if (item?.gstatus === "Starting Soon.") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                      <div className="h-[25px] rounded-[7px] w-[200px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[12px] flex justify-center items-center">
                         Starting Soon.
                       </div>
                       <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2396,7 +2373,6 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
                     </div>
                   </div>
                 )
@@ -2419,15 +2395,49 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
   }
 };
 
-const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) => {
+const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
   const [longPress, setLongPress] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const [totalCal, setTotalCal] = useState<any>(null);
   const [hideMarkets, setHideMarkets] = useState<string[]>([]);
+  const [oneTimeRendered, setOneTimeRendered] = useState(false);
+  const recentExp = useSelector((state: any) => state.recentExp);
+  const [selectedFancyBets, setSelectedFancyBets] = useState([]);
+
+  const fn_closeModal = () => {
+    setShowModal(false);
+  };
+
+  const fn_openModal = async (item: any, marketNm: string) => {
+    if (marketNm !== "khado" && marketNm !== "meter") return;
+    const mId = `${item?.mid}-${item?.sid}`;
+    setOneTimeRendered(true);
+    const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
+    const scores = checkBet?.map((bet: any) => {
+      const selectionNameArray = bet?.selectionName.split(" ");
+      const score = parseFloat(selectionNameArray?.[selectionNameArray?.length - 1]);
+      return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
+    })?.sort((a: any, b: any) => a.score - b.score);
+    const data = await fn_fancyModalCalculation(scores || []) as any;
+    console.log("data ", data);
+    setSelectedFancyBets(data || []);
+    if (checkBet?.length > 0) {
+      setShowModal(true);
+      // setShowModal(false);
+    }
+  };
+
+  const fn_totalCal = (marketId: any): any => {
+    const filteredPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === marketId);
+    const result: any = fancy_calculatingBets(filteredPendingBets);
+    return result;
+  };
 
   const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string, selectionName: string) => {
     e.preventDefault();
@@ -2438,27 +2448,64 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     dispatch(updateSlipTab('slip'));
-    const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
-    const loss = 10;
-    const obj = {
-      afterLoss: wallet - 10,
-      afterWin: wallet + profit,
-      amount: 10,
-      eventId: eventId,
-      gameId: runnerId,
-      gameName: eventName,
-      loss,
-      marketId: runnerId,
-      marketName: marketName,
-      odd: odd,
-      profit,
-      side: side,
-      sportId: "4",
-      selectionName: selectionName
+    if (marketName === "meter" || marketName === "khado") {
+      const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
+      const loss = 10;
+      const obj = {
+        afterLoss: wallet - 10,
+        afterWin: wallet + profit,
+        amount: 10,
+        stake: 10,
+        eventId: eventId,
+        gameId: runnerId,
+        gameName: eventName,
+        loss,
+        marketId: runnerId,
+        marketName: marketName,
+        odd: parseFloat(odd),
+        profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+        exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
+        side: side,
+        sportId: "4",
+        selectionName: selectionName
+      };
+      console.log("obj ==> ", obj);
+      const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === marketName && bet?.marketId == runnerId) || [];
+      console.log("updatedPendingBets ", updatedPendingBets);
+      const updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
+      dispatch(updateRecentExp(updatedCalculation));
+      const updatedBets = [obj];
+      dispatch(updateBets(updatedBets));
+      dispatch(updateBettingSlip("open"));
+    } else {
+      const profit = parseFloat((10 * (odd - 1)).toFixed(2));
+      const loss = 10;
+      const obj = {
+        afterLoss: wallet - 10,
+        afterWin: wallet + profit,
+        amount: 10,
+        stake: 10,
+        eventId: eventId,
+        gameId: runnerId,
+        gameName: runnerName,
+        loss,
+        marketId: runnerId,
+        marketName: marketName,
+        odd: parseFloat(odd),
+        profit: side === "Back" ? Number(((parseFloat(odd) - 1) * 10).toFixed(2)) : 10,
+        exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) - 1) * 10).toFixed(2)),
+        side: side,
+        sportId: "4",
+        selectionName: selectionName
+      };
+      const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === runnerId);
+      const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+      console.log("updatedCalculation ==> ", updatedCalculation)
+      dispatch(updateRecentExp(updatedCalculation));
+      const updatedBets = [obj];
+      dispatch(updateBets(updatedBets));
+      dispatch(updateBettingSlip("open"));
     }
-    const updatedBets = [obj];
-    dispatch(updateBets(updatedBets));
-    dispatch(updateBettingSlip("open"));
   }
 
   const handleStart = (e: any, item: any, num: any) => {
@@ -2498,6 +2545,26 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
       return () => clearTimeout(timeout);
     }
   }, [longPress]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOneTimeRendered(false);
+    }, 1000);
+  }, [oneTimeRendered]);
+
+  useEffect(() => {
+    const tiedId = data?.tied_match?.[0]?.mid;
+    if (tiedId) {
+      if (pendingBets?.length > 0) {
+        const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketId?.split("-")?.[0] === tiedId)
+        const result: any = fn_calculatingBets(specificMarketBets);
+        if (result) {
+          console.log("result ", result);
+          setTotalCal(result);
+        }
+      }
+    }
+  }, [pendingBets]);
 
   const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string, marketName: any, runnerName: any) => {
     e.preventDefault();
@@ -2541,7 +2608,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
     } else {
       hideMarkets.push(marketName);
     }
-  }
+  };
 
   if (Object.keys(data)?.length > 0) {
     return (
@@ -2550,6 +2617,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
           if (data[singleExtraMarket]?.[0]?.gtype === "cricketcasino") return;
           return (
             <div key={index} className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
+              {showModal && <FancyModal showModal={showModal} fn_closeModal={fn_closeModal} webColor={webColor} selectedFancyBets={selectedFancyBets} />}
               {/* header */}
               <div
                 className="h-[47px] flex justify-between border-b cursor-pointer"
@@ -2559,11 +2627,12 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                   {singleExtraMarket}
                 </div>
                 <div className="flex gap-[7px] items-center pe-[10px]">
-                  {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-                  <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-                  CashOut
-                </div> */}
-                  <HiMiniInformationCircle className="text-[20px]" />
+                  {data[singleExtraMarket]?.[0]?.min && (
+                    <div className='flex flex-col items-end gap-[3px]'>
+                      <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {data[singleExtraMarket]?.[0]?.min} INR</p>
+                      <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {data[singleExtraMarket]?.[0]?.max} INR</p>
+                    </div>
+                  )}
                   <IoIosArrowUp
                     className={`transition-all duration-300 ${hideMarkets?.find((m) => m === singleExtraMarket) ? "rotate-180" : "rotate-0"}`}
                   />
@@ -2573,7 +2642,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
               {!hideMarkets?.find((m) => m === singleExtraMarket) && (
                 <div>
                   {singleExtraMarket === "tied_match" ? (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
+                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
                       <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                         <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
                         <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
@@ -2588,7 +2657,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                       </div>
                     </div>
                   ) : singleExtraMarket === "fancy1" ? (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
+                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
                       <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                         <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
@@ -2596,11 +2665,18 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                         <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
                         </div>
-                        <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
+                      </div>
+                    </div>
+                  ) : singleExtraMarket === "khado" ? (
+                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                      <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
+                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                          Back
+                        </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
+                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
                       <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                         <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
@@ -2608,7 +2684,6 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                         <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
                         </div>
-                        <div className="h-[25px] w-[108px] sm:w-auto ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]"></div>
                       </div>
                     </div>
                   )}
@@ -2618,17 +2693,26 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                     if (singleExtraMarket !== "tied_match" && item?.gtype === undefined) {
                       if (item?.gstatus?.toLowerCase() !== "suspended" && item?.gstatus !== "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize cursor-pointer" onClick={() => fn_openModal(item, singleExtraMarket)}>{item?.nat}</p>
+                              <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                <p>
+                                  <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp?.toFixed(2)}</span>
+                                </p>
+                                <p>
+                                  {recentExp?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp?.toFixed(2)}</span>)}
+                                  {recentExp?.recentObjDetails?.marketId == `${item?.mid}-${item?.sid}` && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp?.toFixed(2)}</span>)}
+                                </p>
+                              </div>
                             </div>
                             <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                               {singleExtraMarket !== "fancy1" ? (
                                 <>
-                                  {singleExtraMarket !== "cricketcasino" && (
+                                  {singleExtraMarket !== "cricketcasino" && singleExtraMarket !== "khado" && (
                                     <div
                                       className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                      onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
+                                      onClick={(e) => handleBetClicked(e, item?.l1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`)}
                                       onMouseDown={(e) => handleStart(e, item, '1')}
                                       onTouchStart={(e) => handleStart(e, item, '1')}
                                     >
@@ -2651,7 +2735,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   )}
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                    onClick={(e) => handleBetClicked(e, item?.b1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
                                   >
@@ -2722,22 +2806,17 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   )}
                                 </>
                               )}
-
-                              <div className="h-[43px] ms-[7px] sm:ms-0 flex flex-col justify-end lg:me-[10px] italic text-gray-600 lg:min-w-[120px]">
-                                <p className="text-[11px]">Min Bet: {item?.min}.00 INR</p>
-                                <p className="text-[11px]">Max Bet: {item?.max}.00 INR</p>
-                              </div>
                             </div>
                           </div>
                         )
                       } else if (item?.gstatus?.toLowerCase() === "suspended") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 SUSPENDED
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2756,18 +2835,17 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
                       } else if (item?.gstatus?.toLowerCase() === "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 Ball Running
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2786,7 +2864,6 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
@@ -2794,9 +2871,23 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                     } else if (singleExtraMarket === "tied_match") {
                       if (item?.mstatus?.toLowerCase() !== "suspended" && item?.mstatus !== "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
-                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
-                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                              <p className="text-[13px] sm:text-[15px] font-[500] capitalize cursor-pointer">{item?.nat}</p>
+                              <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                <p>
+                                  {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                  {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                  {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                  {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                </p>
+                                <p>
+                                  {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] === item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                  {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] === item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                  {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] === item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                  {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] === item?.mid && recentExp?.profitableRunner?.split("-")?.[1] != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                </p>
+                              </div>
                             </div>
                             <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                               <div
@@ -2938,12 +3029,12 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                         )
                       } else if (item?.mstatus?.toLowerCase() === "suspended") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 SUSPENDED
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2962,18 +3053,17 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
                       } else if (item?.mstatus?.toLowerCase() === "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 Ball Running
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2992,7 +3082,6 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
@@ -3001,7 +3090,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                       if (item?.status?.toLowerCase() !== "suspended" && item?.status !== "ball running") {
                         return (
                           item?.section?.map((i: any) => (
-                            <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                            <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                               <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                                 <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
                               </div>
@@ -3041,12 +3130,12 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                         )
                       } else if (item?.status?.toLowerCase() === "suspended") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-30px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 SUSPENDED
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -3065,18 +3154,17 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
                       } else if (item?.status?.toLowerCase() === "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                             </div>
                             <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                              <div className="h-[25px] rounded-[7px] w-[160px] bg-[--suspended-odds-dark] mt-[2px] ml-[-20px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                              <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                 Ball Running
                               </div>
                               <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -3095,7 +3183,6 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName }: any) =>
                                   -
                                 </p>
                               </div>
-                              <div className="h-[43px] flex flex-col justify-center lg:me-[10px] italic text-gray-600 lg:min-w-[50px]"></div>
                             </div>
                           </div>
                         )
@@ -3154,7 +3241,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
-  }
+  };
 
   const handleStart = (e: any, item: any) => {
     e.preventDefault();
@@ -3225,7 +3312,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
     } else {
       return toast.error(response?.message);
     }
-  }
+  };
 
   const fn_controlMarketView = (marketName: string) => {
     const findMarket = hideMarkets?.find((m) => m === marketName);
@@ -3235,7 +3322,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
     } else {
       hideMarkets.push(marketName);
     }
-  }
+  };
 
   if (Object.keys(data)?.length > 0) {
     return (
@@ -3253,11 +3340,6 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                   {singleExtraMarket}
                 </div>
                 <div className="flex gap-[7px] items-center pe-[10px]">
-                  {/* <div className="h-[37px] cursor-not-allowed bg-[--cashout] rounded-[7px] flex gap-[5px] justify-center items-center text-[14px] font-[600] px-[10px]">
-                  <img alt="cashout" src={cashoutImg} className="w-[20px]" />
-                  CashOut
-                </div> */}
-                  <HiMiniInformationCircle className="text-[20px]" />
                   <IoIosArrowUp
                     className={`transition-all duration-300 ${hideMarkets?.find((m) => m === singleExtraMarket) ? "rotate-180" : "rotate-0"}`}
                   />
@@ -3266,7 +3348,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
               {/* content */}
               {!hideMarkets?.find((m) => m === singleExtraMarket) && (
                 <div>
-                  <div className="min-h-[20px] py-[4px] flex justify-end px-[10px] border-b">
+                  <div className="min-h-[20px] py-[4px] flex justify-end px-[4px] sm:px-[10px] border-b">
                     <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                       <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                         Back
@@ -3278,7 +3360,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                     if (item?.status?.toLowerCase() !== "suspended" && item?.status !== "ball running") {
                       return (
                         item?.section?.map((i: any) => (
-                          <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
                             </div>
@@ -3313,7 +3395,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                       )
                     } else if (item?.status?.toLowerCase() === "suspended") {
                       return (
-                        <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                        <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                           <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                             <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                           </div>
@@ -3343,7 +3425,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                       )
                     } else if (item?.status?.toLowerCase() === "ball running") {
                       return (
-                        <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                        <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                           <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                             <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                           </div>
@@ -3389,34 +3471,36 @@ const FancyModal = ({ showModal, fn_closeModal, webColor, selectedFancyBets }: a
   return (
     <Modal title="" open={showModal} onCancel={fn_closeModal} footer={null} style={{ fontFamily: "Roboto" }} width={500} centered>
       <p className="text-[19px] font-[600] mt-[-5px]">Run Amount</p>
-      <table className="table-fixed w-full mt-[10px]">
-        <tr style={{ backgroundColor: webColor, height: "38px" }}>
-          <td
-            className="text-left ps-[15px] text-white font-[500] text-[16px] border-[1px]"
-            style={{ borderColor: webColor }}
-          >
-            Run
-          </td>
-          <td
-            className="text-right pe-[15px] text-white font-[500] text-[16px] border-r-[1px] border-y-[1px]"
-            style={{ borderColor: webColor }}
-          >
-            Amount
-          </td>
-        </tr>
-        {selectedFancyBets && selectedFancyBets?.length > 0 && selectedFancyBets?.map((score: any, index: number) => (
-          <tr key={index} style={{ height: "30px" }}>
-            <td className="text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300">
-              {score?.score}
+      <div className='w-full max-h-[300px] overflow-auto'>
+        <table className="table-fixed w-full mt-[10px]">
+          <tr style={{ backgroundColor: webColor, height: "38px" }}>
+            <td
+              className="text-left ps-[15px] text-white font-[500] text-[16px] border-[1px]"
+              style={{ borderColor: webColor }}
+            >
+              Run
             </td>
             <td
-              className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.profit > 0 ? "text-green-500" : score?.profit < 0 ? "text-red-500" : "text-gray-500"}`}
+              className="text-right pe-[15px] text-white font-[500] text-[16px] border-r-[1px] border-y-[1px]"
+              style={{ borderColor: webColor }}
             >
-              {score?.profit}
+              Amount
             </td>
           </tr>
-        ))}
-      </table>
+          {selectedFancyBets && selectedFancyBets?.length > 0 && selectedFancyBets?.map((score: any, index: number) => (
+            <tr key={index} style={{ height: "30px" }}>
+              <td className="text-left ps-[15px] font-[500] text-[14px] border-x-[1px] border-b-[1px] border-gray-300">
+                {score?.score}
+              </td>
+              <td
+                className={`text-right pe-[15px] font-[500] text-[14px] border-r-[1px] border-b-[1px] border-gray-300 ${score?.profit > 0 ? "text-green-500" : score?.profit < 0 ? "text-red-500" : "text-gray-500"}`}
+              >
+                {score?.profit}
+              </td>
+            </tr>
+          ))}
+        </table>
+      </div>
     </Modal>
   );
 };

@@ -279,7 +279,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
             if (i === index) {
                 let profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd - 1)).toFixed(2))) : amount;
                 let exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd - 1)).toFixed(2))) : -amount;
-                if (bet?.marketName === "bookmaker" || bet?.marketId?.includes("-")) {
+                if (bet?.marketName === "bookmaker" || bet?.marketId?.includes("-") && bet?.marketName !== "tied_match") {
                     profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd / 100)).toFixed(2))) : amount;
                     exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd / 100)).toFixed(2))) : -amount;
                 }
