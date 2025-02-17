@@ -8,7 +8,7 @@ const initialState = {
   authentication: false,
   dashboardDarkTheme: false,
   colorScheme: "color1",
-  smallSidebar: false,
+  smallSidebar: window.innerWidth < 500 ? true : false,
   bettingSlip: "hide",
   websiteColor: "",
   panelMainColor: "",
@@ -132,7 +132,7 @@ export const featuresSlice = createSlice({
     updatePendingBets: (state, action) => {
       state.pendingBets = action.payload;
     },
-    updateRecentExp : (state, action) => {
+    updateRecentExp: (state, action) => {
       state.recentExp = action.payload;
     }
   },

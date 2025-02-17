@@ -6,7 +6,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
 import { retrieveGamesDataToRedisApi } from "./api/api";
-import { updateRedisGamesData } from "./features/features";
+import { updateRedisGamesData, updateSidebar } from "./features/features";
 
 // import Notification from "./Notification";
 
@@ -35,6 +35,7 @@ import FDProfitLoss from "./pages/account/Bets/FDProftLoss/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
 import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
+import { useEffect } from "react";
 
 function App() {
   const location = useLocation();

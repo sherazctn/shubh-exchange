@@ -343,8 +343,9 @@ const Navbar = () => {
             </div>
           )}
           {authentication && (
-            <div className="text-white text-[13px] font-[600] absolute text-nowrap top-[48px] bg-black w-full left-0 flex justify-end items-center px-[10px] py-[1px]">
+            <div className="text-white text-[13px] font-[600] absolute text-nowrap top-[48px] bg-black w-full left-0 flex justify-between items-center px-[10px] py-[1px]">
               <p>Balance: <FaIndianRupeeSign className="inline-block text-[14px]" />{Number(wallet).toFixed(2)}</p>
+              <p>Exposure: <FaIndianRupeeSign className="inline-block text-[14px]" />{exposure <= 0 ? Number(exposure).toFixed(2) : `-${Number(exposure).toFixed(2)}`}</p>
             </div>
           )}
         </div>

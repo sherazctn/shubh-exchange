@@ -54,7 +54,7 @@ const RightSection = ({ sportId, eventId, selectedEvent }: any) => {
         >
           Live Match
         </button>
-        {showCasino && <RightSlider cricketScore={cricketScore} sportId={sportId} eventId={eventId} selectedEvent={selectedEvent} />}
+        {showCasino && <RightSlider cricketScore={cricketScore} sportId={sportId} eventId={eventId} selectedEvent={selectedEvent} webColor={webColor} />}
       </div>
       <div className="rounded-[7px] p-[7px] bg-white mt-[7px]">
         <button

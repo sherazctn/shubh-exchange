@@ -80,7 +80,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
         <button className="live-match-btn mt-[3px] sm:mt-[10px]">{getEventDisplayText()}</button>
       </div>
       <div className="w-full mb-[10px] block lg:hidden">
-        <RightSlider sportId={sportId} eventId={eventId} cricketScore={cricketScore} selectedEvent={selectedEvent} />
+        <RightSlider sportId={sportId} eventId={eventId} cricketScore={cricketScore} selectedEvent={selectedEvent} webColor={webColor} />
       </div>
       {/* tabs */}
       {/* <div className="flex gap-[10px] overflow-auto mb-[10px]">
@@ -162,9 +162,9 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
             <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
           )}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[10px] mt-[10px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px] mt-[10px]">
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} />
+            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
           )}
         </div>
         {/* {tabs === "all" && (
@@ -2325,7 +2325,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                         Ball Running
                       </div>
                       <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2506,7 +2506,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
       dispatch(updateBets(updatedBets));
       dispatch(updateBettingSlip("open"));
     }
-  }
+  };
 
   const handleStart = (e: any, item: any, num: any) => {
     e.preventDefault();
@@ -3201,7 +3201,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
   }
 };
 
-const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) => {
+const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
@@ -3209,7 +3209,9 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
   const wallet = useSelector((state: any) => state.wallet);
   const authentication = useSelector((state: any) => state.authentication);
 
+  const [totalCal, setTotalCal] = useState<any>(null);
   const [hideMarkets, setHideMarkets] = useState<string[]>([]);
+  const recentExp = useSelector((state: any) => state.recentExp);
 
   const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string) => {
     e.preventDefault();
@@ -3226,18 +3228,23 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
       afterLoss: wallet - 10,
       afterWin: wallet + profit,
       amount: 10,
+      stake: 10,
       eventId: eventId,
       gameId: runnerId,
       gameName: eventName,
       loss,
       marketId: runnerId,
-      marketName: marketName,
+      marketName: `${marketName} (CrickCasino)`,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) - 1) * 10).toFixed(2)) : 10,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) - 1) * 10).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: runnerName
-    }
+    };
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId?.split("-")?.[0] === runnerId?.split("-")?.[0]);
+    const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
+    dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
@@ -3270,6 +3277,14 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
     document.removeEventListener('mouseup', handleEnd);
     document.removeEventListener('touchend', handleEnd);
     document.removeEventListener('touchmove', handleEnd);
+  };
+
+  const fn_totalCal = (marketId: any): any => {
+    const filteredPendingBets = pendingBets?.filter((bet: any) => {
+      return bet?.marketId?.split("-")?.[0] == marketId
+    });
+    const result: any = fn_calculatingBets(filteredPendingBets);
+    return result;
   };
 
   useEffect(() => {
@@ -3340,6 +3355,12 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                   {singleExtraMarket}
                 </div>
                 <div className="flex gap-[7px] items-center pe-[10px]">
+                  {data[singleExtraMarket]?.[0]?.section?.[0]?.min && (
+                    <div className='flex flex-col items-end gap-[3px]'>
+                      <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {data[singleExtraMarket]?.[0]?.section?.[0]?.min} INR</p>
+                      <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {data[singleExtraMarket]?.[0]?.section?.[0]?.max} INR</p>
+                    </div>
+                  )}
                   <IoIosArrowUp
                     className={`transition-all duration-300 ${hideMarkets?.find((m) => m === singleExtraMarket) ? "rotate-180" : "rotate-0"}`}
                   />
@@ -3361,14 +3382,22 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName }: any) =
                       return (
                         item?.section?.map((i: any) => (
                           <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                            <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
+                              <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                <p>
+                                  {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
+                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
+                                  {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
+                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
+                                </p>
+                              </div>
                             </div>
                             <div className="flex flex-col">
                               <div className="flex flex-nowrap sm:flex-wrap sm:gap-[11px] justify-center items-center relative">
                                 <div
                                   className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                  onClick={(e) => handleBetClicked(e, i?.odds?.[0]?.odds, i?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back",)}
+                                  onClick={(e) => handleBetClicked(e, i?.odds?.[0]?.odds, i?.nat, `${item?.mid}-${i?.sid}`, singleExtraMarket, "Back",)}
                                   onMouseDown={(e) => handleStart(e, i)}
                                   onTouchStart={(e) => handleStart(e, i)}
                                 >

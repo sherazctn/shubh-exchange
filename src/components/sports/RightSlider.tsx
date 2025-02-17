@@ -13,13 +13,18 @@ interface RightSliderProps {
   sportId: string | number;
   eventId: string | number;
   cricketScore: any;
-  selectedEvent: any
+  selectedEvent: any;
+  webColor: any
 }
 
-const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScore, selectedEvent }) => {
+const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScore, selectedEvent, webColor }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewTv, setViewTv] = useState(true);
 
   useEffect(() => {
+    if (window.innerWidth > 400) {
+      setViewTv(true);
+    }
     const handleContextMenu = (e: MouseEvent) => {
       e.stopPropagation();
       return true;
@@ -40,20 +45,27 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
   return (
     <>
       <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-        <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[99] right-[2px] top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
-          <MdFullscreen className="text-[23px]" />
-        </div>
-        <div className="relative pt-[56.25%]">
-          <iframe
-            src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
-            className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowFullScreen
-            frameBorder="0"
-            scrolling="no"
-            sandbox="allow-scripts allow-same-origin allow-presentation"
-          ></iframe>
-        </div>
+        <button onClick={() => setViewTv(!viewTv)} className="block sm:hidden w-full h-[35px] rounded-[7px] text-white text-[14px] font-[500] mb-[2px] pt-[1px]" style={{ backgroundColor: webColor }}>
+          {viewTv ? "Hide" : "Show"} TV
+        </button>
+        {viewTv && (
+          <>
+            <div className="w-[30px] h-[30px] bg-[#000000cb] absolute z-[99] right-[2px] top-[45px] sm:top-[2px] rounded-[7px] flex justify-center items-center cursor-pointer text-white" onClick={() => setIsModalOpen(!isModalOpen)}>
+              <MdFullscreen className="text-[23px]" />
+            </div>
+            <div className="relative pt-[56.25%]">
+              <iframe
+                src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
+                className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                allowFullScreen
+                frameBorder="0"
+                scrolling="no"
+                sandbox="allow-scripts allow-same-origin allow-presentation"
+              ></iframe>
+            </div>
+          </>
+        )}
         <Modal
           title=""
           open={isModalOpen}

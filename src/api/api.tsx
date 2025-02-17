@@ -7,9 +7,9 @@ const URL = "https://backend.shubhexchange.com";
 
 export const fn_calculatingBets = (pendingBets: any) => {
     if (!pendingBets || pendingBets.length === 0) return;
-
     if (pendingBets.length === 1) {
         const obj = pendingBets[0];
+        console.log("single obj ", obj);
         return {
             totalProfit: obj.profit,
             totalExp: obj.exposure,
@@ -97,6 +97,100 @@ export const fn_calculatingBets = (pendingBets: any) => {
         marketId: recentObjDetails?.marketId,
     };
 };
+
+// export const fn_calculatingBets_cricketcasino = (pendingBets: any) => {
+//     if (!pendingBets || pendingBets.length === 0) return;
+//     if (pendingBets.length === 1) {
+//         const obj = pendingBets[0];
+//         return {
+//             totalProfit: obj.profit,
+//             totalExp: obj.exposure,
+//             profitableRunner: obj.gameId,
+//             recentObjDetails: obj,
+//             side: obj.side,
+//             marketId: obj.marketId
+//         };
+//     }
+
+//     const profitArray = [] as any[];
+//     const profitMap: { profit: number; runner: string; side: string }[] = [];
+
+//     let sameGameExposure = 0;
+//     let totalSamePointsExposure = [] as any;
+//     let samePointsExposure = 0;
+//     let isSamePointsExposure = false;
+
+//     for (let x = 0; x < pendingBets?.length; x++) {
+//         const runningBet = pendingBets[x];
+
+//         const plusPointSameGame = pendingBets?.filter((bet: any) => bet?.gameId?.split("-")?.[0] == runningBet?.gameId?.split("-")?.[0] && bet?.side == runningBet?.side);
+//         const negativePointSameGame = pendingBets?.filter((bet: any) => bet?.gameId?.split("-")?.[0] == runningBet?.gameId?.split("-")?.[0] && bet?.side != runningBet?.side);
+
+//         const plusPointDiffGame = pendingBets?.filter((bet: any) => bet?.gameId?.split("-")?.[0] != runningBet?.gameId?.split("-")?.[0] && bet?.side != runningBet?.side);
+//         const negativePointDiffGame = pendingBets?.filter((bet: any) => bet?.gameId?.split("-")?.[0] != runningBet?.gameId?.split("-")?.[0] && bet?.side == runningBet?.side);
+
+//         if (plusPointDiffGame?.length > 0) {
+//             totalSamePointsExposure.push(plusPointDiffGame?.[0]);
+//         }
+
+//         const addingPlusPointSameGame = plusPointSameGame.reduce((a: any, p: any) => a + p?.profit, 0);
+//         sameGameExposure = plusPointSameGame.reduce((acc: number, p: any) => acc + (p?.exposure || 0), 0);
+//         const addingPlusPointDiffGame = plusPointDiffGame.reduce((a: any, p: any) => a + p?.profit, 0);
+//         const minusNegativePointSameGame = negativePointSameGame.reduce((a: any, p: any) => a + p?.exposure, 0);
+//         const minusNegativePointDiffGame = negativePointDiffGame.reduce((a: any, p: any) => a + p?.exposure, 0);
+
+//         const numbers = [
+//             addingPlusPointSameGame,
+//             addingPlusPointDiffGame,
+//             minusNegativePointSameGame,
+//             minusNegativePointDiffGame
+//         ];
+
+//         console.log(numbers)
+
+//         const profit = numbers?.reduce((a, n) => {
+//             return a + n
+//         }, 0);
+//         profitArray.push(profit);
+
+//         profitMap.push({
+//             profit,
+//             runner: runningBet?.gameId,
+//             side: runningBet?.side,
+//         });
+//     }
+
+//     let checkSameBets = false;
+//     const firstBet = pendingBets?.[0];
+//     const sameBets = pendingBets?.filter((bet: any) => bet?.gameId?.split("-")?.[0] == firstBet?.gameId?.split("-")?.[0] && bet.side == firstBet.side);
+//     console.log("sameBets ", sameBets);
+//     if (sameBets?.length === pendingBets?.length) {
+//         console.log("same spot bets ");
+//         checkSameBets = true;
+//     };
+
+//     if (totalSamePointsExposure?.length === pendingBets?.length) {
+//         console.log("opposite but same");
+//         isSamePointsExposure = true;
+//         samePointsExposure = totalSamePointsExposure?.reduce((acc: any, bet: any) => acc + bet?.exposure, 0)
+//     };
+
+//     const totalProfit = Math.max(...profitArray);
+//     const totalExp = Math.min(...profitArray);
+
+//     const maxProfitEntry = profitMap.find((entry) => entry.profit === totalProfit);
+
+//     const recentObjDetails = pendingBets[pendingBets.length - 1];
+
+//     return {
+//         totalProfit: Number(totalProfit?.toFixed(2)),
+//         totalExp: checkSameBets ? Number(sameGameExposure?.toFixed(2)) : isSamePointsExposure ? Number(samePointsExposure?.toFixed(2)) : Number(totalExp.toFixed(2)),
+//         profitableRunner: maxProfitEntry?.runner, // Runner with the maximum profit
+//         side: maxProfitEntry?.side, // Side with the maximum profit
+//         recentObjDetails,
+//         marketId: recentObjDetails?.marketId,
+//     };
+// };
 
 export const fancy_calculatingBets = (pendingBets: any) => {
     const allBets = [...(pendingBets || [])];
