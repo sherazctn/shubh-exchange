@@ -436,21 +436,21 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
 
                         <div className="flex border-t border-gray-200 my-[10px] pt-[15px]">
                             <div className="flex-1 border-e-[2px] border-gray-500 px-[5px]">
-                                <p className="text-center text-[14px] font-[600] text-green-600 pt-[5px] pb-[7px]">
+                                <p className="text-center text-[13px] font-[600] text-green-600 pt-[5px] pb-[7px]">
                                     <BsGraphUpArrow className="inline-block mt-[-3px] me-[6px]" />
-                                    After Winning
+                                    Winning Amount
                                     {" "}={" "}
-                                    <FaIndianRupeeSign className="text-[14px] inline-block mt-[-2px]" />
-                                    {wallet + bets?.[0]?.profit}
+                                    <FaIndianRupeeSign className="text-[13px] inline-block mt-[-2px]" />
+                                    {bets?.[0]?.profit}
                                 </p>
                             </div>
                             <div className="flex-1 px-[5px]">
-                                <p className="text-center text-[14px] font-[600] text-red-500 pt-[5px] pb-[7px]">
+                                <p className="text-center text-[13px] font-[600] text-red-500 pt-[5px] pb-[7px]">
                                     <BsGraphDownArrow className="inline-block mt-[-3px] me-[6px]" />
-                                    After Lossing
+                                    Lossing Amount
                                     {" "}={" "}
-                                    <FaIndianRupeeSign className="text-[14px] inline-block mt-[-2px]" />
-                                    {wallet + bets?.[0]?.exposure}
+                                    <FaIndianRupeeSign className="text-[13px] inline-block mt-[-2px]" />
+                                    {bets?.[0]?.exposure}
                                 </p>
                             </div>
                         </div>
@@ -496,18 +496,18 @@ const OpenBet = ({ openBets }: any) => {
                             <td>Stake</td>
                         </tr>
                         {openBets?.map((item: any) => (
-                            <tr className={`text-[13px] font-[500] border-b h-[45px] ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
-                                <td className="ps-[5px] flex items-center h-[45px]">
+                            <tr className={`text-[13px] font-[500] border-b min-h-[45px] ${item?.side === "Back" ? "bg-[--blue]" : "bg-[--red]"}`}>
+                                <td className="ps-[5px] flex items-center min-h-[45px] py-[5px]">
                                     <img alt="" src={`${URL}/${redisGames?.find((r: any) => r.id == item?.sportId).image}`} className="w-[20px] h-[20px] inline-block me-[5px]" />
                                     <p className="flex flex-col">
-                                        <span>{item?.gameName}</span>
-                                        <span className="text-[11px] italic mt-[-2px]">
+                                        <span className="leading-[16px]">{item?.marketName === "Tied Match" ? "Tied Match" : item?.marketName === "tied_match" ? "Tied_match" : item?.gameName.replace(/\d+$/, "")}</span>
+                                        <span className="text-[11px] italic mt-[-1px]">
                                             {item?.marketId?.includes("-") ? formatSelectionName(item?.selectionName) : item?.selectionName}
                                         </span>
                                     </p>
                                 </td>
-                                <td>{item?.odd}</td>
-                                <td className=""><FaIndianRupeeSign className="inline-block mt-[-1px] me-[2px]" />{item?.amount}</td>
+                                <td className="min-w-[60px]">{item?.marketName === "fancy" ? item?.selectionName.match(/\d+(?!.*\d)/)?.[0] || item?.odd : item?.odd}</td>
+                                <td className="min-w-[60px]"><FaIndianRupeeSign className="inline-block mt-[-1px] me-[2px]" />{item?.amount}</td>
                             </tr>
                         ))}
                     </table>

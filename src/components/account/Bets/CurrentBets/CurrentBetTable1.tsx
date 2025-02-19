@@ -20,9 +20,9 @@ const CurrentBetTable1 = ({ colors, data }: any) => {
               <td className="min-w-[250px]">Market Name</td>
               <td>Market Name</td>
               {/* <td>Runner Name</td> */}
-              <td>Side</td>
+              <td className="min-w-[50px]">Side</td>
               <td>Bet Amount<SortingArrows /></td>
-              <td>Odd</td>
+              <td className="min-w-[80px]">Odd</td>
               <td>Created Date</td>
             </tr>
           </thead>

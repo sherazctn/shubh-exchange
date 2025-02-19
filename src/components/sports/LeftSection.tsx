@@ -1,4 +1,5 @@
 import aos from "aos";
+import Lottie from "lottie-react";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaExclamationCircle } from "react-icons/fa";
+
+import spadesAnimation from "../../assets/animations/spades.json";
+import tennisAnimation from "../../assets/animations/tennis.json";
+import cricketAnimation from "../../assets/animations/cricket.json";
+import footballAnimation from "../../assets/animations/football-player.json";
 
 import Loader from "../Loader";
 import Footer from "../footer/page";
@@ -64,29 +70,41 @@ const LeftSection = () => {
     >
       {/* tabs */}
       <div className="h-[67px] flex gap-[8px] sm:gap-[15px] overflow-auto">
-        {!loader ?
-          data?.length > 0 ? data?.map((item: any) => (
+        {!loader ? (
+          <>
+            {data?.map((item: any) => (
+              <div
+                className={`sports-left-top-tabs shadow-sm ${tab == "4" && item?.name === "cricket"
+                  ? "bg-[#f3f3f3] border"
+                  : tab == "1" && item?.name === "soccer" ? "bg-[#f3f3f3] border"
+                    : tab == "2" && item?.name === "tennis" ? "bg-[#f3f3f3] border"
+                      : " bg-white"
+                  }`}
+                style={{ borderColor: webColor }}
+                onClick={() => {
+                  fn_controlTabs(item?.name === "cricket" ? "4" : item?.name === "soccer" ? "1" : item?.name === "tennis" ? "2" : "");
+                  setContentLoader(true);
+                }}
+              >
+                {item?.name === "cricket" && <Lottie animationData={cricketAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
+                {item?.name === "soccer" && <Lottie animationData={footballAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
+                {item?.name === "tennis" && <Lottie animationData={tennisAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
+                {/* <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" /> */}
+                <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
+              </div>
+            ))}
             <div
-              className={`sports-left-top-tabs shadow-sm ${tab == "4" && item?.name === "cricket"
-                ? "bg-[#f3f3f3] border"
-                : tab == "1" && item?.name === "soccer" ? "bg-[#f3f3f3] border"
-                  : tab == "2" && item?.name === "tennis" ? "bg-[#f3f3f3] border"
-                    : " bg-white"
-                }`}
+              className={`sports-left-top-tabs shadow-sm bg-white`}
               style={{ borderColor: webColor }}
-              onClick={() => {
-                fn_controlTabs(item?.name === "cricket" ? "4" : item?.name === "soccer" ? "1" : item?.name === "tennis" ? "2" : "");
-                setContentLoader(true);
-              }}
+              onClick={() => toast.error("Coming Soon")}
             >
-              <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" />
-              <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
+              <Lottie animationData={spadesAnimation} loop={true} className="h-[27px] sm:h-[30px]" />
+              <p className="font-[500] text-[14px] capitalize">Casino</p>
             </div>
-          )) : (
-            <p>No Game is Playing</p>
-          ) : (
-            <div className="p-[18px]"><Loader color={webColor} size={25} /></div>
-          )}
+          </>
+        ) : (
+          <div className="p-[18px]"><Loader color={webColor} size={25} /></div>
+        )}
       </div>
       {!contentLoader ? (
         <AllTabs webColor={webColor} competitions={marketData} tab={tab} />

@@ -2,15 +2,15 @@ import { Modal } from 'antd';
 import toast from "react-hot-toast";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { format, parseISO, isBefore, isToday, isTomorrow, setDate } from 'date-fns';
+import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
 import RightSlider from "../sports/RightSlider";
 import { updateBets, updateBettingSlip, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features";
 
+import { TbLadder } from "react-icons/tb";
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
-import { HiMiniInformationCircle } from "react-icons/hi2";
 import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
@@ -24,6 +24,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
 
   const webColor = useSelector((state: any) => state.websiteColor);
   const pendingBets = useSelector((state: any) => state.pendingBets);
+  const [matchOddMrId, setMatchOddMrId] = useState("");
 
   const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
 
@@ -61,12 +62,13 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   }, [user]);
 
   useEffect(() => {
+    setMatchOddMrId(markets?.find((m: any) => m?.marketName === "Match Odds")?.marketId);
     if (sportId === "4") {
       fn_getCricketScore();
       setInterval(() => {
         fn_getCricketScore();
       }, 1500);
-    }
+    };
   }, []);
 
   return (
@@ -148,7 +150,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           })}
           {tabs === "Main" && (
             <>
-              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} />
+              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} matchOddMrId={matchOddMrId} />
               <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
               <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
             </>
@@ -618,7 +620,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
   }
 };
 
-const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
+const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -682,7 +684,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     }, 500);
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -691,6 +693,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     dispatch(updateSlipTab('slip'));
+    console.log("matchOddMrId ", matchOddMrId)
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
     const obj = {
@@ -709,6 +712,8 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
       exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
       side: side,
       sportId: "4",
+      selectionName: selectionName,
+      matchOddMrId: matchOddMrId
     };
     console.log("obj ==> ", obj);
     const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker");
@@ -718,7 +723,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
     dispatch(updateBettingSlip("open"));
-  }
+  };
 
   const handleStart = (e: any, selectionId: any, num: any) => {
     e.preventDefault();
@@ -756,7 +761,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     }
   }, [longPress]);
 
-  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number) => {
+  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
@@ -777,7 +782,9 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
       odd: odd,
       profit,
       side: side,
-      sportId: "4"
+      sportId: "4",
+      selectionName: selectionName,
+      matchOddMrId: matchOddMrId
     }
     const response = await placeBetsApi([obj]);
     if (response?.status) {
@@ -877,7 +884,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
 
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back")}
+                        onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           1
@@ -899,7 +906,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -908,7 +915,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -917,7 +924,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -926,7 +933,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -935,7 +942,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -945,7 +952,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                       </div>
                       <div
                         className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay")}
+                        onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
                           2
@@ -967,7 +974,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -976,7 +983,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -985,7 +992,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -994,7 +1001,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -1003,7 +1010,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -2219,6 +2226,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
+                      {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2284,6 +2292,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
+                      {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2318,6 +2327,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
+                      {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                       <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
@@ -2352,6 +2362,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
+                      {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
                       <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[12px] flex justify-center items-center">
@@ -3339,6 +3350,29 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
     }
   };
 
+  const fn_returnAmount = (marketId: any, srNo: any) => {
+    const cricketCasinoPendingBets = pendingBets?.filter((bet: any) => bet?.marketId?.split("-")?.[0] == marketId);
+    if (cricketCasinoPendingBets?.length === 0) return "null";
+    const findBet = cricketCasinoPendingBets?.find((bet: any) => bet?.marketId === `${marketId}-${srNo}`);
+    if (!findBet) {
+      const amount = cricketCasinoPendingBets?.reduce((acc: number, bet: any) => {
+        return acc + (bet?.exposure || 0);
+      }, 0);
+      return amount;
+    } else {
+      const similarBets = cricketCasinoPendingBets?.filter((bet: any) => bet?.marketId == `${marketId}-${srNo}`);
+      const profitAmount = similarBets?.reduce((acc: number, bet: any) => {
+        return acc + bet?.profit;
+      }, 0);
+      const differentBets = cricketCasinoPendingBets?.filter((bet: any) => bet?.marketId != `${marketId}-${srNo}`);
+      const lossingAmount = differentBets?.reduce((acc: number, bet: any) => {
+        return acc + bet?.exposure;
+      }, 0);
+      const amount = profitAmount + lossingAmount;
+      return amount;
+    }
+  }
+
   if (Object.keys(data)?.length > 0) {
     return (
       <>
@@ -3385,11 +3419,12 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{i?.nat}</p>
                               <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
-                                <p>
-                                  {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
+                                <p className={`${fn_returnAmount(item?.mid, i?.sid) > 0 ? "text-green-600" : fn_returnAmount(item?.mid, i?.sid) < 0 ? "text-red-600" : "text-gray-600"}`}>
+                                  {fn_returnAmount(item?.mid, i?.sid) == "null" ? "" : fn_returnAmount(item?.mid, i?.sid)}
+                                  {/* {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
                                   {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
                                   {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
-                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
+                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)} */}
                                 </p>
                               </div>
                             </div>
