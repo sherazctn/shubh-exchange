@@ -6,12 +6,13 @@ import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
 import RightSlider from "../sports/RightSlider";
-import { updateBets, updateBettingSlip, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features";
+import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features";
 
 import { TbLadder } from "react-icons/tb";
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
-import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
+import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getOpenBetsByUserApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
+import { voiceLanguage } from '../../assets/data';
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
 
@@ -257,7 +258,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       side: side,
       sportId: sportId,
       selectionName: selectionName
-    }
+    };
     const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId === market.marketId);
     const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
     console.log("updatedCalculation ==> ", updatedCalculation)
@@ -308,14 +309,14 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
-    const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
+    const profit = parseFloat((amount * (odd - 1)).toFixed(2));
     const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
     setAmount("");
     const obj = {
       afterLoss: wallet - amount,
       afterWin: wallet + profit,
       amount: amount,
+      stake: amount,
       eventId: eventId,
       gameId: selectionId,
       gameName: gameName,
@@ -323,19 +324,34 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       marketId: market.marketId,
       marketName: market.marketName,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) - 1) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) - 1) * amount).toFixed(2)),
       side: side,
       sportId: sportId,
       selectionName: selectionName
-    }
+    };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
     }
-  }
+  };
 
   if (market.odds) {
     return (
@@ -767,28 +783,43 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: 
     if (!authentication) return toast.error("Login Yourself");
     const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
     const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
     setAmount("");
     const obj = {
       afterLoss: wallet - amount,
       afterWin: wallet + profit,
       amount: amount,
+      stake: amount,
       eventId: eventId,
       gameId: selectionId,
       gameName: gameName,
       loss,
       marketId: selectionId,
       marketName: "bookmaker",
-      odd: odd,
-      profit,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: selectionName,
       matchOddMrId: matchOddMrId
-    }
+    };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
@@ -1206,27 +1237,42 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
     if (!authentication) return toast.error("Login Yourself");
     const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
     const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
     setAmount("");
     const obj = {
       afterLoss: wallet - amount,
       afterWin: wallet + profit,
       amount: amount,
+      stake: amount,
       eventId: eventId,
       gameId: selectionId,
       gameName: eventName,
       loss,
       marketId: selectionId,
-      marketName: "bookmaker",
-      odd: odd,
-      profit,
+      marketName: data?.[0]?.mname.toLowerCase() === "bookmaker" ? "bookmaker 2" : data?.[0]?.mname,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: selectionName
-    }
+    };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
@@ -1605,7 +1651,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
       sportId: "4",
       selectionName: selectionName,
       stake: 10
-    }
+    };
     console.log("obj ==> ", obj);
     const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" || (bet?.marketId?.includes("-") && bet?.marketName != "fancy"));
     const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
@@ -1652,7 +1698,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     }
   }, [longPress]);
 
-  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number) => {
+  const fn_immediateBet = async (e: any, odd: any, gameName: any, selectionId: any, side: any, amount: number, selectionName: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
@@ -1671,13 +1717,30 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
       marketId: selectionId,
       marketName: data?.[0]?.mname.toLowerCase() === "bookmaker" ? "bookmaker 2" : data?.[0]?.mname,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
       side: side,
-      sportId: "4"
-    }
+      sportId: "4",
+      selectionName: selectionName,
+      stake: amount
+    };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
@@ -1795,7 +1858,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -1804,7 +1867,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -1813,7 +1876,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -1822,7 +1885,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -1831,7 +1894,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000
+                                e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -1863,7 +1926,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[0] || 1000, item?.nat
                               )}
                             >
                               {oddsPrice?.[0] || 1000}
@@ -1872,7 +1935,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[1] || 2000, item?.nat
                               )}
                             >
                               {oddsPrice?.[1] || 2000}
@@ -1881,7 +1944,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[2] || 3000, item?.nat
                               )}
                             >
                               {oddsPrice?.[2] || 3000}
@@ -1890,7 +1953,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[3] || 4000, item?.nat
                               )}
                             >
                               {oddsPrice?.[3] || 4000}
@@ -1899,7 +1962,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
                               style={{ backgroundColor: webColor }}
                               className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]"
                               onClick={(e) => fn_immediateBet(
-                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000
+                                e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", oddsPrice?.[4] || 5000, item?.nat
                               )}
                             >
                               {oddsPrice?.[4] || 5000}
@@ -2153,29 +2216,44 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
+    setAmount("");
     const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
     const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
-    setAmount("");
     const obj = {
-      afterLoss: wallet - 10,
+      afterLoss: wallet - amount,
       afterWin: wallet + profit,
       amount: amount,
+      stake: amount,
       eventId: eventId,
       gameId: `${item?.mid}-${item?.sid}`,
       gameName: eventName,
       loss,
       marketId: `${item?.mid}-${item?.sid}`,
       marketName: "fancy",
-      odd: odd,
-      profit,
+      odd: parseFloat(odd),
+      profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: selectionName
     };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
@@ -2253,11 +2331,11 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                         </p>
                         {showAmounts === `${item?.mid}-${item?.sid}-1` && (
                           <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[0] || 1000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[1] || 2000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[2] || 3000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[3] || 4000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.l1, "Lay", item?.nat)}>{oddsPrice?.[4] || 5000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[0] || 1000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[1] || 2000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[2] || 3000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[3] || 4000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[4] || 5000}</button>
                           </div>
                         )}
                       </div>
@@ -2276,11 +2354,11 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                         </p>
                         {showAmounts === `${item?.mid}-${item?.sid}-2` && (
                           <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[0] || 1000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[1] || 2000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[2] || 3000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[3] || 4000}</button>
-                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.b1, "Back", item?.nat)}>{oddsPrice?.[4] || 5000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[0] || 1000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[1] || 2000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[2] || 3000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[3] || 4000}</button>
+                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[4] || 5000}</button>
                           </div>
                         )}
                       </div>
@@ -2365,7 +2443,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                     </div>
                     <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] ml-[-50px] absolute text-white font-[500] text-[12px] flex justify-center items-center">
+                      <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[12px] flex justify-center items-center">
                         Starting Soon.
                       </div>
                       <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
@@ -2469,7 +2547,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         stake: 10,
         eventId: eventId,
         gameId: runnerId,
-        gameName: eventName,
+        gameName: runnerName,
         loss,
         marketId: runnerId,
         marketName: marketName,
@@ -2516,7 +2594,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
       const updatedBets = [obj];
       dispatch(updateBets(updatedBets));
       dispatch(updateBettingSlip("open"));
-    }
+    };
   };
 
   const handleStart = (e: any, item: any, num: any) => {
@@ -2581,33 +2659,92 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
-    const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
-    const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
     setAmount("");
-    const obj = {
-      afterLoss: wallet - 10,
-      afterWin: wallet + profit,
-      amount: amount,
-      eventId: eventId,
-      gameId: `${item?.mid}-${item?.sid}`,
-      gameName: eventName,
-      loss,
-      marketId: `${item?.mid}-${item?.sid}`,
-      marketName: marketName,
-      odd: odd,
-      profit,
-      side: side,
-      sportId: "4",
-      selectionName: runnerName
-    };
-    const response = await placeBetsApi([obj]);
-    if (response?.status) {
-      dispatch(updateWallet(response?.wallet));
-      return toast.success(response?.message);
+    if (marketName === "meter" || marketName === "khado") {
+      const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
+      const loss = amount;
+      const obj = {
+        afterLoss: wallet - amount,
+        afterWin: wallet + profit,
+        amount: amount,
+        stake: amount,
+        eventId: eventId,
+        gameId: `${item?.mid}-${item?.sid}`,
+        gameName: eventName,
+        loss,
+        marketId: `${item?.mid}-${item?.sid}`,
+        marketName: marketName,
+        odd: parseFloat(odd),
+        profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
+        exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
+        side: side,
+        sportId: "4",
+        selectionName: runnerName
+      };
+      const response = await placeBetsApi([obj]);
+      if (response?.status) {
+        const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+        const lan = voiceLanguage[selectedLanguage];
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = lan.line || 'Bet has been placed';
+        msg.lang = lan.name || 'en';
+        window.speechSynthesis.speak(msg);
+        dispatch(updateBets([]));
+        dispatch(updateSlipTab("open"));
+        dispatch(updateWallet(response?.wallet));
+        dispatch(updateRecentExp({}));
+        const res = await getOpenBetsByUserApi(null);
+        if (res?.status) {
+          dispatch(updatePendingBets(res?.data));
+          console.log(res?.data);
+        }
+        return toast.success(response?.message);
+      } else {
+        return toast.error(response?.message);
+      }
     } else {
-      return toast.error(response?.message);
-    }
+      const profit = parseFloat((amount * (odd - 1)).toFixed(2));
+      const loss = amount;
+      const obj = {
+        afterLoss: wallet - amount,
+        afterWin: wallet + profit,
+        amount: amount,
+        stake: amount,
+        eventId: eventId,
+        gameId: `${item?.mid}-${item?.sid}`,
+        gameName: eventName,
+        loss,
+        marketId: `${item?.mid}-${item?.sid}`,
+        marketName: marketName,
+        odd: parseFloat(odd),
+        profit: side === "Back" ? Number(((parseFloat(odd) - 1) * amount).toFixed(2)) : amount,
+        exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) - 1) * amount).toFixed(2)),
+        side: side,
+        sportId: "4",
+        selectionName: runnerName
+      };
+      const response = await placeBetsApi([obj]);
+      if (response?.status) {
+        const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+        const lan = voiceLanguage[selectedLanguage];
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = lan.line || 'Bet has been placed';
+        msg.lang = lan.name || 'en';
+        window.speechSynthesis.speak(msg);
+        dispatch(updateBets([]));
+        dispatch(updateSlipTab("open"));
+        dispatch(updateWallet(response?.wallet));
+        dispatch(updateRecentExp({}));
+        const res = await getOpenBetsByUserApi(null);
+        if (res?.status) {
+          dispatch(updatePendingBets(res?.data));
+          console.log(res?.data);
+        }
+        return toast.success(response?.message);
+      } else {
+        return toast.error(response?.message);
+      }
+    };
   }
 
   const fn_controlMarketView = (marketName: string) => {
@@ -3311,29 +3448,44 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
     e.preventDefault();
     e.stopPropagation();
     if (!authentication) return toast.error("Login Yourself");
+    setAmount("");
     const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
     const loss = amount;
-    if (wallet < amount) return toast.error("Not Enough Balance");
-    setAmount("");
     const obj = {
-      afterLoss: wallet - 10,
+      afterLoss: wallet - amount,
       afterWin: wallet + profit,
       amount: amount,
+      stake: amount,
       eventId: eventId,
       gameId: `${item?.mid}-${item?.sid}`,
       gameName: eventName,
       loss,
       marketId: `${item?.mid}-${item?.sid}`,
-      marketName: marketName,
+      marketName: `${marketName} (CrickCasino)`,
       odd: odd,
-      profit,
+      profit: side === "Back" ? Number(((parseFloat(odd) - 1) * amount).toFixed(2)) : amount,
+      exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) - 1) * amount).toFixed(2)),
       side: side,
       sportId: "4",
       selectionName: runnerName
     };
     const response = await placeBetsApi([obj]);
     if (response?.status) {
+      const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
+      const lan = voiceLanguage[selectedLanguage];
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = lan.line || 'Bet has been placed';
+      msg.lang = lan.name || 'en';
+      window.speechSynthesis.speak(msg);
+      dispatch(updateBets([]));
+      dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
+      dispatch(updateRecentExp({}));
+      const res = await getOpenBetsByUserApi(null);
+      if (res?.status) {
+        dispatch(updatePendingBets(res?.data));
+        console.log(res?.data);
+      }
       return toast.success(response?.message);
     } else {
       return toast.error(response?.message);
