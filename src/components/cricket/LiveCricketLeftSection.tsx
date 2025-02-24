@@ -3584,10 +3584,6 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
                               <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                                 <p className={`${fn_returnAmount(item?.mid, i?.sid) > 0 ? "text-green-600" : fn_returnAmount(item?.mid, i?.sid) < 0 ? "text-red-600" : "text-gray-600"}`}>
                                   {fn_returnAmount(item?.mid, i?.sid) == "null" ? "" : fn_returnAmount(item?.mid, i?.sid)}
-                                  {/* {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)}
-                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Back" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
-                                  {fn_totalCal(item?.mid)?.profitableRunner == `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-red-600">{fn_totalCal(item?.mid)?.totalExp}</span>)}
-                                  {fn_totalCal(item?.mid)?.profitableRunner != `${item?.mid}-${i?.sid}` && fn_totalCal(item?.mid)?.side === "Lay" && (<span className="text-green-600">{fn_totalCal(item?.mid)?.totalProfit}</span>)} */}
                                 </p>
                               </div>
                             </div>
@@ -3606,7 +3602,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
                                     {i?.odds?.[0]?.size}
                                   </p>
                                   {authentication && showAmounts === `${item?.mid}-${i?.sid}` && (
-                                    <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                                    <div className="absolute top-[43px] sm:top-[47px] bg-white border right-0 shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, i, i?.odds?.[0]?.odds, "Back", singleExtraMarket, i?.nat)}>{oddsPrice?.[0] || 1000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, i, i?.odds?.[0]?.odds, "Back", singleExtraMarket, i?.nat)}>{oddsPrice?.[1] || 2000}</button>
                                       <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, i, i?.odds?.[0]?.odds, "Back", singleExtraMarket, i?.nat)}>{oddsPrice?.[2] || 3000}</button>
