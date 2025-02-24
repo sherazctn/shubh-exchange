@@ -391,7 +391,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                   <div key={index} className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <BsGraphUp />
-                      <p className="text-[13px] sm:text-[15px] font-[500]">{item?.runnerName}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] text-nowrap">{item?.runnerName}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           {totalCal?.profitableRunner == item?.selectionId && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
@@ -879,7 +879,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: 
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
-                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize text-nowrap">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
@@ -1129,6 +1129,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
   const authentication = useSelector((state: any) => state.authentication);
 
   const [totalCal, setTotalCal] = useState<any>(null);
+  const [totalCal2, setTotalCal2] = useState<any>(null);
   const [viewBookmaker, setViewBookmaker] = useState(true);
   const recentExp = useSelector((state: any) => state.recentExp);
 
@@ -1137,8 +1138,12 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
       const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
       const result: any = fn_calculatingBets(specificMarketBets);
       if (result) {
-        console.log("result ", result);
         setTotalCal(result);
+      };
+      const specificMarketBets2 = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker 2" && bet?.marketId?.includes("-"));
+      const result2: any = fn_calculatingBets(specificMarketBets2);
+      if (result2) {
+        setTotalCal2(result2);
       }
     }
   }, [pendingBets]);
@@ -1332,13 +1337,19 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
                 return (
                   <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
-                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
+                      <p className="text-[13px] sm:text-[15px] font-[500] capitalize text-nowrap">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
+                          {}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                          
+                          {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal2?.side === "Back" && (<span className="text-green-600">{totalCal2?.totalProfit}</span>)}
+                          {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal2?.side === "Back" && (<span className="text-red-600">{totalCal2?.totalExp}</span>)}
+                          {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal2?.side === "Lay" && (<span className="text-red-600">{totalCal2?.totalExp}</span>)}
+                          {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal2?.side === "Lay" && (<span className="text-green-600">{totalCal2?.totalProfit}</span>)}
                         </p>
                         <p>
                           {recentExp?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && recentExp?.profitableRunner?.split("-")?.[1] == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
@@ -3022,7 +3033,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                           <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize cursor-pointer">{item?.nat}</p>
-                              <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                              <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                                 <p>
                                   {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
                                   {totalCal?.profitableRunner?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}

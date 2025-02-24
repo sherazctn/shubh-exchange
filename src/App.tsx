@@ -35,7 +35,6 @@ import FDProfitLoss from "./pages/account/Bets/FDProftLoss/page";
 import FloatingHomePage from "./components/FloatingHomePage/page";
 import DepositWithdraw from "./pages/account/DepositWithdraw/page";
 import PaymentInformation from "./pages/account/paymentInformation/page";
-import { useEffect } from "react";
 
 function App() {
   const location = useLocation();
