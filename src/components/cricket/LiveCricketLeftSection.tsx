@@ -63,7 +63,6 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   }, [user]);
 
   useEffect(() => {
-    setMatchOddMrId(markets?.find((m: any) => m?.marketName === "Match Odds")?.marketId);
     if (sportId === "4") {
       fn_getCricketScore();
       setInterval(() => {
@@ -71,6 +70,10 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
       }, 1500);
     };
   }, []);
+
+  useEffect(() => {
+    setMatchOddMrId(markets?.find((m: any) => m?.marketName === "Match Odds")?.marketId);
+  }, [markets]);
 
   return (
     <div
