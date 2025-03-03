@@ -6,7 +6,7 @@ import { format, parseISO, isBefore, isToday, isTomorrow } from 'date-fns';
 
 import Footer from "../footer/page";
 import RightSlider from "../sports/RightSlider";
-import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateWallet } from "../../features/features";
+import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateTrigger, updateWallet } from "../../features/features";
 
 import { TbLadder } from "react-icons/tb";
 import { BsGraphUp } from "react-icons/bs";
@@ -26,6 +26,9 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   const webColor = useSelector((state: any) => state.websiteColor);
   const pendingBets = useSelector((state: any) => state.pendingBets);
   const [matchOddMrId, setMatchOddMrId] = useState("");
+
+  const oneTouchEnable = useSelector((state: any) => state.oneTouchEnable);
+  const trigger = useSelector((state: any) => state.trigger);
 
   const eventDate: any = selectedEvent?.date ? parseISO(selectedEvent.date) : null;
 
@@ -130,7 +133,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           {markets?.map((item: any) => {
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
             if (item?.marketName === "Tied Match") return;
-            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} />
+            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
             if (tabs === "Main") {
               const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
               if (item?.marketName !== "Match Odds" && item?.marketName !== "Tied Match") return;
@@ -154,23 +157,23 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           })}
           {tabs === "Main" && (
             <>
-              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} matchOddMrId={matchOddMrId} />
-              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
-              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
+              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} matchOddMrId={matchOddMrId} oneTouchEnable={oneTouchEnable} trigger={trigger} />
+              <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
+              <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
             </>
           )}
           {(tabs === "Main" || tabs === "fancy") && (
             <>
-              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
+              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
             </>
           )}
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
+            <ExtraMarkets oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
           )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px] mt-[10px]">
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
-            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} />
+            <ExtraMarkets2 oddsPrice={oddsPrice} data={extraMarkets} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
           )}
         </div>
         {/* {tabs === "all" && (
@@ -185,7 +188,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId, pendingBets }: any) => {
+const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId, pendingBets, oneTouchEnable, trigger }: any) => {
   const timerRef = useRef<any>();
   const dispatch = useDispatch();
   const [showAmounts, setAmount] = useState("");
@@ -194,6 +197,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
   const wallet = useSelector((state: any) => state.wallet);
   const expCalculation = useSelector((state: any) => state.expCalculation);
   const authentication = useSelector((state: any) => state.authentication);
+
 
   const [totalCal, setTotalCal] = useState<any>(null);
 
@@ -241,6 +245,13 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     if (!odd) return;
     if (odd >= 4) return toast.error("Odds above 4 not accepted");
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1)).toFixed(2));
     const loss = 10;
@@ -639,7 +650,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
   }
 };
 
-const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: any) => {
+const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, oneTouchEnable, trigger }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -711,6 +722,13 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: 
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     console.log("matchOddMrId ", matchOddMrId)
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
@@ -1120,7 +1138,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId }: 
   }
 };
 
-const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: any) => {
+const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneTouchEnable, trigger }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -1172,6 +1190,13 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
@@ -1343,12 +1368,12 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize text-nowrap">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                         <p>
-                          {}
+                          { }
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
                           {totalCal?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                          
+
                           {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal2?.side === "Back" && (<span className="text-green-600">{totalCal2?.totalProfit}</span>)}
                           {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] != item?.sid && totalCal2?.side === "Back" && (<span className="text-red-600">{totalCal2?.totalExp}</span>)}
                           {totalCal2?.recentObjDetails?.marketId?.split("-")?.[0] == item?.mid && totalCal2?.profitableRunner?.split("-")?.[1] == item?.sid && totalCal2?.side === "Lay" && (<span className="text-red-600">{totalCal2?.totalExp}</span>)}
@@ -1598,7 +1623,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets }: an
   }
 };
 
-const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
+const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable, trigger }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -1645,6 +1670,13 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
@@ -2052,7 +2084,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets }: any) => {
   }
 };
 
-const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets }: any) => {
+const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger }: any) => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const timerRef = useRef<any>(null);
@@ -2132,7 +2164,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     }, 500);
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string, item: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -2140,6 +2172,13 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, selectionName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
@@ -2333,7 +2372,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       {/* lay odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                        onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`)}
+                        onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`, item)}
                         onMouseDown={(e) => handleStart(e, item, '1')}
                         onTouchStart={(e) => handleStart(e, item, '1')}
                       >
@@ -2356,7 +2395,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       {/* back odd */}
                       <div
                         className="h-[43px] sm:h-[47px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                        onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.b1}`)}
+                        onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.b1}`, item)}
                         onMouseDown={(e) => handleStart(e, item, '2')}
                         onTouchStart={(e) => handleStart(e, item, '2')}
                       >
@@ -2498,7 +2537,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
   }
 };
 
-const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets }: any) => {
+const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets, oneTouchEnable, trigger }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
@@ -2542,7 +2581,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
     return result;
   };
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string, selectionName: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string, selectionName: string, item: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -2550,6 +2589,13 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, marketName, runnerName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     if (marketName === "meter" || marketName === "khado") {
       const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
@@ -2874,7 +2920,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                   {singleExtraMarket !== "cricketcasino" && singleExtraMarket !== "khado" && (
                                     <div
                                       className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                      onClick={(e) => handleBetClicked(e, item?.l1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`)}
+                                      onClick={(e) => handleBetClicked(e, item?.l1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`, item)}
                                       onMouseDown={(e) => handleStart(e, item, '1')}
                                       onTouchStart={(e) => handleStart(e, item, '1')}
                                     >
@@ -2897,7 +2943,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                   )}
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`)}
+                                    onClick={(e) => handleBetClicked(e, item?.b1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`, item)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
                                   >
@@ -2922,7 +2968,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 <>
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
                                   >
@@ -2945,7 +2991,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                   {singleExtraMarket !== "cricketcasino" && (
                                     <div
                                       className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                      onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
+                                      onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                       onMouseDown={(e) => handleStart(e, item, '1')}
                                       onTouchStart={(e) => handleStart(e, item, '1')}
                                     >
@@ -3054,7 +3100,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                             <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.b3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '1')}
                                 onTouchStart={(e) => handleStart(e, item, '1')}
                               >
@@ -3076,7 +3122,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.b2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '2')}
                                 onTouchStart={(e) => handleStart(e, item, '2')}
                               >
@@ -3099,7 +3145,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
 
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '3')}
                                 onTouchStart={(e) => handleStart(e, item, '3')}
                               >
@@ -3121,7 +3167,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '4')}
                                 onTouchStart={(e) => handleStart(e, item, '4')}
                               >
@@ -3144,7 +3190,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
 
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.l2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '5')}
                                 onTouchStart={(e) => handleStart(e, item, '5')}
                               >
@@ -3166,7 +3212,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               </div>
                               <div
                                 className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                onClick={(e) => handleBetClicked(e, item?.l3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat)}
+                                onClick={(e) => handleBetClicked(e, item?.l3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '6')}
                                 onTouchStart={(e) => handleStart(e, item, '6')}
                               >
@@ -3260,7 +3306,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat)}
+                                    onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                     onMouseDown={(e) => handleStart(e, item, i?.sid)}
                                     onTouchStart={(e) => handleStart(e, item, i?.sid)}
                                   >
@@ -3363,7 +3409,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
   }
 };
 
-const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets }: any) => {
+const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingBets, oneTouchEnable, trigger }: any) => {
   const dispatch = useDispatch();
   const timerRef = useRef<any>(null);
   const [showAmounts, setAmount] = useState("");
@@ -3375,7 +3421,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
   const [hideMarkets, setHideMarkets] = useState<string[]>([]);
   const recentExp = useSelector((state: any) => state.recentExp);
 
-  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string) => {
+  const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, marketName: any, side: string, item: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (longPress) return;
@@ -3383,6 +3429,13 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
     if (!authentication) return toast.error("Login Yourself");
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
+    if (oneTouchEnable) {
+      dispatch(updateBettingSlip("open"));
+      dispatch(updateSlipTab("open"));
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, marketName, runnerName);
+      return;
+    };
     dispatch(updateSlipTab('slip'));
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
@@ -3594,7 +3647,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
                               <div className="flex flex-nowrap sm:flex-wrap sm:gap-[11px] justify-center items-center relative">
                                 <div
                                   className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                  onClick={(e) => handleBetClicked(e, i?.odds?.[0]?.odds, i?.nat, `${item?.mid}-${i?.sid}`, singleExtraMarket, "Back",)}
+                                  onClick={(e) => handleBetClicked(e, i?.odds?.[0]?.odds, i?.nat, `${item?.mid}-${i?.sid}`, singleExtraMarket, "Back", i)}
                                   onMouseDown={(e) => handleStart(e, i)}
                                   onTouchStart={(e) => handleStart(e, i)}
                                 >

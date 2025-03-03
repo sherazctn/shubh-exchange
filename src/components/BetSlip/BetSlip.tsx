@@ -27,6 +27,7 @@ const BetSlip = () => {
 
     const webColor = useSelector((state: any) => state.websiteColor);
     const [openBets, setOpenBets] = useState([]);
+    const trigger = useSelector((state: any) => state.trigger);
 
     useEffect(() => {
         fn_getOpenBets();
@@ -37,7 +38,7 @@ const BetSlip = () => {
         if (inputRef.current && window.innerWidth > 400) {
             // inputRef.current.focus();
         }
-    }, [bettingSlip, slipTab]);
+    }, [bettingSlip, slipTab, trigger]);
 
     const fn_getOpenBets = async () => {
         const response = await getOpenBetsByUserApi(token);

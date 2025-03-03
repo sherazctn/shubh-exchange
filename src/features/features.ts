@@ -32,7 +32,9 @@ const initialState = {
   user: {},
   expCalculation: [],
   pendingBets: [],
-  recentExp: {}
+  recentExp: {},
+  oneTouchEnable: localStorage.getItem('oneTouch') ? true : false,
+  trigger: 0
 };
 
 export const featuresSlice = createSlice({
@@ -134,6 +136,12 @@ export const featuresSlice = createSlice({
     },
     updateRecentExp: (state, action) => {
       state.recentExp = action.payload;
+    },
+    updateOneTouchEnable: (state, action) => {
+      state.oneTouchEnable = action.payload
+    },
+    updateTrigger : (state, action) => {
+      state.trigger = action.payload;
     }
   },
 });
@@ -170,7 +178,9 @@ export const {
   updateUser,
   updateExpCalculation,
   updatePendingBets,
-  updateRecentExp
+  updateRecentExp,
+  updateOneTouchEnable,
+  updateTrigger
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOneTouchEnable, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -18,7 +18,7 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { GiNetworkBars, GiNotebook } from "react-icons/gi";
 import { LuLayoutDashboard, LuWallet2 } from "react-icons/lu";
 import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
-import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
 import bangaliFlag from "../../assets/bangladesh_flag.png";
@@ -27,15 +27,18 @@ import bangaliFlag2 from "../../assets/bangladesh_flag_2.png";
 const Navbar = () => {
   const dispatch = useDispatch();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
+  const oneTouchEnable = useSelector((state: any) => state.oneTouchEnable);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
   const pageNav = useSelector((state: any) => state.navPage);
   const authentication = useSelector((state: any) => state.authentication);
   const [loginModal, setLoginModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
+  const [oneTouchModal, setOneTouchModal] = useState(false);
   const [accountDropdown, setAccountDropdown] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [oneTouchNumber, setOneTouchNumber] = useState<any>(null);
 
   const [loader, setLoader] = useState(false);
 
@@ -120,7 +123,7 @@ const Navbar = () => {
     dispatch(updateBets([]));
     setAccountDropdown(false);
     return toast.success("Logout Successfully");
-  }
+  };
 
   const fn_depositClicked = () => {
     if (!authentication) {
@@ -128,7 +131,18 @@ const Navbar = () => {
     } else {
       window.location.href = "/account/deposit-withdraw";
     }
-  }
+  };
+
+  const fn_oneTouchSubmit = (e: any) => {
+    e.preventDefault();
+    if (!oneTouchNumber || oneTouchNumber == 0) {
+      return toast.error("Enter Amount");
+    };
+    setOneTouchModal(!oneTouchModal);
+    localStorage.setItem("oneTouch", oneTouchNumber);
+    dispatch(updateOneTouchEnable(true));
+    return toast.success("One Touch Bet Activated");
+  };
 
   return (
     <>
@@ -251,6 +265,21 @@ const Navbar = () => {
         {/* web menus */}
         <div className="hidden md:flex gap-[10px]">
           <ul className="menus flex items-center gap-[15px] font-[600] text-[15px] text-[--text-color]">
+            <div
+              className={`${oneTouchEnable ? "opacity-100" : "opacity-50"} bg-[white]  w-[37px] h-[37px] min-h-[37px] min-w-[37px] flex justify-center items-center rounded-full transition-all duration-200 cursor-pointer active:scale-[0.95]`}
+              style={{ color: webColor }}
+              onClick={() => {
+                if (oneTouchEnable) {
+                  localStorage.removeItem("oneTouch");
+                  dispatch(updateOneTouchEnable(false));
+                  return toast.success("One Touch Bet Disabled");
+                } else {
+                  setOneTouchModal(!oneTouchModal)
+                }
+              }}
+            >
+              <MdTouchApp className="text-[20px]" />
+            </div>
             <p style={{ color: webColor }} className="flex items-center justify-center gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
               <PiHandDeposit className="w-[19px] h-[19px]" />
               <span className="me-[5px]">Deposit</span>
@@ -317,6 +346,21 @@ const Navbar = () => {
         </div>
         {/* mobile menu btn */}
         <div className={`flex gap-[6px] sm:gap-[10px] md:hidden ${authentication && "mt-[-18px]"}`}>
+          <div
+            className={`${oneTouchEnable ? "opacity-100" : "opacity-50"} bg-[white]  w-[29px] h-[29px] min-h-[29px] min-w-[29px] flex justify-center items-center rounded-full transition-all duration-200 cursor-pointer active:scale-[0.95]`}
+            style={{ color: webColor }}
+            onClick={() => {
+              if (oneTouchEnable) {
+                localStorage.removeItem("oneTouch");
+                dispatch(updateOneTouchEnable(false));
+                return toast.success("One Touch Bet Disabled");
+              } else {
+                setOneTouchModal(!oneTouchModal)
+              }
+            }}
+          >
+            <MdTouchApp className="text-[16px]" />
+          </div>
           <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
             <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit
           </div>
@@ -556,6 +600,40 @@ const Navbar = () => {
         </form>
       </Modal>
       <SignupModal signupModal={signupModal} setSignupModal={setSignupModal} webName={webName} webColor={webColor} />
+      <Modal
+        title=""
+        centered
+        open={oneTouchModal}
+        onOk={() => setOneTouchModal(false)}
+        onCancel={() => setOneTouchModal(false)}
+        footer={null}
+        style={{ fontFamily: "Roboto" }}
+      >
+        <p className="font-[600] text-[20px] mb-[10px]">Enable One Touch Bet</p>
+        <form onSubmit={fn_oneTouchSubmit} className="flex flex-col gap-[14px]">
+          <div className="flex flex-col gap-[3px]">
+            <label
+              htmlFor="oneTouchNumber"
+              className="font-[500] text-[14px]"
+            >
+              Amount
+            </label>
+            <input
+              className="border h-[35px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+              style={{ outlineColor: webColor }}
+              id="oneTouchNumber"
+              required
+              type="number"
+              min={1}
+              value={oneTouchNumber}
+              onChange={(e) => setOneTouchNumber(e.target.value)}
+            />
+          </div>
+          <button className="text-[--text-color] h-[40px] rounded-[5px] text-[15px] font-[500] mt-[5px] flex justify-center items-center" style={{ backgroundColor: webColor }}>
+            Enable One Touch Bet
+          </button>
+        </form>
+      </Modal>
     </>
   );
 };
