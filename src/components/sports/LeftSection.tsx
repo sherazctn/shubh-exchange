@@ -15,10 +15,11 @@ import footballAnimation from "../../assets/animations/football-player.json";
 
 import Loader from "../Loader";
 import Footer from "../footer/page";
-import { updateBets, updateBettingSlip, updateSelectedEvent } from "../../features/features";
-import URL, { getAvailableGames, getMarketOddsApi, getSingleSportMarketsApi } from "../../api/api";
+import { updateSelectedEvent } from "../../features/features";
+import { getAvailableGames, getMarketOddsApi, getSingleSportMarketsApi } from "../../api/api";
 
 const LeftSection = () => {
+
   const [tab, setTab] = useState("");
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -89,7 +90,6 @@ const LeftSection = () => {
                 {item?.name === "cricket" && <Lottie animationData={cricketAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
                 {item?.name === "soccer" && <Lottie animationData={footballAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
                 {item?.name === "tennis" && <Lottie animationData={tennisAnimation} loop={true} className="h-[27px] sm:h-[30px]" />}
-                {/* <img alt="img" src={`${URL}/${item?.image}`} className="w-[27px] h-[27px] rounded-full object-cover" /> */}
                 <p className="font-[500] text-[14px] capitalize">{item?.name}</p>
               </div>
             ))}
@@ -120,6 +120,14 @@ export default LeftSection;
 
 const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitions: any; tab: any }) => {
   const [competitionsId, setCompetitionsId] = useState<any>([]);
+
+  // Sort competitions based on totalMatched in descending order
+  const sortedCompetitions = competitions.sort((a: any, b: any) => {
+    const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+    const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+    return totalMatchedB - totalMatchedA;
+  });
+
   const fn_updateCompetitionsId = (id: string) => {
     setCompetitionsId((prevIds: any) => {
       if (prevIds.includes(id)) {
@@ -128,10 +136,11 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
         return [...prevIds, id];
       }
     });
-  }
+  };
+  console.log(competitions);
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
-      {competitions?.length > 0 ? competitions?.map((comp: any) => (
+      {sortedCompetitions?.length > 0 ? sortedCompetitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
             onClick={() => fn_updateCompetitionsId(comp?.competitionId)}
@@ -164,9 +173,6 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
 const List = ({ event, webColor, tab, compName }: any) => {
 
   const dispatch = useDispatch();
-  const authentication = useSelector((state: any) => state.authentication);
-  const wallet = useSelector((state: any) => state.wallet);
-  const bets = useSelector((state: any) => state.bets);
   const [odds, setOdds] = useState<any>({});
 
   const fn_getUpdatedOdds = async () => {
@@ -174,45 +180,11 @@ const List = ({ event, webColor, tab, compName }: any) => {
     if (response?.status) {
       setOdds(response?.data)
     }
-    // setInterval(async () => {
-    //   const response = await getMarketOddsApi(event?.market_id);
-    //   if (response?.status) {
-    //     setOdds(response?.data)
-    //   }
-    // }, 60000);
   }
 
   useEffect(() => {
     fn_getUpdatedOdds();
   }, [event]);
-
-  const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!authentication) return toast.error("Login Yourself")
-    if (!odd) return;
-    if (!gameName) return;
-    const profit = parseFloat((10 * (odd - 1)).toFixed(2));
-    const loss = 10;
-    const obj = {
-      afterLoss: wallet - 10,
-      afterWin: wallet + profit,
-      amount: 10,
-      eventId: eventId,
-      gameId: selectionId,
-      gameName: gameName,
-      loss,
-      marketId: marketId,
-      marketName: marketName,
-      odd: odd,
-      profit,
-      side: side,
-      sportId: tab
-    }
-    const updatedBets = [obj, ...bets];
-    dispatch(updateBets(updatedBets));
-    dispatch(updateBettingSlip("open"));
-  }
 
   return (
     <a
@@ -255,16 +227,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
           <>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[0]?.selectionId,
-            //   "Back",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
@@ -275,16 +237,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[0]?.selectionId,
-            //   "Lay",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
@@ -296,16 +248,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
 
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[2]?.ex?.availableToBack[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[2]?.selectionId,
-            //   "Back",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[2]?.ex?.availableToBack[0]?.price}
@@ -316,16 +258,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[2]?.ex?.availableToLay[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[2]?.selectionId,
-            //   "Lay",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[2]?.ex?.availableToLay[0]?.price}
@@ -337,16 +269,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
 
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[1]?.selectionId,
-            //   "Back",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
@@ -357,16 +279,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[1]?.selectionId,
-            //   "Lay",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
@@ -380,16 +292,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
           <>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[0]?.ex?.availableToBack[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[0]?.selectionId,
-            //   "Back",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
@@ -400,16 +302,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[0]?.ex?.availableToLay[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[0]?.selectionId,
-            //   "Lay",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
@@ -442,16 +334,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
 
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[1]?.ex?.availableToBack[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[1]?.selectionId,
-            //   "Back",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
@@ -462,16 +344,6 @@ const List = ({ event, webColor, tab, compName }: any) => {
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
-            // onClick={(e) => handleBetClicked(
-            //   e,
-            //   odds?.runners?.[1]?.ex?.availableToLay[0]?.price,
-            //   event?.matchName,
-            //   odds?.runners?.[1]?.selectionId,
-            //   "Lay",
-            //   event?.match_id,
-            //   event?.market_id,
-            //   event?.marketname
-            // )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}

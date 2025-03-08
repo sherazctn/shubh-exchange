@@ -24,7 +24,7 @@ import Loader from "../Loader";
 import Footer from "../footer/page";
 import allSport from "../../assets/inplay.png";
 import URL, { getAvailableGames, getInplayMarketsApi } from "../../api/api";
-import { updateBets, updateBettingSlip, updateSelectedEvent, updateSlipTab } from "../../features/features";
+import { updateSelectedEvent } from "../../features/features";
 import { MdWatchLater } from "react-icons/md";
 
 const LeftSection = () => {
@@ -331,9 +331,17 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
       }
     });
   };
+
+  // Sort competitions based on totalMatched in descending order
+  const sortedCompetitions = competitions.sort((a: any, b: any) => {
+    const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
+    const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
+    return totalMatchedB - totalMatchedA;
+  });
+
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
-      {competitions?.length > 0 ? competitions?.map((comp: any) => (
+      {sortedCompetitions?.length > 0 ? sortedCompetitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
             onClick={() => fn_controlMatchesView(comp?.competitionId)}
@@ -367,9 +375,6 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
 
   const dispatch = useDispatch();
   const [prevOdds, setPrevOdds] = useState<any>({});
-  const bets = useSelector((state: any) => state.bets);
-  const wallet = useSelector((state: any) => state.wallet);
-  const authentication = useSelector((state: any) => state.authentication);
 
   useEffect(() => {
     if (Object.keys(prevOdds)?.length === 0 && Object.keys(event)?.length !== 0) {
@@ -380,36 +385,6 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
       }, 400);
     }
   }, [event]);
-
-  const handleBetClicked = (e: any, odd: any, gameName: any, selectionId: any, side: any, eventId: any, marketId: any, marketName: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!authentication) return toast.error("Login Yourself")
-    if (!odd) return;
-    if (!gameName) return;
-    dispatch(updateSlipTab('slip'));
-    const profit = parseFloat((10 * (odd - 1)).toFixed(2));
-    const loss = 10;
-    const obj = {
-      afterLoss: wallet - 10,
-      afterWin: wallet + profit,
-      amount: 10,
-      eventId: eventId,
-      gameId: selectionId,
-      gameName: gameName,
-      loss,
-      marketId: marketId,
-      marketName: marketName,
-      odd: odd,
-      profit,
-      side: side,
-      sportId: tab
-    }
-    console.log(obj)
-    const updatedBets = [obj];
-    dispatch(updateBets(updatedBets));
-    dispatch(updateBettingSlip("open"));
-  }
 
   return (
     <a
@@ -455,16 +430,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
           <>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[0]?.selectionId,
-                "Lay",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price || "-"}
@@ -475,16 +441,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
             </div>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[0]?.selectionId,
-                "Back",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price || "-"}
@@ -496,16 +453,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
 
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToLay?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[2]?.selectionId,
-                "Lay",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.price}
@@ -516,16 +464,6 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
             </div>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[2]?.selectionId,
-                "Back",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[2]?.ex?.availableToBack?.[0]?.price || "-"}
@@ -537,16 +475,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
 
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[1]?.selectionId,
-                "Lay",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price || "-"}
@@ -557,16 +486,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
             </div>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[1]?.selectionId,
-                "Back",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price || "-"}
@@ -580,16 +500,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
           <>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[0]?.selectionId,
-                "Lay",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[0]?.ex?.availableToLay?.[0]?.price || "-"}
@@ -600,16 +511,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
             </div>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[0]?.selectionId,
-                "Back",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[0]?.ex?.availableToBack?.[0]?.price || "-"}
@@ -642,16 +544,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
 
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[1]?.selectionId,
-                "Lay",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[1]?.ex?.availableToLay?.[0]?.price || "-"}
@@ -662,16 +555,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
             </div>
             <div
               className={`h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] flex flex-col justify-between py-[6px] ${prevOdds?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price !== event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
-              onClick={(e) => handleBetClicked(
-                e,
-                event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price,
-                event?.matchName,
-                event?.odd?.runners?.[1]?.selectionId,
-                "Back",
-                event?.eventId,
-                event?.market_id,
-                event?.marketname
-              )}
+
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                 {event?.odd?.runners?.[1]?.ex?.availableToBack?.[0]?.price || "-"}

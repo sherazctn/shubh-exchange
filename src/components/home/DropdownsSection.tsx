@@ -110,8 +110,18 @@ const CricketDropdownsSection = ({ text, id }: any) => {
       }
 
       const response = await getLiveMarketsApi(id);
-      setMarketData(response?.data);
-      dispatch(updateLiveMarkets({ ...liveMarkets, [sportName]: response?.data }));
+      const sortedData = response?.data.map((competition: any) => {
+        return {
+          ...competition,
+          events: competition.events.sort((a: any, b: any) => b.odd.totalMatched - a.odd.totalMatched)
+        };
+      }).sort((a: any, b: any) => {
+        const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+        const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+        return totalMatchedB - totalMatchedA;
+      });
+      setMarketData(sortedData);
+      dispatch(updateLiveMarkets({ ...liveMarkets, [sportName]: sortedData }));
       setLoader(false);
     }, 500);
   };
@@ -380,7 +390,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                                   event?.marketname
                                 )}
                                 onMouseDown={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id, 2)}
-                                onTouchStart={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id,2)}
+                                onTouchStart={(e) => handleStart(e, event?.odd?.runners?.[0]?.selectionId, event?.market_id, 2)}
                               >
                                 <p className="font-[800] text-center text-[12px] sm:text-[14px]">
                                   {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price || "-"}

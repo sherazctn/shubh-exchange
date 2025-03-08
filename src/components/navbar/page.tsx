@@ -21,8 +21,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.png";
-import bangaliFlag2 from "../../assets/bangladesh_flag_2.png";
+import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -213,7 +212,7 @@ const Navbar = () => {
                       className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px]"
                     >
                       <img
-                        src={bangaliFlag2}
+                        src={bangaliFlag}
                         width={20}
                         className="object-contain"
                       />
@@ -239,7 +238,7 @@ const Navbar = () => {
                       className=" hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-[13px]"
                     >
                       <img
-                        src={bangaliFlag2}
+                        src={bangaliFlag}
                         width={20}
                         className="object-contain"
                       />
