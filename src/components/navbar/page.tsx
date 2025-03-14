@@ -21,7 +21,8 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
+import bangaliFlag from "../../assets/bangladesh_flag.png";
+import bangaliFlag2 from "../../assets/bangladesh_flag_2.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();

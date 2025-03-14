@@ -83,7 +83,7 @@ const PaymentInformationTable = ({ colors }: any) => {
                 <p className="text-[25px] font-[700]">Deposited Transaction Details</p>
                 <div className="my-[20px] flex gap-[30px]">
                     <div className="max-w-[400px]">
-                        <img alt="" src={`${URL}/${selectedItem?.receipt}`} className="rounded-[20px]" />
+                        <img alt="" src={`${URL}/${selectedItem?.receipt}`} className="rounded-[20px] max-h-[500px] object-contain lg:min-w-[300px]" />
                     </div>
                     <div className="flex-1 max-w-[400px] flex flex-col gap-[20px]">
                         <div>

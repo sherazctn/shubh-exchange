@@ -844,7 +844,12 @@ export const createDepositApi = async (data: any) => {
 
 export const getAllBanksApi = async () => {
     try {
-        const response = await axios.get(`${URL}/bank/active`);
+        const token = Cookies.get('token');
+        const response = await axios.get(`${URL}/bank/active`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (response?.status === 200) {
             return { status: true, data: response?.data?.data }
         }

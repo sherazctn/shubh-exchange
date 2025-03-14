@@ -277,7 +277,7 @@ const NewAccount = ({ colors, panelSecColor, state, setState }: any) => {
               className="font-[500] text-[14px]"
               style={{ color: panelSecColor }}
             >
-              IBN Number&nbsp;<span className="text-[red]">*</span>
+              IFSC Number&nbsp;<span className="text-[red]">*</span>
             </label>
             <label className="text-[11px]" style={{ color: colors.subText }}>
               (11-18 characters allowed)
@@ -286,7 +286,7 @@ const NewAccount = ({ colors, panelSecColor, state, setState }: any) => {
           <input
             type="number"
             className="h-[35px] rounded-[5px] w-full border mt-[2px] px-[10px] text-[14px] font-[500] focus:outline-none"
-            placeholder="IBN Number"
+            placeholder="IFSC Number"
             value={state.ibn}
             onChange={(e) => setState((prev: any) => ({ ...prev, ibn: e.target.value }))}
             style={{
