@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 
 import Loader from '../Loader';
 import { AuthCheckApi, CheckAdminApi, fancy_calculatingBets, fn_calculatingBets, getOpenBetsByUserApi, panelColorApi, UpdateUserExposureApi, webColorApi } from '../../api/api';
-import { authenticate, updateExposure, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
+import { authenticate, updateExposure, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
 
 import img from "../../assets/block-website.png";
 import { FaExclamationTriangle } from 'react-icons/fa';
@@ -108,6 +108,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
                 dispatch(updateWallet(response?.data?.wallet))
                 dispatch(updateExposure(response?.data?.exposure || 0))
                 dispatch(updateUsername(response?.data?.username))
+                dispatch(updateSportPermission(response?.data?.user?.sportPermission || {}));
                 const res = await getOpenBetsByUserApi(token);
                 if (res?.status) {
                     dispatch(updatePendingBets(res?.data));

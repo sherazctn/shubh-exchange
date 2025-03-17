@@ -21,6 +21,7 @@ const LiveCricket = () => {
   const [extraMarkets, setExtraMarkets] = useState([]);
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const selectedEvent = useSelector((state: any) => state.selectedEvent);
+  const sportPermission = useSelector((state: any) => state.sportPermission);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -29,6 +30,10 @@ const LiveCricket = () => {
     if (!eventId) return navigate("/");
     dispatch(updateMobileMenu(false));
     dispatch(updatePageNav("cricket"));
+    if (sportPermission?.[sportId === "4" ? "cricket" : sportId === "1" ? "soccer" : sportId === "2" ? "tennis" : ""] === false) {
+      window.location.href = "/";
+      return;
+    }
     fn_getMarket();
     fn_getExtraMarkets();
     if (Object.keys(selectedEvent)?.length === 0) {
@@ -39,7 +44,7 @@ const LiveCricket = () => {
         navigate("/");
       }
     }
-  }, [dispatch, sportId, eventId, selectedEvent]);
+  }, [dispatch, sportId, eventId, selectedEvent, sportPermission]);
 
   useEffect(() => {
     if (marketIds?.length > 0) {

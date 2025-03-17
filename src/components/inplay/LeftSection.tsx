@@ -18,7 +18,7 @@ import eSports from "../../assets/e-Sports.svg"
 
 import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaLock } from "react-icons/fa";
 
 import Loader from "../Loader";
 import Footer from "../footer/page";
@@ -36,6 +36,7 @@ const LeftSection = () => {
   const [loader, setLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
   const [marketData, setMarketData] = useState([]);
+  const sportPermission = useSelector((state: any) => state.sportPermission);
 
   useEffect(() => {
     aos.init({ once: true });
@@ -311,7 +312,7 @@ const LeftSection = () => {
           </div>
         )}
       </div>
-      <AllTabs webColor={webColor} competitions={marketData} tab={tab} />
+      <AllTabs webColor={webColor} competitions={marketData} tab={tab} sportPermission={sportPermission} />
       <Footer />
     </div>
   );
@@ -319,7 +320,7 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitions: any; tab: any }) => {
+const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: string; competitions: any; tab: any, sportPermission: any }) => {
   const [competitionsId, setCompetitionsId] = useState<any>([]);
   const adminGamesData = useSelector((state: any) => state.redisGames);
   const fn_controlMatchesView = (id: string) => {
@@ -359,7 +360,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
           {!competitionsId.includes(comp?.competitionId) && (
             <div className="bg-white rounded-b-[7px]">
               {comp?.events?.length > 0 && comp?.events?.map((event: any) => (
-                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} adminGamesData={adminGamesData} />
+                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} adminGamesData={adminGamesData} sportPermission={sportPermission} />
               ))}
             </div>
           )}
@@ -371,7 +372,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
   );
 };
 
-const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
+const List = ({ event, webColor, tab, compName, adminGamesData, sportPermission }: any) => {
 
   const dispatch = useDispatch();
   const [prevOdds, setPrevOdds] = useState<any>({});
@@ -388,8 +389,10 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
 
   return (
     <a
-      className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
-      href={`/match?sportId=${tab}&eventId=${event?.eventId}`}
+    className={`min-h-[65px] relative border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] ${
+      sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false ? "cursor-not-allowed" : "cursor-pointer"
+    }`}
+      href={sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false ? "#" : `/match?sportId=${event?.eventTypeId}&eventId=${event?.eventId}`}
       onClick={() => {
         dispatch(updateSelectedEvent({
           competitionName: compName,
@@ -405,6 +408,11 @@ const List = ({ event, webColor, tab, compName, adminGamesData }: any) => {
         }))
       }}
     >
+      {sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false && (
+        <div className="absolute w-full h-full bg-black opacity-60 left-0 top-0 z-50 flex justify-center items-center">
+          <FaLock className="text-center text-white text-[20px]" />
+        </div>
+      )}
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
         {adminGamesData && (
           <img

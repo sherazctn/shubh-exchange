@@ -7,11 +7,11 @@ import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
 
 import Loader from "../Loader";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaLock } from "react-icons/fa";
 import URL, { getLiveMarketsApi, placeBetsApi } from "../../api/api";
 import { updateBets, updateBettingSlip, updateLiveMarkets, updateSelectedEvent, updateSlipTab, updateWallet } from "../../features/features";
 
-const CricketDropdownsSection = ({ text, id }: any) => {
+const CricketDropdownsSection = ({ text, id, smallText }: any) => {
 
   const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(true);
@@ -21,6 +21,7 @@ const CricketDropdownsSection = ({ text, id }: any) => {
   const liveMarkets = useSelector((state: any) => state.liveMarkets);
   const adminGamesData = useSelector((state: any) => state.redisGames);
   const authentication = useSelector((state: any) => state.authentication);
+  const sportPermission = useSelector((state: any) => state.sportPermission);
 
   const timerRef = useRef<any>();
   const location = useLocation();
@@ -224,7 +225,12 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                   {competition?.events?.map((event: any, i: number) => {
                     return (
                       <a
-                        onClick={() => {
+                        onClick={(e) => {
+                          if (sportPermission?.[smallText] === false) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
+                          }
                           dispatch(updateSelectedEvent({
                             competitionName: competition?.competitionName,
                             eventId: event?.eventId,
@@ -232,17 +238,23 @@ const CricketDropdownsSection = ({ text, id }: any) => {
                             date: event?.date || event?.openDate,
                             inPlay: true
                           }));
-                          localStorage.setItem('selectedEvent', JSON.stringify({
+                          localStorage.setItem("selectedEvent", JSON.stringify({
                             competitionName: competition?.competitionName,
                             eventId: event?.eventId,
                             eventName: event?.matchName,
                             date: event?.date || event?.openDate,
                             inPlay: true
-                          }))
+                          }));
+                          window.location.href = `/match?sportId=${id}&eventId=${event?.eventId}`;
                         }}
                         href={`/match?sportId=${id}&eventId=${event?.eventId}`}
-                        className="min-h-[65px] border-b sm:pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[2px] sm:px-[11px] cursor-pointer"
+                        className={`relative min-h-[65px] border-b sm:pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[2px] sm:px-[11px] cursor-pointer ${sportPermission?.[smallText] === false ? "cursor-not-allowed pointer-events-none" : ""}`}
                       >
+                        {sportPermission?.[smallText] === false && (
+                          <div className="absolute w-full h-full bg-black opacity-60 left-0 top-0 z-50 flex justify-center items-center">
+                            <FaLock className="text-center text-white text-[20px]" />
+                          </div>
+                        )}
                         <div className="flex md:w-auto items-center gap-2 sm:gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
                           {adminGamesData && (
                             <img

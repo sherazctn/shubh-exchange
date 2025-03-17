@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOneTouchEnable, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -105,6 +105,7 @@ const Navbar = () => {
       setPasswordType("password");
       dispatch(authenticate(true));
       dispatch(updateWallet(response?.data?.wallet || 0));
+      dispatch(updateSportPermission(response?.data?.sportPermission || {}));
       dispatch(updateExposure(response?.data?.exposure || 0));
       dispatch(updateUsername(response?.data?.username));
       setLoginModal(false);
@@ -121,6 +122,7 @@ const Navbar = () => {
     Cookies.remove('token');
     dispatch(authenticate(false));
     dispatch(updateBets([]));
+    dispatch(dispatch(updateSportPermission({})));
     setAccountDropdown(false);
     return toast.success("Logout Successfully");
   };

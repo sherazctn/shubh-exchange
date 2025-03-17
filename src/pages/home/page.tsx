@@ -37,9 +37,9 @@ const Home = () => {
     >
       <HeroSection />
       <CardsSection />
-      {sportIds?.find(id => id == "4") && (<CricketDropdownsSection text={`Live Cricket Matches`} id={"4"} />)}
-      {sportIds?.find(id => id == "2") && (<CricketDropdownsSection text={`Live Tennis Matches`} id={"2"} />)}
-      {sportIds?.find(id => id == "1") && (<CricketDropdownsSection text={`Live Soccer Matches`} id={"1"} />)}
+      {sportIds?.find(id => id == "4") && (<CricketDropdownsSection text={`Live Cricket Matches`} id={"4"} smallText={"cricket"} />)}
+      {sportIds?.find(id => id == "2") && (<CricketDropdownsSection text={`Live Tennis Matches`} id={"2"} smallText={"tennis"} />)}
+      {sportIds?.find(id => id == "1") && (<CricketDropdownsSection text={`Live Soccer Matches`} id={"1"} smallText={"soccer"} />)}
       <CasinoSlider />
       <hr className="border-[1px] border-gray-300 my-[40px]" />
       <Footer />

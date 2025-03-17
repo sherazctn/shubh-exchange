@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { GoDotFill } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaLock } from "react-icons/fa";
 
 import spadesAnimation from "../../assets/animations/spades.json";
 import tennisAnimation from "../../assets/animations/tennis.json";
@@ -27,6 +27,7 @@ const LeftSection = () => {
   const [marketData, setMarketData] = useState([]);
   const divHeight = `${window.innerHeight - 60}px`;
   const webColor = useSelector((state: any) => state.websiteColor);
+  const sportPermission = useSelector((state: any) => state.sportPermission);
 
   useEffect(() => {
     fn_getGames();
@@ -107,7 +108,7 @@ const LeftSection = () => {
         )}
       </div>
       {!contentLoader ? (
-        <AllTabs webColor={webColor} competitions={marketData} tab={tab} />
+        <AllTabs sportPermission={sportPermission} webColor={webColor} competitions={marketData} tab={tab} />
       ) : (
         <div className="mb-[10px] mt-[15px]" style={{ minHeight: `${window.innerHeight - 340}px` }}><Loader size={25} color={webColor} /></div>
       )}
@@ -118,7 +119,7 @@ const LeftSection = () => {
 
 export default LeftSection;
 
-const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitions: any; tab: any }) => {
+const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: string; competitions: any; tab: any, sportPermission: any }) => {
   const [competitionsId, setCompetitionsId] = useState<any>([]);
 
   // Sort competitions based on totalMatched in descending order
@@ -137,7 +138,6 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
       }
     });
   };
-  console.log(competitions);
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
       {sortedCompetitions?.length > 0 ? sortedCompetitions?.map((comp: any) => (
@@ -158,7 +158,7 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
           {!competitionsId.includes(comp?.competitionId) && (
             <div className="bg-white rounded-b-[7px]">
               {comp?.events?.length > 0 && comp?.events?.map((event: any) => (
-                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} />
+                <List event={event} webColor={webColor} tab={tab} compName={comp?.competitionName} sportPermission={sportPermission} />
               ))}
             </div>
           )}
@@ -170,10 +170,11 @@ const AllTabs = ({ webColor, competitions, tab }: { webColor: string; competitio
   );
 };
 
-const List = ({ event, webColor, tab, compName }: any) => {
+const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
 
   const dispatch = useDispatch();
   const [odds, setOdds] = useState<any>({});
+  const smallText = tab === "4" ? "cricket" : tab === "1" ? "soccer" : tab === "2" ? "tennis" : "";
 
   const fn_getUpdatedOdds = async () => {
     const response = await getMarketOddsApi(event?.market_id);
@@ -188,8 +189,8 @@ const List = ({ event, webColor, tab, compName }: any) => {
 
   return (
     <a
-      href={`/match?sportId=${tab}&eventId=${event?.eventId}`}
-      className="min-h-[65px] border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] cursor-pointer"
+      href={sportPermission?.[smallText] === false ? "#" : `/match?sportId=${tab}&eventId=${event?.eventId}`}
+      className={`min-h-[65px] relative border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] ${sportPermission?.[smallText] === false ? "cursor-not-allowed" : "cursor-pointer"}`}
       onClick={() => {
         dispatch(updateSelectedEvent({
           competitionName: compName,
@@ -205,6 +206,11 @@ const List = ({ event, webColor, tab, compName }: any) => {
         }))
       }}
     >
+      {sportPermission?.[smallText] === false && (
+        <div className="absolute w-full h-full bg-black opacity-60 left-0 top-0 z-50 flex justify-center items-center">
+          <FaLock className="text-center text-white text-[20px]" />
+        </div>
+      )}
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
         <p className="text-[14px]">
           {event?.matchName}

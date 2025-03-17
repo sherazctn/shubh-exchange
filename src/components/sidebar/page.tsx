@@ -23,6 +23,7 @@ import { FiSearch } from "react-icons/fi";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight, MdWatchLater } from "react-icons/md";
+import { FaLock } from "react-icons/fa";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,8 @@ const Sidebar = () => {
   const webColor = useSelector((state: any) => state.websiteColor);
   const showSidebar = useSelector((state: any) => state.showSidebar);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
+  const authentication = useSelector((state: any) => state.authentication);
+  const sportPermission = useSelector((state: any) => state.sportPermission);
 
   const fn_getEvents = async () => {
     const response = await retrieveEventsDataToRedisApi();
@@ -69,7 +72,7 @@ const Sidebar = () => {
     const intervalId = setInterval(fn_getEvents, 2 * 60 * 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [sportPermission]);
 
   useEffect(() => {
     if (redisGames) {
@@ -135,16 +138,22 @@ const Sidebar = () => {
         <div
           className={`sidebar-menus my-[15px] flex flex-col gap-1.5 items-center`}
         >
-          {data?.length > 0 ? data?.map((item: any) => (
-            <Events
-              showSidebar={showSidebar}
-              openOptions={openOptions}
-              setOpenOption={setOpenOption}
-              game={item}
-            />
-          )) : (
+          {data?.length > 0 ? data?.map((item: any) => {
+            const sportStatus = sportPermission?.[item.sportName];
+            const disabled = authentication && (sportStatus === false);
+
+            return (
+              <Events
+                showSidebar={showSidebar}
+                openOptions={openOptions}
+                setOpenOption={setOpenOption}
+                game={item}
+                disabled={disabled}
+              />
+            );
+          }) : (
             <div className="text-center mt-[20px] text-[15px] font-[500] text-gray-600 flex justify-center items-center gap-[7px]">
-              <BsFillExclamationCircleFill className="text-[20px]" />No Game is playing
+              <BsFillExclamationCircleFill className="text-[20px]" /> No Game is playing
             </div>
           )}
           {/* casino */}
@@ -430,50 +439,45 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-const Events = ({
-  showSidebar,
-  openOptions,
-  setOpenOption,
-  game
-}: any) => {
+const Events = ({ showSidebar, openOptions, setOpenOption, game, disabled }: any) => {
+
   const dispatch = useDispatch();
   const [option, setOption] = useState(false);
   const [subOption, setSubOption] = useState<any>(null);
   const adminGamesData = useSelector((state: any) => state.redisGames);
+
   useEffect(() => {
     setOption(openOptions.find((id: string) => id === game?.sportId) ? true : false);
   }, [openOptions, game]);
+
   const fn_subOption = (id: string) => {
     if (subOption === id) return setSubOption(null);
     setSubOption(id);
-  }
+  };
+
   const fn_selectEvent = (sportId: string, eventId: string, i: any, competitionName: string) => {
     dispatch(updateSelectedEvent({ ...i, competitionName }));
     localStorage.setItem('selectedEvent', JSON.stringify({ ...i, competitionName }));
     window.location.href = `/match?sportId=${sportId}&eventId=${eventId}`;
-  }
+  };
+
   return (
-    <div className="w-full flex flex-col items-center" data-aos="slide-right" data-aos-duration="500">
+    <div className={`w-full flex flex-col items-center ${disabled && "cursor-not-allowed"}`} data-aos="slide-right" data-aos-duration="500">
       {/* header */}
       <a
-        href={`/all-sports?game=${game?.sportName}`}
-        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] hover:bg-white transition-all duration-200 ${!option
-          ? "hover:scale-[1.02]"
-          : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white"
-          } ${showSidebar
-            ? "justify-between"
-            : "justify-center border-none rounded-b-[7px]"
-          }`}
+        href={disabled ? undefined : `/all-sports?game=${game?.sportName}`}
+        style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+        className={`cursor-pointer w-[90%] h-[40px] rounded-[7px] flex items-center px-[10px] transition-all duration-200 ${!disabled ? !option ? "hover:bg-white hover:scale-[1.02]" : "border-t border-x rounded-none rounded-t-[7px] border-gray-300 bg-white" : "cursor-not-allowed"} ${showSidebar ? "justify-between" : "justify-center border-none rounded-b-[7px]"}`}
       >
         <div className="flex items-center gap-2.5">
           {adminGamesData && (
             <img
               alt={game?.name}
               src={`${URL}/${adminGamesData?.find((g: any) => g?.id == game?.sportId)?.image}`}
-              className="w-[25px] h-[25px] rounded-full object-cover"
+              className={`w-[25px] h-[25px] rounded-full object-cover ${disabled ? "contrast-50 opacity-70" : ""}`}
             />
           )}
-          {showSidebar && <p className="font-[600] text-[15px] capitalize">{game?.sportName}</p>}
+          {showSidebar && <p className={`font-[600] text-[15px] capitalize ${disabled ? "text-gray-500" : "text-black"}`}>{game?.sportName}</p>}
         </div>
         {showSidebar && (
           <div
@@ -489,8 +493,8 @@ const Events = ({
               }
             }}
           >
-            <div className="px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[1px] bg-gray-300 font-[600] text-[11px] flex items-center justify-center">
-              {game?.competitions.length}
+            <div className={`px-1.5 min-w-[32px] rounded-[4px] h-[22px] pt-[1px] font-[600] text-[11px] flex items-center justify-center ${disabled ? "text-gray-400 bg-gray-200" : "text-black bg-gray-300"}`}>
+              {!disabled ? game?.competitions.length : <FaLock />}
             </div>
             {!option ? <IoIosArrowDown /> : <IoIosArrowUp />}
           </div>
