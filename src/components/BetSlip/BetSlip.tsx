@@ -257,7 +257,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
             const msg = new SpeechSynthesisUtterance();
             msg.text = lan.line || 'Bet has been placed';
             msg.lang = lan.name || 'en';
-            window.speechSynthesis.speak(msg);
+            // window.speechSynthesis.speak(msg);
             fn_getOpenBets();
             dispatch(updateBets([]));
             dispatch(updateSlipTab("open"));

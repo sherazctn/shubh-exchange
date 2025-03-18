@@ -354,7 +354,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
@@ -848,7 +848,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
@@ -1327,7 +1327,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
@@ -1808,7 +1808,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
@@ -2328,7 +2328,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
@@ -2796,7 +2796,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         const msg = new SpeechSynthesisUtterance();
         msg.text = lan.line || 'Bet has been placed';
         msg.lang = lan.name || 'en';
-        window.speechSynthesis.speak(msg);
+        // window.speechSynthesis.speak(msg);
         dispatch(updateBets([]));
         dispatch(updateSlipTab("open"));
         dispatch(updateWallet(response?.wallet));
@@ -2838,7 +2838,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         const msg = new SpeechSynthesisUtterance();
         msg.text = lan.line || 'Bet has been placed';
         msg.lang = lan.name || 'en';
-        window.speechSynthesis.speak(msg);
+        // window.speechSynthesis.speak(msg);
         dispatch(updateBets([]));
         dispatch(updateSlipTab("open"));
         dispatch(updateWallet(response?.wallet));
@@ -3591,7 +3591,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
       const msg = new SpeechSynthesisUtterance();
       msg.text = lan.line || 'Bet has been placed';
       msg.lang = lan.name || 'en';
-      window.speechSynthesis.speak(msg);
+      // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
       dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
