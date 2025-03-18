@@ -6,7 +6,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useColorScheme from "./hooks/useColorScheme";
 import { retrieveGamesDataToRedisApi } from "./api/api";
-import { updateRedisGamesData, updateSidebar } from "./features/features";
+import { updateRedisGamesData } from "./features/features";
 
 // import Notification from "./Notification";
 
