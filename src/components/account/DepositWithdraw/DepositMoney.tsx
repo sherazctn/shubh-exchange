@@ -59,7 +59,7 @@ const DepositMoney = ({ colors }: any) => {
       return toast.error("Please Enter Transaction Id");
     }
     if (!image) {
-      return toast.error("Please Select Image");
+      return toast.error("Please Upload Proof");
     }
     const data = new FormData();
     data.append('bankId', selectedBank?._id);
@@ -217,7 +217,7 @@ const DepositMoney = ({ colors }: any) => {
           className="font-[500] text-[14px]"
           style={{ color: panelSecColor }}
         >
-          Unique Transaction Reference&nbsp;<span className="text-[red]">*</span>
+          Unique Transaction Reference (UTR)&nbsp;<span className="text-[red]">*</span>
         </label>
         <input
           type="number"
@@ -238,7 +238,7 @@ const DepositMoney = ({ colors }: any) => {
             className="font-[500] text-[14px]"
             style={{ color: panelSecColor }}
           >
-            Upload and Scan UTR from Receipt&nbsp;
+            Upload Receipt&nbsp;
             <span className="text-[red]">*</span>
           </label>
           <input type="file" style={{ color: panelSecColor }} onChange={fn_selectImage} />
