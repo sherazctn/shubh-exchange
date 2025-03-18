@@ -35,7 +35,8 @@ const initialState = {
   recentExp: {},
   oneTouchEnable: localStorage.getItem('oneTouch') ? true : false,
   trigger: 0,
-  sportPermission: {}
+  sportPermission: {},
+  oddRate: { value: 0, type: 'percentage' }
 };
 
 export const featuresSlice = createSlice({
@@ -141,12 +142,15 @@ export const featuresSlice = createSlice({
     updateOneTouchEnable: (state, action) => {
       state.oneTouchEnable = action.payload
     },
-    updateTrigger : (state, action) => {
+    updateTrigger: (state, action) => {
       state.trigger = action.payload;
     },
-    updateSportPermission : (state, action) => {
+    updateSportPermission: (state, action) => {
       state.sportPermission = action.payload;
     },
+    updateOddRate: (state, action) => {
+      state.oddRate = action.payload;
+    }
   },
 });
 
@@ -185,7 +189,8 @@ export const {
   updateRecentExp,
   updateOneTouchEnable,
   updateTrigger,
-  updateSportPermission
+  updateSportPermission,
+  updateOddRate
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

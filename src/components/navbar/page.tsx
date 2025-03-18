@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -21,8 +21,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.png";
-import bangaliFlag2 from "../../assets/bangladesh_flag_2.png";
+import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -102,14 +101,15 @@ const Navbar = () => {
     if (response?.status) {
       setPhone("");
       setPassword("");
+      setLoader(false);
+      setLoginModal(false);
       setPasswordType("password");
       dispatch(authenticate(true));
       dispatch(updateWallet(response?.data?.wallet || 0));
       dispatch(updateSportPermission(response?.data?.sportPermission || {}));
       dispatch(updateExposure(response?.data?.exposure || 0));
       dispatch(updateUsername(response?.data?.username));
-      setLoginModal(false);
-      setLoader(false);
+      dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
       return toast.success(response?.message)
     } else {
       setLoader(false);

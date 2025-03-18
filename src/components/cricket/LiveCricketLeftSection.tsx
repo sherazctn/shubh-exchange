@@ -20,12 +20,13 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   const [oddsPrice, setOddsPrice] = useState([]);
   const divHeight = `${window.innerHeight - 60}px`;
   const user = useSelector((state: any) => state.user);
+  const [matchOddMrId, setMatchOddMrId] = useState("");
   const [cricketScore, setCricketScore] = useState({});
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
+  const oddRate = useSelector((state: any) => state.oddRate);
   const webColor = useSelector((state: any) => state.websiteColor);
   const pendingBets = useSelector((state: any) => state.pendingBets);
-  const [matchOddMrId, setMatchOddMrId] = useState("");
 
   const oneTouchEnable = useSelector((state: any) => state.oneTouchEnable);
   const trigger = useSelector((state: any) => state.trigger);
@@ -77,6 +78,8 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   useEffect(() => {
     setMatchOddMrId(markets?.find((m: any) => m?.marketName === "Match Odds")?.marketId);
   }, [markets]);
+
+  console.log("oddRate ==> ", oddRate);
 
   return (
     <div
@@ -133,7 +136,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           {markets?.map((item: any) => {
             const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
             if (item?.marketName === "Tied Match") return;
-            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
+            return <MatchOdds oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} oddRate={oddRate} />
             if (tabs === "Main") {
               const filterData = runners.find((runner: any) => runner?.[0]?.marketId === item?.marketId);
               if (item?.marketName !== "Match Odds" && item?.marketName !== "Tied Match") return;
@@ -188,7 +191,7 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
 
 export default LiveCricketLeftSection;
 
-const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId, pendingBets, oneTouchEnable, trigger }: any) => {
+const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runner, sportId, eventId, pendingBets, oneTouchEnable, trigger, oddRate }: any) => {
   const timerRef = useRef<any>();
   const dispatch = useDispatch();
   const [showAmounts, setAmount] = useState("");
@@ -442,7 +445,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                             )}
                           >
                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                              {i.price || "-"}
+                              {i.price || "-"}-
                             </p>
                             <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                               {i.size || "-"}
