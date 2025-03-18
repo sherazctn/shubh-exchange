@@ -24,9 +24,8 @@ const DepositWithdraw = ({ darkTheme }: any) => {
     <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>
       <Sidebar colors={colors} path={"depositWithdraw"} />
       <div
-        className={`relative p-[1px] transition-all duration-500 ${
-          smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
-        }`}
+        className={`relative p-[1px] transition-all duration-500 ${smallSidebar ? "ps-[50px]" : "ps-[50px] lg:ps-[250px]"
+          }`}
       >
         <Navbar
           pageName={"Deposit/Withdraw"}
@@ -34,10 +33,10 @@ const DepositWithdraw = ({ darkTheme }: any) => {
           colors={colors}
         />
         <div className="mt-[15px] px-[10px] sm:px-[20px]">
-            <div className="flex flex-col xl:flex-row gap-[15px] pb-[20px]">
-                <DepositMoney colors={colors} />
-                <WithdrawMoney colors={colors} />
-            </div>
+          <div className="flex flex-col xl:flex-row gap-[15px] pb-[20px]">
+            <DepositMoney colors={colors} />
+            <WithdrawMoney colors={colors} />
+          </div>
         </div>
       </div>
     </div>

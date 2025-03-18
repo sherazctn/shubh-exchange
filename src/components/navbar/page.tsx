@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateExposure, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateBookmakerRate, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -110,6 +110,8 @@ const Navbar = () => {
       dispatch(updateExposure(response?.data?.exposure || 0));
       dispatch(updateUsername(response?.data?.username));
       dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
+      dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
+      dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
       return toast.success(response?.message)
     } else {
       setLoader(false);
@@ -120,10 +122,12 @@ const Navbar = () => {
 
   const fn_logout = () => {
     Cookies.remove('token');
-    dispatch(authenticate(false));
     dispatch(updateBets([]));
-    dispatch(dispatch(updateSportPermission({})));
     setAccountDropdown(false);
+    dispatch(authenticate(false));
+    dispatch(dispatch(updateSportPermission({})));
+    dispatch(updateOddRate({ value: 0, type: "percentage" }));
+    dispatch(updateBookmakerRate({ value: 0, type: "percentage" }));
     return toast.success("Logout Successfully");
   };
 

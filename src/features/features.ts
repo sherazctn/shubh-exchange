@@ -36,7 +36,9 @@ const initialState = {
   oneTouchEnable: localStorage.getItem('oneTouch') ? true : false,
   trigger: 0,
   sportPermission: {},
-  oddRate: { value: 0, type: 'percentage' }
+  oddRate: { value: 0, type: 'percentage' },
+  bookmakerRate: { value: 0, type: 'percentage' },
+  fancyRate: { value: 0, type: 'number' },
 };
 
 export const featuresSlice = createSlice({
@@ -150,7 +152,13 @@ export const featuresSlice = createSlice({
     },
     updateOddRate: (state, action) => {
       state.oddRate = action.payload;
-    }
+    },
+    updateBookmakerRate: (state, action) => {
+      state.bookmakerRate = action.payload;
+    },
+    updateFancyRate: (state, action) => {
+      state.fancyRate = action.payload;
+    },
   },
 });
 
@@ -190,7 +198,9 @@ export const {
   updateOneTouchEnable,
   updateTrigger,
   updateSportPermission,
-  updateOddRate
+  updateOddRate,
+  updateBookmakerRate,
+  updateFancyRate
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

@@ -11,8 +11,8 @@ import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, upda
 import { TbLadder } from "react-icons/tb";
 import { BsGraphUp } from "react-icons/bs";
 import { IoIosArrowUp } from "react-icons/io";
-import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getOpenBetsByUserApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
 import { voiceLanguage } from '../../assets/data';
+import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, fn_getCricketScoreApi, getOpenBetsByUserApi, getUpdatedBookmaker, getUpdatedBookmaker2, getUpdatedBookmaker3, getUpdatedFancyMarket, marketOddsFormulation, placeBetsApi } from "../../api/api";
 
 const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners, sportId, eventId }: any) => {
 
@@ -25,8 +25,10 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   const [matchOdds, setMatchOdds] = useState<string[]>([]);
 
   const oddRate = useSelector((state: any) => state.oddRate);
+  const fancyRate = useSelector((state: any) => state.fancyRate);
   const webColor = useSelector((state: any) => state.websiteColor);
   const pendingBets = useSelector((state: any) => state.pendingBets);
+  const bookmakerRate = useSelector((state: any) => state.bookmakerRate);
 
   const oneTouchEnable = useSelector((state: any) => state.oneTouchEnable);
   const trigger = useSelector((state: any) => state.trigger);
@@ -78,8 +80,6 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
   useEffect(() => {
     setMatchOddMrId(markets?.find((m: any) => m?.marketName === "Match Odds")?.marketId);
   }, [markets]);
-
-  console.log("oddRate ==> ", oddRate);
 
   return (
     <div
@@ -160,14 +160,14 @@ const LiveCricketLeftSection = ({ extraMarkets, markets, selectedEvent, runners,
           })}
           {tabs === "Main" && (
             <>
-              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} matchOddMrId={matchOddMrId} oneTouchEnable={oneTouchEnable} trigger={trigger} />
+              <Bookmaker oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} pendingBets={pendingBets} matchOddMrId={matchOddMrId} oneTouchEnable={oneTouchEnable} trigger={trigger} bookmakerRate={bookmakerRate} />
               <Bookmaker2 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
               <Bookmaker3 oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
             </>
           )}
           {(tabs === "Main" || tabs === "fancy") && (
             <>
-              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />
+              <Fancy oddsPrice={oddsPrice} webColor={webColor} eventId={eventId} tabs={tabs} setTabs={setTabs} eventName={selectedEvent?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} fancyRate={fancyRate} />
             </>
           )}
           {tabs === "Main" && Object.keys(extraMarkets)?.length > 0 && (
@@ -370,6 +370,20 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     }
   };
 
+  const calculatePrice = (price: any) => {
+    let finalPrice = price || 0;
+    let value = oddRate?.value || 0;
+    let type = oddRate?.type || "";
+
+    if (type === "percentage") {
+      finalPrice -= (finalPrice * value) / 100;
+    } else if (type === "number") {
+      finalPrice -= value;
+    }
+
+    return finalPrice.toFixed(2);
+  };
+
   if (market.odds) {
     return (
       <div key={market.marketId} className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
@@ -445,7 +459,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                             )}
                           >
                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                              {i.price || "-"}-
+                              {calculatePrice(i.price)}
                             </p>
                             <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                               {i.size || "-"}
@@ -552,7 +566,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                             )}
                           >
                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                              {i.price || "-"}
+                              {calculatePrice(i.price)}
                             </p>
                             <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                               {i.size || "-"}
@@ -653,7 +667,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
   }
 };
 
-const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, oneTouchEnable, trigger }: any) => {
+const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, oneTouchEnable, trigger, bookmakerRate }: any) => {
   const timerRef = useRef<any>(null);
   const dispatch = useDispatch();
   const [data, setData] = useState<any>([]);
@@ -861,6 +875,20 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
     };
   }, [eventId, bets]);
 
+  const calculatePrice = (price: any) => {
+    let finalPrice = price || 0;
+    let value = bookmakerRate?.value || 0;
+    let type = bookmakerRate?.type || "";
+
+    if (type === "percentage") {
+      finalPrice -= (finalPrice * value) / 100;
+    } else if (type === "number") {
+      finalPrice -= value;
+    }
+
+    return finalPrice.toFixed(0);
+  };
+
   if (data?.length > 0) {
     return (
       <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
@@ -950,7 +978,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                         )}
                       >
                         <p className="font-[800] text-center text-[13px] sm:text-[15px] cursor-pointer">
-                          {item?.b1}
+                          {calculatePrice(item?.b1)}
                         </p>
                         <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px] cursor-pointer">
                           {item?.bs1}
@@ -1018,7 +1046,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                         )}
                       >
                         <p className="font-[800] text-center text-[13px] sm:text-[15px] cursor-pointer">
-                          {item?.l1}
+                          {calculatePrice(item?.l1)}
                         </p>
                         <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px] cursor-pointer">
                           {item?.ls1}
@@ -2087,7 +2115,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
   }
 };
 
-const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger }: any) => {
+const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger, fancyRate }: any) => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const timerRef = useRef<any>(null);
@@ -2316,6 +2344,23 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     }
   };
 
+  const calculatePrice = (price: any) => {
+    let finalPrice = price || 0;
+    let value = fancyRate?.value || 0;
+    let type = fancyRate?.type || "";
+
+    if (type === "percentage") {
+      finalPrice -= (finalPrice * value) / 100;
+    } else if (type === "number") {
+      finalPrice -= value;
+    }
+    if (finalPrice.toFixed(0) < 0) {
+      return 0;
+    } else {
+      return finalPrice.toFixed(0);
+    }
+  };
+
   if (data?.length > 0) {
     return (
       <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
@@ -2380,7 +2425,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                         onTouchStart={(e) => handleStart(e, item, '1')}
                       >
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                          {item?.l1}
+                          {calculatePrice(item?.l1)}
                         </p>
                         <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                           {item?.ls1}
@@ -2403,7 +2448,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                         onTouchStart={(e) => handleStart(e, item, '2')}
                       >
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                          {item?.b1}
+                          {calculatePrice(item?.b1)}
                         </p>
                         <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                           {item?.bs1}

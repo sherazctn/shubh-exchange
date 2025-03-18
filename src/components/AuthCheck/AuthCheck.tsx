@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 
 import Loader from '../Loader';
 import { AuthCheckApi, CheckAdminApi, fancy_calculatingBets, fn_calculatingBets, getOpenBetsByUserApi, panelColorApi, UpdateUserExposureApi, webColorApi } from '../../api/api';
-import { authenticate, updateExposure, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
+import { authenticate, updateBookmakerRate, updateExposure, updateFancyRate, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
 
 import img from "../../assets/block-website.png";
 import { FaExclamationTriangle } from 'react-icons/fa';
@@ -110,6 +110,8 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
                 dispatch(updateUsername(response?.data?.username))
                 dispatch(updateSportPermission(response?.data?.user?.sportPermission || {}));
                 dispatch(updateOddRate({ value: response?.data?.user?.oddRate || 0, type: response?.data?.user?.oddRateType || "percentage" }));
+                dispatch(updateBookmakerRate({ value: response?.data?.user?.bookmakerRate || 0, type: response?.data?.user?.bookmakerRateType || "percentage" }));
+                dispatch(updateFancyRate({ value: response?.data?.user?.fancyRate || 0, type: response?.data?.user?.fancyRateType || "number" }));
                 const res = await getOpenBetsByUserApi(token);
                 if (res?.status) {
                     dispatch(updatePendingBets(res?.data));

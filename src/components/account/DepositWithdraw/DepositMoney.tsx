@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Banks } from "../../../json-data/bank";
-import { createDepositApi, getAllBanksApi } from "../../../api/api";
+import URL, { createDepositApi, getAllBanksApi } from "../../../api/api";
 
 const DepositMoney = ({ colors }: any) => {
   const navigate = useNavigate();
@@ -132,20 +132,22 @@ const DepositMoney = ({ colors }: any) => {
               {selectedBank?.accountNo}
             </td>
           </tr>
-          <tr>
-            <td
-              className="border text-[14px] font-[600] ps-[7px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              Account Holder Name
-            </td>
-            <td
-              className="border text-[15px] ps-[7px] py-[2px]"
-              style={{ borderColor: colors.line, color: colors.subText }}
-            >
-              {selectedBank?.name}
-            </td>
-          </tr>
+          {selectedBank.bank !== "UPI Payment" && (
+            <tr>
+              <td
+                className="border text-[14px] font-[600] ps-[7px]"
+                style={{ borderColor: colors.line, color: colors.subText }}
+              >
+                Account Holder Name
+              </td>
+              <td
+                className="border text-[15px] ps-[7px] py-[2px]"
+                style={{ borderColor: colors.line, color: colors.subText }}
+              >
+                {selectedBank?.name}
+              </td>
+            </tr>
+          )}
           {selectedBank.bank !== "UPI Payment" && (
             <tr>
               <td
@@ -159,6 +161,13 @@ const DepositMoney = ({ colors }: any) => {
                 style={{ borderColor: colors.line, color: colors.subText }}
               >
                 {selectedBank?.ibn}
+              </td>
+            </tr>
+          )}
+          {selectedBank?.bank === "UPI Payment" && selectedBank?.image !== "" && (
+            <tr>
+              <td colSpan={2}>
+                <img src={`${URL}/${selectedBank.image}`} className="h-[300px] sm:w-[300px] object-contain" />
               </td>
             </tr>
           )}
