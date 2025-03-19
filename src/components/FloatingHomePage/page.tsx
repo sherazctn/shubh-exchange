@@ -1,19 +1,19 @@
-import { Link } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
-import { FaHome } from "react-icons/fa";
-
-const FloatingHomePage = ({ colors }: any) => {
-  const webColor = useSelector((state: any) => state.websiteColor);
+const FloatingHomePage = () => {
+  const phone = useSelector((state: any) => state.whatsappPhone);
+  console.log("phone ", phone);
   return (
-    <Link
-      to={"/"}
-      title="Go to Home"
-      className="fixed z-[99999] right-[30px] cursor-pointer bottom-[30px] min-h-[60px] rounded-full min-w-[60px] flex justify-center items-center"
-      style={{ backgroundColor: webColor, display: "none" }}
+    <a
+      href={`https://wa.me/${phone}`}
+      target="_blank"
+      title="Go to WhatsApp"
+      className="fixed z-[99999] right-[30px] cursor-pointer bottom-[30px] min-h-[60px] rounded-full min-w-[60px] justify-center items-center"
+      style={{ backgroundImage: "linear-gradient(45deg, #25D366, #128C7E)", display: phone ? "flex" : "none" }}
     >
-      <FaHome className="text-[35px]" style={{ color: colors.bg }} />
-    </Link>
+      <FaWhatsapp className="text-[33px]" style={{ color: "white" }} />
+    </a>
   );
 };
 

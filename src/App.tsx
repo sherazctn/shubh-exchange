@@ -94,8 +94,8 @@ function App() {
               <Route path="fd-profitloss" element={<FDProfitLoss colors={colors} />} />
             </Route>
           </Routes>
+          <FloatingHomePage />
         </div>
-        {isAccountPage && <FloatingHomePage colors={colors} />}
       </div>
     </>
   );

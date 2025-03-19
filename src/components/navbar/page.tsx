@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateBookmakerRate, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet } from "../../features/features";
+import { authenticate, updateBets, updateBookmakerRate, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet, updateWhatsappPhone } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -21,7 +21,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.png";
+import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -109,6 +109,7 @@ const Navbar = () => {
       dispatch(updateSportPermission(response?.data?.sportPermission || {}));
       dispatch(updateExposure(response?.data?.exposure || 0));
       dispatch(updateUsername(response?.data?.username));
+      dispatch(updateWhatsappPhone(response?.data?.phone || null));
       dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
       dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
       dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
@@ -128,7 +129,8 @@ const Navbar = () => {
     dispatch(dispatch(updateSportPermission({})));
     dispatch(updateOddRate({ value: 0, type: "percentage" }));
     dispatch(updateBookmakerRate({ value: 0, type: "percentage" }));
-    return toast.success("Logout Successfully");
+    toast.success("Logout Successfully");
+    window.location.reload();
   };
 
   const fn_depositClicked = () => {

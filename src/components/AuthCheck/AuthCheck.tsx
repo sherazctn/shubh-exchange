@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 
 import Loader from '../Loader';
 import { AuthCheckApi, CheckAdminApi, fancy_calculatingBets, fn_calculatingBets, getOpenBetsByUserApi, panelColorApi, UpdateUserExposureApi, webColorApi } from '../../api/api';
-import { authenticate, updateBookmakerRate, updateExposure, updateFancyRate, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor } from '../../features/features';
+import { authenticate, updateBookmakerRate, updateExposure, updateFancyRate, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor, updateWhatsappPhone } from '../../features/features';
 
 import img from "../../assets/block-website.png";
 import { FaExclamationTriangle } from 'react-icons/fa';
@@ -15,6 +15,7 @@ interface AuthCheckProps {
 }
 
 const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
@@ -75,58 +76,62 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
         }
     }, []);
 
-    useEffect(() => {
-        setLoader(true);
-        const fn_checkAuth = async () => {
-            const checkAdmin = await CheckAdminApi();
-            if (!checkAdmin?.status) {
-                setLoader(false);
-                setBlockWebsite(true);
-            }
-            const response: any = await AuthCheckApi(token || "");
-            if (websiteColor === "") {
-                const colorResponse = await webColorApi();
-                if (colorResponse?.status) {
-                    dispatch(updateWebsiteColor(colorResponse?.data[0].color));
-                } else {
-                    dispatch(updateWebsiteColor("#ff4444"));
-                }
-            }
-            if (panelMainColor === "") {
-                const panelColorResponse = await panelColorApi();
-                if (panelColorResponse?.status) {
-                    dispatch(updatePanelMainColor(panelColorResponse?.data[0].mainColor));
-                    dispatch(updatePanelSecColor(panelColorResponse?.data[0].secColor));
-                } else {
-                    dispatch(updatePanelMainColor("rgb(232, 232, 252)"));
-                    dispatch(updatePanelSecColor("rgb(61, 61, 158)"));
-                }
-            }
-            dispatch(authenticate(response.status ? true : false));
-            if (response?.status) {
-                dispatch(updateUser(response?.data?.user))
-                dispatch(updateWallet(response?.data?.wallet))
-                dispatch(updateExposure(response?.data?.exposure || 0))
-                dispatch(updateUsername(response?.data?.username))
-                dispatch(updateSportPermission(response?.data?.user?.sportPermission || {}));
-                dispatch(updateOddRate({ value: response?.data?.user?.oddRate || 0, type: response?.data?.user?.oddRateType || "percentage" }));
-                dispatch(updateBookmakerRate({ value: response?.data?.user?.bookmakerRate || 0, type: response?.data?.user?.bookmakerRateType || "percentage" }));
-                dispatch(updateFancyRate({ value: response?.data?.user?.fancyRate || 0, type: response?.data?.user?.fancyRateType || "number" }));
-                const res = await getOpenBetsByUserApi(token);
-                if (res?.status) {
-                    dispatch(updatePendingBets(res?.data));
-                }
-            }
-            if (location.pathname.includes("/account")) {
-                if (response?.status) {
-                    setLoader(false);
-                } else {
-                    navigate("/");
-                }
+    const fn_checkAuth = async () => {
+        const checkAdmin = await CheckAdminApi();
+        if (!checkAdmin?.status) {
+            setLoader(false);
+            setBlockWebsite(true);
+        }
+        const response: any = await AuthCheckApi(token || "");
+        if (websiteColor === "") {
+            const colorResponse = await webColorApi();
+            if (colorResponse?.status) {
+                dispatch(updateWebsiteColor(colorResponse?.data[0].color));
             } else {
-                setLoader(false);
+                dispatch(updateWebsiteColor("#ff4444"));
             }
         }
+        if (panelMainColor === "") {
+            const panelColorResponse = await panelColorApi();
+            if (panelColorResponse?.status) {
+                dispatch(updatePanelMainColor(panelColorResponse?.data[0].mainColor));
+                dispatch(updatePanelSecColor(panelColorResponse?.data[0].secColor));
+            } else {
+                dispatch(updatePanelMainColor("rgb(232, 232, 252)"));
+                dispatch(updatePanelSecColor("rgb(61, 61, 158)"));
+            }
+        }
+        dispatch(authenticate(response.status ? true : false));
+        if (response?.status) {
+            dispatch(updateUser(response?.data?.user))
+            dispatch(updateWallet(response?.data?.wallet))
+            dispatch(updateExposure(response?.data?.exposure || 0))
+            dispatch(updateUsername(response?.data?.username))
+            dispatch(updateWhatsappPhone(response?.data?.phone || null));
+            dispatch(updateSportPermission(response?.data?.user?.sportPermission || {}));
+            dispatch(updateOddRate({ value: response?.data?.user?.oddRate || 0, type: response?.data?.user?.oddRateType || "percentage" }));
+            dispatch(updateBookmakerRate({ value: response?.data?.user?.bookmakerRate || 0, type: response?.data?.user?.bookmakerRateType || "percentage" }));
+            dispatch(updateFancyRate({ value: response?.data?.user?.fancyRate || 0, type: response?.data?.user?.fancyRateType || "number" }));
+            const res = await getOpenBetsByUserApi(token);
+            if (res?.status) {
+                dispatch(updatePendingBets(res?.data));
+            }
+        } else {
+            dispatch(updateWhatsappPhone(response?.phone || null));
+        }
+        if (location.pathname.includes("/account")) {
+            if (response?.status) {
+                setLoader(false);
+            } else {
+                navigate("/");
+            }
+        } else {
+            setLoader(false);
+        }
+    }
+
+    useEffect(() => {
+        setLoader(true);
         fn_checkAuth();
     }, [location.pathname, token, dispatch, navigate, websiteColor, panelMainColor]);
 

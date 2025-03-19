@@ -674,7 +674,7 @@ export const AuthCheckApi = async (token: string) => {
         return response;
     } catch (error: any) {
         if (error?.status === 400) {
-            return { status: false, message: error?.response?.data?.message };
+            return { status: false, message: error?.response?.data?.message, phone: error?.response?.data?.phone };
         } else {
             return { status: false, message: "Network Error" }
         }

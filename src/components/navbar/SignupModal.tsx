@@ -9,7 +9,7 @@ import 'react-phone-input-2/lib/style.css';
 
 import { SignUpApi } from "../../api/api";
 // import { auth } from "../../firebase.config";
-import { authenticate, updateBookmakerRate, updateFancyRate, updateOddRate, updateSportPermission, updateUsername } from "../../features/features";
+import { authenticate, updateBookmakerRate, updateFancyRate, updateOddRate, updateSportPermission, updateUsername, updateWhatsappPhone } from "../../features/features";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
@@ -70,6 +70,7 @@ const SignupModal = ({ signupModal, setSignupModal, webName, webColor }: any) =>
             setCharacterError(true);
             dispatch(authenticate(true));
             dispatch(updateUsername(response?.data?.username));
+            dispatch(updateWhatsappPhone(response?.data?.phone));
             dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
             dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
             dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
