@@ -400,18 +400,18 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
         </div>
         {runner && market.odds && !matchOdds.find((m: any) => m === market.marketId) && (
           <div>
-            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
-              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
               </div>
             </div>
             {runner.runners?.map((item: any, index: any) => {
@@ -419,7 +419,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
               const prevOdd = prevOdds?.odds?.runners?.find((run: any) => run?.selectionId === item?.selectionId);
               return (
                 <>
-                  <div key={index} className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                  <div key={index} className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <BsGraphUp />
                       <p className="text-[13px] sm:text-[15px] font-[500] text-nowrap">{item?.runnerName}</p>
@@ -438,14 +438,15 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
+                    <div className="flex flex-row w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
                       {[2, 1, 0].map((index) => {
+                        if (window.innerWidth < 640 && index !== 0) return null;
                         const i = odd?.ex?.availableToBack?.[index] || {};
                         const preI = prevOdd?.ex?.availableToBack?.[index] || {};
                         return (
                           <div
                             key={index}
-                            className={`h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
+                            className={`h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--blue-dark]" : "bg-[--blue]"}`}
                             onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Back", item?.runnerName)}
                             onMouseDown={(e) => handleStart(e,
                               item?.selectionId,
@@ -547,12 +548,13 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
                         );
                       })}
                       {[0, 1, 2].map((index) => {
+                        if (window.innerWidth < 640 && index !== 0) return null;
                         const i = odd?.ex?.availableToLay?.[index] || {};
                         const preI = prevOdd?.ex?.availableToLay?.[index] || {};
                         return (
                           <div
                             key={index}
-                            className={`h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
+                            className={`h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative cursor-pointer ${preI?.price !== i.price ? "bg-[--red-dark]" : "bg-[--red]"}`}
                             onClick={(e) => handleBetClicked(e, i?.price, `${runner?.runners?.[0]?.runnerName} v ${runner?.runners?.[1]?.runnerName}`, item?.selectionId, "Lay", item?.runnerName)}
                             onMouseDown={(e) => handleStart(e,
                               item?.selectionId,
@@ -912,24 +914,24 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
         {/* content */}
         {viewBookmaker && (
           <div>
-            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
-              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
               </div>
             </div>
             {data?.map((item: any) => {
               if (item?.s === "ACTIVE") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-end sm:justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize text-nowrap">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -947,8 +949,8 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                         </p>
                       </div>
                     </div>
-                    <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div className="flex w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -956,7 +958,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -966,7 +968,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                       </div>
 
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -1034,7 +1036,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                         )}
                       </div>
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -1102,7 +1104,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                         )}
                       </div>
 
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1110,7 +1112,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1378,23 +1380,23 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
         {viewBookmaker && (
           <div>
             <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
-              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
               </div>
             </div>
             {data?.map((item: any) => {
               if (item?.s === "ACTIVE") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize text-nowrap">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -1418,8 +1420,8 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                         </p>
                       </div>
                     </div>
-                    <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div className="flex w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1427,7 +1429,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1437,7 +1439,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                       </div>
 
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -1505,7 +1507,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                         )}
                       </div>
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -1573,7 +1575,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                         )}
                       </div>
 
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1581,7 +1583,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1859,23 +1861,23 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
         {viewBookmaker && (
           <div>
             <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+              <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                   Back
                 </div>
-                <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                   Lay
                 </div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
               </div>
             </div>
             {data?.map((item: any) => {
               if (item?.s === "ACTIVE") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                       <p className="text-[13px] sm:text-[15px] font-[500] capitalize">{item?.nat}</p>
                       <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -1893,8 +1895,8 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                         </p>
                       </div>
                     </div>
-                    <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                    <div className="flex w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1902,7 +1904,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -1912,7 +1914,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                       </div>
 
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.b1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Back", item?.nat)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -1980,7 +1982,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                         )}
                       </div>
                       <div
-                        className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
+                        className="h-[43px] border sm:h-[47px] w-[57px] sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] relative cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.l1, `${data?.[0]?.nat} v ${data?.[1]?.nat}`, `${item?.mid}-${item?.sid}`, "Lay", item?.net)}
                         onMouseDown={(e) => handleStart(e,
                           `${item?.mid}-${item?.sid}`,
@@ -2048,7 +2050,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                         )}
                       </div>
 
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -2056,7 +2058,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
                           -
                         </p>
                       </div>
-                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]">
+                      <div className="h-[43px] border sm:h-[47px] w-full sm:w-[47px] sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px]">
                         <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                           -
                         </p>
@@ -2389,12 +2391,12 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
         {/* content */}
         {viewFancy && (
           <div>
-            <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[10px] border-b">
-              <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+            <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+              <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                <div className="h-[25px] w-[57px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                   No
                 </div>
-                <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                <div className="h-[25px] w-[57px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                   Yes
                 </div>
               </div>
@@ -2402,7 +2404,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
             {data?.map((item: any) => {
               if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running" && item?.gstatus !== "Starting Soon.") {
                 return (
-                  <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                  <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                       <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                       {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
@@ -2416,10 +2418,10 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
+                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
                       {/* lay odd */}
                       <div
-                        className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                        className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
                         onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`, item)}
                         onMouseDown={(e) => handleStart(e, item, '1')}
                         onTouchStart={(e) => handleStart(e, item, '1')}
@@ -2442,7 +2444,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
                       </div>
                       {/* back odd */}
                       <div
-                        className="h-[43px] sm:h-[47px] w-[55px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                        className="h-[43px] sm:h-[47px] w-[57px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
                         onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.b1}`, item)}
                         onMouseDown={(e) => handleStart(e, item, '2')}
                         onTouchStart={(e) => handleStart(e, item, '2')}
@@ -2898,46 +2900,46 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
               {!hideMarkets?.find((m) => m === singleExtraMarket) && (
                 <div>
                   {singleExtraMarket === "tied_match" ? (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-                      <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
-                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                        <div className={`h-[25px] border-[2px] border-blue-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                    <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                      <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                        <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
                           Back
                         </div>
-                        <div className={`h-[25px] border-[2px] border-red-500 w-full sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                        <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
                           Lay
                         </div>
-                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
-                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] flex flex-col justify-between py-[6px] relative`}></div>
+                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                        <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
                       </div>
                     </div>
                   ) : singleExtraMarket === "fancy1" ? (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-                      <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                    <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                      <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                        <div className="h-[25px] w-[57px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
                         </div>
-                        <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                        <div className="h-[25px] w-[57px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
                         </div>
                       </div>
                     </div>
                   ) : singleExtraMarket === "khado" ? (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                    <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
                       <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                        <div className="h-[25px] w-[57px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Back
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-                      <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
-                        <div className="h-[25px] w-[55px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                    <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                      <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                        <div className="h-[25px] w-[57px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
                           No
                         </div>
-                        <div className="h-[25px] w-[55px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
+                        <div className="h-[25px] w-[57px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
                           Yes
                         </div>
                       </div>
@@ -2949,7 +2951,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                     if (singleExtraMarket !== "tied_match" && item?.gtype === undefined) {
                       if (item?.gstatus?.toLowerCase() !== "suspended" && item?.gstatus !== "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize cursor-pointer" onClick={() => fn_openModal(item, singleExtraMarket)}>{item?.nat}</p>
                               <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -2962,12 +2964,12 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 </p>
                               </div>
                             </div>
-                            <div className="flex flex-wrap sm:gap-[11px] justify-center items-center relative">
+                            <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
                               {singleExtraMarket !== "fancy1" ? (
                                 <>
                                   {singleExtraMarket !== "cricketcasino" && singleExtraMarket !== "khado" && (
                                     <div
-                                      className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                      className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
                                       onClick={(e) => handleBetClicked(e, item?.l1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`, item)}
                                       onMouseDown={(e) => handleStart(e, item, '1')}
                                       onTouchStart={(e) => handleStart(e, item, '1')}
@@ -2990,7 +2992,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                     </div>
                                   )}
                                   <div
-                                    className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                                    className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
                                     onClick={(e) => handleBetClicked(e, item?.b1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`, item)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
@@ -3015,7 +3017,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               ) : (
                                 <>
                                   <div
-                                    className="h-[43px] sm:h-[47px] w-[55px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
+                                    className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
                                     onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
@@ -3127,7 +3129,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                     } else if (singleExtraMarket === "tied_match") {
                       if (item?.mstatus?.toLowerCase() !== "suspended" && item?.mstatus !== "ball running") {
                         return (
-                          <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                          <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                             <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                               <p className="text-[13px] sm:text-[15px] font-[500] capitalize cursor-pointer">{item?.nat}</p>
                               <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
@@ -3145,9 +3147,9 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 </p>
                               </div>
                             </div>
-                            <div className="flex w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-center items-center">
+                            <div className="flex w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.b3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '1')}
                                 onTouchStart={(e) => handleStart(e, item, '1')}
@@ -3169,7 +3171,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 )}
                               </div>
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] hidden sm:flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.b2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '2')}
                                 onTouchStart={(e) => handleStart(e, item, '2')}
@@ -3192,7 +3194,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               </div>
 
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.b1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '3')}
                                 onTouchStart={(e) => handleStart(e, item, '3')}
@@ -3214,7 +3216,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 )}
                               </div>
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.l1, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '4')}
                                 onTouchStart={(e) => handleStart(e, item, '4')}
@@ -3237,7 +3239,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                               </div>
 
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.l2, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '5')}
                                 onTouchStart={(e) => handleStart(e, item, '5')}
@@ -3259,7 +3261,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                 )}
                               </div>
                               <div
-                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                className="h-[43px] sm:h-[47px] w-full sm:w-[47px] border sm:rounded-[5px] bg-[--red] hidden sm:flex flex-col justify-between py-[6px] cursor-pointer relative"
                                 onClick={(e) => handleBetClicked(e, item?.l3, item?.nat, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", item?.nat, item)}
                                 onMouseDown={(e) => handleStart(e, item, '6')}
                                 onTouchStart={(e) => handleStart(e, item, '6')}

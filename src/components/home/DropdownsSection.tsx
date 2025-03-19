@@ -255,7 +255,7 @@ const CricketDropdownsSection = ({ text, id, smallText }: any) => {
                             <FaLock className="text-center text-white text-[20px]" />
                           </div>
                         )}
-                        <div className="flex md:w-auto items-center gap-2 sm:gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto">
+                        <div className="flex w-full md:w-auto items-center gap-2 sm:gap-4 ms-2.5 min-h-[50px] sm:min-h-[55px] md:min-h-auto relative">
                           {adminGamesData && (
                             <img
                               alt={text}
@@ -266,7 +266,7 @@ const CricketDropdownsSection = ({ text, id, smallText }: any) => {
                           <p className="text-[12px] sm:text-[14px]">
                             {event?.matchName}
                           </p>
-                          <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
+                          <div className="absolute right-[10px] top-1/2 -translate-y-1/2 flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center" style={{ backgroundColor: webColor }}>
                             Live
                             <GoDotFill className="absolute top-[1px] right-[1px] text-[11px] text-green-500 dot-blink" />
                           </div>
