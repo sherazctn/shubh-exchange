@@ -636,6 +636,26 @@ export const SignInApi = async (data: any) => {
         // const response = await axios.post(`${URL}/user/login`, { ...data, fcmToken: fcmToken || "" });
         const response = await axios.post(`${URL}/user/login`, data);
         if (response?.status === 200) {
+            if (!response?.data?.firstTime) {
+                Cookies.set('token', response?.data?.token);
+                return { status: true, message: "User Logged In Successfully", data: response?.data?.data, firstTime: response?.data?.firstTime };
+            } else {
+                return { status: true, message: "User Verified", firstTime: response?.data?.firstTime, id: response?.data?.id };
+            }
+        }
+    } catch (error: any) {
+        if (error?.status === 401) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
+export const fn_updatePasswordApi = async (data: any) => {
+    try {
+        const response = await axios.put(`${URL}/user/updatePassword`, data);
+        if (response?.status === 200) {
             Cookies.set('token', response?.data?.token);
             return { status: true, message: "User Logged In Successfully", data: response?.data?.data };
         }

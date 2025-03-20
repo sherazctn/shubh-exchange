@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
-import URL, { SignInApi, webLogoApi, webNameApi } from "../../api/api";
+import URL, { fn_updatePasswordApi, SignInApi, webLogoApi, webNameApi } from "../../api/api";
 import { authenticate, updateBets, updateBookmakerRate, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet, updateWhatsappPhone } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
@@ -21,7 +21,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.png";
+import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -32,15 +32,18 @@ const Navbar = () => {
   const authentication = useSelector((state: any) => state.authentication);
   const [loginModal, setLoginModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
+  const [passwordModal, setPasswordModal] = useState(false);
   const [oneTouchModal, setOneTouchModal] = useState(false);
   const [accountDropdown, setAccountDropdown] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [updatedPassword, setUpdatedPassword] = useState("");
   const [oneTouchNumber, setOneTouchNumber] = useState<any>(null);
 
   const [loader, setLoader] = useState(false);
 
+  const [id, setId] = useState("");
   const [webName, setWebName] = useState("");
   const [webLogo, setWebLogo] = useState("");
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -104,16 +107,22 @@ const Navbar = () => {
       setLoader(false);
       setLoginModal(false);
       setPasswordType("password");
-      dispatch(authenticate(true));
-      dispatch(updateWallet(response?.data?.wallet || 0));
-      dispatch(updateSportPermission(response?.data?.sportPermission || {}));
-      dispatch(updateExposure(response?.data?.exposure || 0));
-      dispatch(updateUsername(response?.data?.username));
-      dispatch(updateWhatsappPhone(response?.data?.phone || null));
-      dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
-      dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
-      dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
-      return toast.success(response?.message)
+      if (!response?.firstTime) {
+        dispatch(authenticate(true));
+        dispatch(updateWallet(response?.data?.wallet || 0));
+        dispatch(updateSportPermission(response?.data?.sportPermission || {}));
+        dispatch(updateExposure(response?.data?.exposure || 0));
+        dispatch(updateUsername(response?.data?.username));
+        dispatch(updateWhatsappPhone(response?.data?.phone || null));
+        dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
+        dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
+        dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
+        return toast.success(response?.message);
+      } else {
+        setId(response?.id);
+        setPasswordModal(true);
+        return toast.success(response?.message);
+      }
     } else {
       setLoader(false);
       dispatch(authenticate(false));
@@ -150,6 +159,29 @@ const Navbar = () => {
     localStorage.setItem("oneTouch", oneTouchNumber);
     dispatch(updateOneTouchEnable(true));
     return toast.success("One Touch Bet Activated");
+  };
+
+  const fn_updatePassword = async (e: any) => {
+    e.preventDefault();
+    if (updatedPassword === "") return toast.error("Enter Password");
+    const response = await fn_updatePasswordApi({ userId: id, newPassword: updatedPassword });
+    if (response?.status) {
+      setPasswordModal(false);
+      dispatch(authenticate(true));
+      dispatch(updateWallet(response?.data?.wallet || 0));
+      dispatch(updateSportPermission(response?.data?.sportPermission || {}));
+      dispatch(updateExposure(response?.data?.exposure || 0));
+      dispatch(updateUsername(response?.data?.username));
+      dispatch(updateWhatsappPhone(response?.data?.phone || null));
+      dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
+      dispatch(updateBookmakerRate({ value: response?.data?.bookmakerRate || 0, type: response?.data?.bookmakerRateType || "percentage" }));
+      dispatch(updateFancyRate({ value: response?.data?.fancyRate || 0, type: response?.data?.fancyRateType || "number" }));
+      return toast.success(response?.message);
+    } else {
+      setLoader(false);
+      dispatch(authenticate(false));
+      return toast.error(response?.message)
+    }
   };
 
   return (
@@ -639,6 +671,38 @@ const Navbar = () => {
           </div>
           <button className="text-[--text-color] h-[40px] rounded-[5px] text-[15px] font-[500] mt-[5px] flex justify-center items-center" style={{ backgroundColor: webColor }}>
             Enable One Touch Bet
+          </button>
+        </form>
+      </Modal>
+      <Modal
+        title=""
+        centered
+        footer={null}
+        closeIcon={null}
+        open={passwordModal}
+        style={{ fontFamily: "Roboto" }}
+      >
+        <p className="font-[600] text-[20px] mb-[10px]">Update Your Password</p>
+        <form onSubmit={fn_updatePassword} className="flex flex-col gap-[14px]">
+          <div className="flex flex-col gap-[3px]">
+            <label
+              htmlFor="passwordModal"
+              className="font-[500] text-[14px]"
+            >
+              Enter Your Password
+            </label>
+            <input
+              required
+              type="password"
+              id="passwordModal"
+              value={updatedPassword}
+              style={{ outlineColor: webColor }}
+              onChange={(e) => setUpdatedPassword(e.target.value)}
+              className="border h-[35px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+            />
+          </div>
+          <button className="text-[--text-color] h-[40px] rounded-[5px] text-[15px] font-[500] mt-[5px] flex justify-center items-center" style={{ backgroundColor: webColor }}>
+            Update
           </button>
         </form>
       </Modal>
