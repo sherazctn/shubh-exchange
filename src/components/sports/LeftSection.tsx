@@ -2,6 +2,7 @@ import aos from "aos";
 import Lottie from "lottie-react";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { GoDotFill } from "react-icons/go";
@@ -22,15 +23,27 @@ const LeftSection = () => {
 
   const [tab, setTab] = useState("");
   const [data, setData] = useState([]);
+  const [searchParams] = useSearchParams();
   const [loader, setLoader] = useState(true);
-  const [contentLoader, setContentLoader] = useState(true);
   const [marketData, setMarketData] = useState([]);
   const divHeight = `${window.innerHeight - 60}px`;
+  const [contentLoader, setContentLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
   const sportPermission = useSelector((state: any) => state.sportPermission);
 
+  const queryGame = searchParams.get('game') || null;
+
   useEffect(() => {
-    fn_getGames();
+    if (queryGame) {
+      if (queryGame === "cricket") {
+        setTab("4");
+      } else if (queryGame === "soccer") {
+        setTab("1");
+      } else if (queryGame === "tennis") {
+        setTab("2");
+      }
+    }
+    fn_getGames(queryGame);
     aos.init({ once: true });
   }, []);
 
@@ -42,14 +55,19 @@ const LeftSection = () => {
     setTab(id)
   };
 
-  const fn_getGames = async () => {
-    setLoader(true)
+  const fn_getGames = async (gameType: string | null) => {
+    setLoader(true);
     const response: any = await getAvailableGames();
     if (response?.status) {
       setLoader(false);
       setData(response?.data);
       if (tab === "") {
         setTab(response?.data[0]?.name === "cricket" ? "4" : response?.data[0]?.name === "soccer" ? "1" : response?.data[0]?.name === "tennis" ? "2" : "");
+      }
+      if (gameType) {
+        const gameTab = gameType === "cricket" ? "4" : gameType === "soccer" ? "1" : gameType === "tennis" ? "2" : "";
+        setTab(gameTab);
+        fn_getInPlayMarkets(gameTab);
       }
     } else {
       setLoader(false);

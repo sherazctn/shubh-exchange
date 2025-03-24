@@ -249,8 +249,8 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
     if (odd >= 4) return toast.error("Odds above 4 not accepted");
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
       return;
@@ -356,7 +356,7 @@ const MatchOdds = ({ oddsPrice, market, webColor, matchOdds, setMatchOdds, runne
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);
@@ -687,7 +687,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
 
   useEffect(() => {
     if (pendingBets?.length > 0) {
-      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker");
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker" && bet?.eventId == eventId);
       const result: any = fn_calculatingBets(specificMarketBets);
       if (result) {
         console.log("result ", result);
@@ -742,14 +742,11 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
       return;
     };
     dispatch(updateSlipTab('slip'));
-    console.log("matchOddMrId ", matchOddMrId)
     const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
     const loss = 10;
     const obj = {
@@ -771,10 +768,8 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
       selectionName: selectionName,
       matchOddMrId: matchOddMrId
     };
-    console.log("obj ==> ", obj);
-    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker");
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker" && bet?.marketId?.includes("-") && bet?.marketId?.split("-")?.[0] == runnerId?.split("-")?.[0]);
     const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
-    console.log("updatedCalculation ==> ", updatedCalculation);
     dispatch(updateRecentExp(updatedCalculation));
     const updatedBets = [obj];
     dispatch(updateBets(updatedBets));
@@ -852,7 +847,7 @@ const Bookmaker = ({ oddsPrice, webColor, eventId, pendingBets, matchOddMrId, on
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);
@@ -1189,12 +1184,12 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
 
   useEffect(() => {
     if (pendingBets?.length > 0) {
-      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-") && bet?.eventId == eventId);
       const result: any = fn_calculatingBets(specificMarketBets);
       if (result) {
         setTotalCal(result);
       };
-      const specificMarketBets2 = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker 2" && bet?.marketId?.includes("-"));
+      const specificMarketBets2 = pendingBets?.filter((bet: any) => bet?.marketName === "bookmaker 2" && bet?.marketId?.includes("-") && bet?.eventId == eventId);
       const result2: any = fn_calculatingBets(specificMarketBets2);
       if (result2) {
         setTotalCal2(result2);
@@ -1224,8 +1219,8 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
       return;
@@ -1252,7 +1247,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
       selectionName: selectionName
     };
     console.log("obj ==> ", obj);
-    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.split("-")?.[0] == runnerId?.split("-")?.[0]);
     const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
     console.log("updatedCalculation ==> ", updatedCalculation);
     dispatch(updateRecentExp(updatedCalculation));
@@ -1331,7 +1326,7 @@ const Bookmaker2 = ({ oddsPrice, webColor, eventId, eventName, pendingBets, oneT
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);
@@ -1673,7 +1668,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
 
   useEffect(() => {
     if (pendingBets?.length > 0) {
-      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-"));
+      const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.includes("-") && bet?.eventId == eventId);
       const result: any = fn_calculatingBets(specificMarketBets);
       if (result) {
         console.log("result ", result);
@@ -1704,8 +1699,8 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, odd, runnerName, runnerId, side, Number(localStorage.getItem('oneTouch') || 10), selectionName);
       return;
@@ -1732,7 +1727,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
       stake: 10
     };
     console.log("obj ==> ", obj);
-    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" || (bet?.marketId?.includes("-") && bet?.marketName != "fancy"));
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "Tied Match" && bet?.marketId?.split("-")?.[0] == runnerId?.split("-")?.[0]);
     const updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
     console.log("updatedCalculation ==> ", updatedCalculation);
     dispatch(updateRecentExp(updatedCalculation));
@@ -1812,7 +1807,7 @@ const Bookmaker3 = ({ oddsPrice, webColor, eventId, pendingBets, oneTouchEnable,
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);
@@ -2206,8 +2201,8 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, selectionName);
       return;
@@ -2332,7 +2327,7 @@ const Fancy = ({ oddsPrice, webColor, eventId, tabs, setTabs, eventName, pending
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);
@@ -2640,8 +2635,8 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, marketName, runnerName);
       return;
@@ -2800,7 +2795,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         msg.lang = lan.name || 'en';
         // window.speechSynthesis.speak(msg);
         dispatch(updateBets([]));
-        dispatch(updateSlipTab("open"));
+        if(!oneTouchEnable) dispatch(updateSlipTab("open"));
         dispatch(updateWallet(response?.wallet));
         dispatch(updateRecentExp({}));
         const res = await getOpenBetsByUserApi(null);
@@ -2873,6 +2868,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
       <>
         {Object.keys(data)?.map((singleExtraMarket: any, index: number) => {
           if (data[singleExtraMarket]?.[0]?.gtype === "cricketcasino") return;
+          if (singleExtraMarket === "oddeven") return;
           return (
             <div key={index} className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
               {showModal && <FancyModal showModal={showModal} fn_closeModal={fn_closeModal} webColor={webColor} selectedFancyBets={selectedFancyBets} />}
@@ -3480,8 +3476,8 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
     if (!odd || odd == 0 || odd == 1) return;
     if (!runnerName) return;
     if (oneTouchEnable) {
-      dispatch(updateBettingSlip("open"));
-      dispatch(updateSlipTab("open"));
+      // dispatch(updateBettingSlip("open"));
+      // dispatch(updateSlipTab("open"));
       dispatch(updateTrigger(trigger + 1));
       fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, marketName, runnerName);
       return;
@@ -3595,7 +3591,7 @@ const ExtraMarkets2 = ({ oddsPrice, data, webColor, eventId, eventName, pendingB
       msg.lang = lan.name || 'en';
       // window.speechSynthesis.speak(msg);
       dispatch(updateBets([]));
-      dispatch(updateSlipTab("open"));
+      if(!oneTouchEnable) dispatch(updateSlipTab("open"));
       dispatch(updateWallet(response?.wallet));
       dispatch(updateRecentExp({}));
       const res = await getOpenBetsByUserApi(null);

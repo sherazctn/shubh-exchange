@@ -2,7 +2,6 @@ import { Modal } from "antd";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import PhoneInput from "react-phone-input-2";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../Loader";
@@ -21,7 +20,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaUserPlus } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, MdOutlineSportsScore, MdTouchApp } from "react-icons/md";
 
 import indianFlag from "../../assets/indian_flag.webp";
-import bangaliFlag from "../../assets/bangladesh_flag.jpeg";
+import bangaliFlag from "../../assets/bangladesh_flag.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -40,6 +39,7 @@ const Navbar = () => {
   const [password, setPassword] = useState("");
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [oneTouchNumber, setOneTouchNumber] = useState<any>(null);
+  const [usernameText, setUsername] = useState<any>(null);
 
   const [loader, setLoader] = useState(false);
 
@@ -92,12 +92,8 @@ const Navbar = () => {
 
   const fn_submit = async (e: any) => {
     e.preventDefault();
-    if (phone.length < 5) {
-      return toast.error("Write Correct Phone Number")
-    }
-    const phoneNumber = "+" + phone;
     const data = {
-      phone: phoneNumber, password
+      username: usernameText, password
     }
     setLoader(true);
     const response = await SignInApi(data);
@@ -320,9 +316,9 @@ const Navbar = () => {
             >
               <MdTouchApp className="text-[20px]" />
             </div>
-            <p style={{ color: webColor }} className="flex items-center justify-center gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
+            <p style={{ color: webColor }} className="flex items-center justify-center px-[15px] gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] min-w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
               <PiHandDeposit className="w-[19px] h-[19px]" />
-              <span className="me-[5px]">Deposit</span>
+              <span className="me-[5px]">Deposit / Withdraw</span>
             </p>
             <a href={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
               <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
@@ -402,7 +398,7 @@ const Navbar = () => {
             <MdTouchApp className="text-[16px]" />
           </div>
           <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
-            <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit
+            <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit / Withdraw
           </div>
           {!authentication && (
             <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[30px] bg-[--text-color] cursor-pointer text-[13px] font-[600]" onClick={() => setLoginModal(true)}>
@@ -587,21 +583,18 @@ const Navbar = () => {
         <form onSubmit={fn_submit} className="flex flex-col gap-[14px]">
           <div className="flex flex-col gap-[3px]">
             <label
+              htmlFor="username"
               className="font-[600] text-[16px] sm:text-[18px]"
             >
-              Phone Number
+              Username
             </label>
-            <PhoneInput
-              country={'in'}
-              value={phone}
-              onChange={(e) => setPhone(e)}
-              inputStyle={{
-                width: "100%",
-                borderColor: "#e5e7eb"
-              }}
-              inputProps={{
-                required: true,
-              }}
+            <input
+              className="border h-[40px] rounded-[5px] px-[10px] font-[500] outline-[1px]"
+              style={{ outlineColor: webColor }}
+              id="username"
+              required
+              value={usernameText}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="relative flex flex-col gap-[3px]">
