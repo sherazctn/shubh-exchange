@@ -16,12 +16,12 @@ const CurrentBetTable1 = ({ colors, data }: any) => {
               className="leading-[40px] font-[600] text-[15px]"
               style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
-              <td className="ps-[5px] w-[100px]">Sr No.<SortingArrows /></td>
+              <td className="ps-[5px] w-[100px]">Sr No.</td>
               <td className="min-w-[250px]">Market Name</td>
               <td>Market Name</td>
               {/* <td>Runner Name</td> */}
-              <td className="min-w-[50px]">Side</td>
-              <td>Bet Amount<SortingArrows /></td>
+              <td className="min-w-[60px]">Side</td>
+              <td className="min-w-[80px]">Stake</td>
               <td className="min-w-[80px]">Odd</td>
               <td>Created Date</td>
             </tr>
@@ -40,6 +40,10 @@ const CurrentBetTable1 = ({ colors, data }: any) => {
 export default CurrentBetTable1;
 
 const TableRows = ({ colors, item, index }: any) => {
+  const dashedOdd = (item?.marketName === "fancy" || item?.marketName === "khado" || item?.marketName === "meter") ? true : false;
+  const fn_returnOnlyName = (sName: string) => {
+    return sName.replace(/\s\d+(\.\d+)?$/, '');
+  };
   return (
     <tr
       key={index}
@@ -47,12 +51,13 @@ const TableRows = ({ colors, item, index }: any) => {
       style={{ borderColor: colors.line, color: colors.subText }}
     >
       <td className="ps-[5px]">{index}</td>
-      <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${item?.selectionName})`}</td>
-      {/* <td>{item?.runner}</td> */}
+      <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${fn_returnOnlyName(item?.selectionName)})`}{dashedOdd && ` - ${item?.odd}`}</td>
       <td className="capitalize">{item?.marketName}</td>
-      <td>{item?.side}</td>
+      <td>
+        <p className="w-[max-content] min-w-[45px] h-[25px] flex justify-center items-center rounded-[7px]" style={{ backgroundColor: item?.side === "Lay" ? "var(--red)" : "var(--blue)" }}>{item?.side}</p>
+      </td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
-      <td>{item?.odd}</td>
+      <td>{/\s\d+(\.\d+)?$/.test(item?.selectionName) ? item?.selectionName.match(/\d+(\.\d+)?$/)?.[0] : item?.odd}</td>
       <td>{formatDate(item?.createdAt)}</td>
     </tr>
   );

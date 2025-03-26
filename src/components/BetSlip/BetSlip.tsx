@@ -483,7 +483,7 @@ const OpenBet = ({ openBets }: any) => {
     const redisGames = useSelector((state: any) => state.redisGames);
     function formatSelectionName(name: string): string {
         return name.replace(/\s\d+$/, "");
-    }
+    };
     return (
         <div className="flex bg-white p-[5px] flex-col gap-[7px] overflow-auto h-[300px]">
             {openBets?.length === 0 ? (
@@ -507,7 +507,7 @@ const OpenBet = ({ openBets }: any) => {
                                         </span>
                                     </p>
                                 </td>
-                                <td className="min-w-[60px]">{item?.marketName === "fancy" ? item?.selectionName.match(/\d+(?!.*\d)/)?.[0] || item?.odd : item?.odd}</td>
+                                <td className="min-w-[60px]">{(item?.marketName === "fancy" || item?.marketName === "meter" || item?.marketName === "khado") ? item?.selectionName.match(/\d+(?!.*\d)/)?.[0] || item?.odd : item?.odd}</td>
                                 <td className="min-w-[60px]"><FaIndianRupeeSign className="inline-block mt-[-1px] me-[2px]" />{item?.amount}</td>
                             </tr>
                         ))}

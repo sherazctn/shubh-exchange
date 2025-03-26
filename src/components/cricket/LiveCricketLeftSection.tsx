@@ -2652,7 +2652,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         stake: 10,
         eventId: eventId,
         gameId: runnerId,
-        gameName: runnerName,
+        gameName: eventName,
         loss,
         marketId: runnerId,
         marketName: marketName,
@@ -2681,7 +2681,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
         stake: 10,
         eventId: eventId,
         gameId: runnerId,
-        gameName: runnerName,
+        gameName: eventName,
         loss,
         marketId: runnerId,
         marketName: marketName,
@@ -2966,7 +2966,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                   {singleExtraMarket !== "cricketcasino" && singleExtraMarket !== "khado" && (
                                     <div
                                       className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                      onClick={(e) => handleBetClicked(e, item?.l1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`, item)}
+                                      onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Lay", `${item?.nat} ${item?.l1}`, item)}
                                       onMouseDown={(e) => handleStart(e, item, '1')}
                                       onTouchStart={(e) => handleStart(e, item, '1')}
                                     >
@@ -2989,7 +2989,7 @@ const ExtraMarkets = ({ oddsPrice, data, webColor, eventId, eventName, pendingBe
                                   )}
                                   <div
                                     className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                    onClick={(e) => handleBetClicked(e, item?.b1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`, item)}
+                                    onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, singleExtraMarket, "Back", `${item?.nat} ${item?.b1}`, item)}
                                     onMouseDown={(e) => handleStart(e, item, '2')}
                                     onTouchStart={(e) => handleStart(e, item, '2')}
                                   >
