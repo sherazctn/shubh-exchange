@@ -46,7 +46,7 @@ const Sidebar = () => {
     const gameResponse = await retrieveGamesDataToRedisApi();
     if (response?.status) {
       const games = gameResponse?.data;
-      const gamesIds = games?.map((gm: any) => gm?.id);
+      const gamesIds = games?.map((gm: any) => (gm?.id).toString());
       const updatedGames = response?.data?.filter((gme: any) => gamesIds?.includes(gme?.sportId));
       setData(updatedGames);
       dispatch(updateEventData(updatedGames));
