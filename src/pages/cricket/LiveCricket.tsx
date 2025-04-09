@@ -26,6 +26,7 @@ const LiveCricket = () => {
   const sportPermission = useSelector((state: any) => state.sportPermission);
 
   const [eventDetails, setEventDetails] = useState<any>(null);
+  const [allEventsOdds, setAllEventsOdds] = useState<any>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -39,9 +40,9 @@ const LiveCricket = () => {
     //   return;
     // }
     // fn_getMarket();
-    fn_getMarkets();
+    // fn_getMarkets();
     // fn_getExtraMarkets();
-    fn_getMarketsByInterval();
+    // fn_getMarketsByInterval();
     // if (Object.keys(selectedEvent)?.length === 0) {
     //   const storedEvent = localStorage.getItem('selectedEvent');
     //   if (storedEvent) {
@@ -51,12 +52,6 @@ const LiveCricket = () => {
     //   }
     // }
   }, [dispatch, sportId, eventId, selectedEvent, sportPermission]);
-
-  useEffect(() => {
-    if(eventDetails){
-      fn_getMarketsOdds();
-    }
-  }, [eventDetails]);
 
   // useEffect(() => {
   //   if (marketIds?.length > 0) {
@@ -81,31 +76,6 @@ const LiveCricket = () => {
       setBookmaker(response?.data?.bookmakersData);
     } else {
       // navigate("");
-    }
-  };
-
-  const fn_getMarkets = async () => {
-    const data = { sportId, eventId };
-    const response = await fn_getMarketsApi(data);
-    if (response?.status) {
-      setEventDetails(response?.data);
-    }
-  };
-
-  const fn_getMarketsByInterval = async () => {
-    const data = { sportId, eventId };
-    setInterval(async () => {
-      const response = await fn_getMarketsApi(data);
-      if (response?.status) {
-        setEventDetails(response?.data);
-      }
-    }, 600 * 1000);
-  };
-
-  const fn_getMarketsOdds = async () => {
-    const response = await fn_getMarketsOddsApi(eventDetails?.formattedMarketIds);
-    if (response?.status) {
-      console.log("response fn_getMarketsOddsApi ", response);
     }
   };
 
@@ -139,9 +109,46 @@ const LiveCricket = () => {
     }, 2000);
   };
 
+  useEffect(() => {
+    fn_getMarkets();
+  
+    const marketInterval = setInterval(() => {
+      fn_getMarkets()
+    }, 5 * 60 * 1000);
+  
+    return () => clearInterval(marketInterval);
+  }, []);
+
+  useEffect(() => {
+    if (eventDetails) {
+      fn_getMarketsOdds();
+  
+      const oddsInterval = setInterval(() => {
+        fn_getMarketsOdds();
+      }, 1000);
+  
+      return () => clearInterval(oddsInterval);
+    }
+  }, [eventDetails]);
+
+  const fn_getMarkets = async () => {
+    const data = { sportId, eventId };
+    const response = await fn_getMarketsApi(data);
+    if (response?.status) {
+      setEventDetails(response?.data);
+    }
+  };
+
+  const fn_getMarketsOdds = async () => {
+    const response = await fn_getMarketsOddsApi(eventDetails?.formattedMarketIds);
+    if (response?.status) {
+      setAllEventsOdds(response?.data);
+    }
+  };
+
   return (
     <div className={`content pt-[68px] sm:pt-[60px] ${showSidebar ? "ps-[2px] sm:ps-[20px] lg:ps-[285px]" : "ps-[2px] sm:ps-[20px] lg:ps-[85px]"} pe-[2px] sm:pe-[20px] flex`}>
-      <LiveCricketLeftSection2 eventDetails={eventDetails} extraMarkets={extraMarkets} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
+      <LiveCricketLeftSection2 allEventsOdds={allEventsOdds} eventDetails={eventDetails} extraMarkets={extraMarkets} markets={markets} selectedEvent={selectedEvent} runners={runners} sportId={sportId} eventId={eventId} bookmaker={bookmaker} />
       <RightSection sportId={sportId} eventId={eventId} selectedEvent={selectedEvent} />
     </div>
   );
