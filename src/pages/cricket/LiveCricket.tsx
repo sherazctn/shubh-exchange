@@ -123,11 +123,11 @@ const LiveCricket = () => {
     if (eventDetails) {
       fn_getMarketsOdds();
   
-      const oddsInterval = setInterval(() => {
-        fn_getMarketsOdds();
-      }, 1000);
+      // const oddsInterval = setInterval(() => {
+      //   fn_getMarketsOdds();
+      // }, 1000);
   
-      return () => clearInterval(oddsInterval);
+      // return () => clearInterval(oddsInterval);
     }
   }, [eventDetails]);
 
