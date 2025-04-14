@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import RightSection from "../../components/sports/RightSection";
-import { fn_getMarketsApi, fn_getMarketsOddsApi } from "../../api/newApis";
+import { fn_getExtraMarketsApi, fn_getMarketsApi, fn_getMarketsOddsApi } from "../../api/newApis";
 import LiveCricketLeftSection2 from "../../components/cricket/LiveCricketLeftSection2";
 import { updateMobileMenu, updatePageNav, updateSelectedEvent } from "../../features/features";
 import { getExtraMarketsByEventIdApi, retrieveMarketsToRedisApi, retrieveUpdatedOddsToRedisApi } from "../../api/api";
@@ -96,21 +96,9 @@ const LiveCricket = () => {
     }
   };
 
-  const fn_getExtraMarkets = async () => {
-    const response = await getExtraMarketsByEventIdApi(eventId);
-    if (response?.status) {
-      setExtraMarkets(response?.data);
-    }
-    setInterval(async () => {
-      const response = await getExtraMarketsByEventIdApi(eventId);
-      if (response?.status) {
-        setExtraMarkets(response?.data);
-      }
-    }, 2000);
-  };
-
   useEffect(() => {
     fn_getMarkets();
+    fn_getExtraMarkets();
 
     const marketInterval = setInterval(() => {
       fn_getMarkets()
@@ -137,6 +125,19 @@ const LiveCricket = () => {
     if (response?.status) {
       setEventDetails(response?.data);
     }
+  };
+
+  const fn_getExtraMarkets = async () => {
+    const response = await fn_getExtraMarketsApi(eventId);
+    if (response?.status) {
+      setExtraMarkets(response?.data?.data);
+    }
+    setInterval(async () => {
+      const response = await fn_getExtraMarketsApi(eventId);
+      if (response?.status) {
+        setExtraMarkets(response?.data?.data);
+      }
+    }, 2000);
   };
 
   const fn_getMarketsOdds = async () => {
