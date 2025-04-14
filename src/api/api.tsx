@@ -2,8 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 // import { messaging, getToken } from "../firebase";
 
-const URL = "https://backend.shubhexchange.com";
-// const URL = "http://62.72.57.126:8001";
+// const URL = "https://backend.shubhexchange.com";
+const URL = "http://62.72.57.126:8080";
 
 export const fn_calculatingBets = (pendingBets: any) => {
     if (!pendingBets || pendingBets.length === 0) return;
@@ -1120,7 +1120,7 @@ export const getSoccerUpcomingMatchesApi = async () => {
 
 export const retrieveGamesDataToRedisApi = async () => {
     try {
-        const response = await axios.post(`${URL}/redis/games-data`);
+        const response = await axios.get(`${URL}/new/games-data`);
         if (response.status === 200) {
             return { status: true, data: response?.data?.data }
         }
@@ -1165,8 +1165,8 @@ export const retrieveCricketDataToRedisApi = async () => {
 
 export const retrieveEventsDataToRedisApi = async () => {
     try {
-        const response = await axios.get(`${URL}/redis/events-data`);
-        return { status: true, data: response?.data?.data }
+        const response = await axios.get(`${URL}/new/events-data`);
+        return { status: true, data: response?.data }
     } catch (error: any) {
         if (error?.status === 400) {
             return { status: false, message: error?.response?.data?.message };
