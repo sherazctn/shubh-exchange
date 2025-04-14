@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // const URL = "https://backend.shubhexchange.com";
-const URL = "http://62.72.57.126:8080";
+const URL = "https://test-backend.shubhexchange.com";
 
 export const fn_getMarketsApi = async (data: any) => {
     try {

@@ -36,12 +36,12 @@ const RightSection = ({ sportId, eventId, selectedEvent }: any) => {
 
   useEffect(() => {
     fn_getPopularEvents();
-    if (sportId === "4") {
-      fn_getCricketScore();
-      setInterval(() => {
-        fn_getCricketScore();
-      }, 1500);
-    }
+    // if (sportId === "4") {
+    //   fn_getCricketScore();
+    //   setInterval(() => {
+    //     fn_getCricketScore();
+    //   }, 1500);
+    // }
   }, []);
 
   return (

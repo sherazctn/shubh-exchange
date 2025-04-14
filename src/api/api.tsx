@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 // import { messaging, getToken } from "../firebase";
 
 // const URL = "https://backend.shubhexchange.com";
-const URL = "http://62.72.57.126:8080";
+const URL = "https://test-backend.shubhexchange.com";
 
 export const fn_calculatingBets = (pendingBets: any) => {
     if (!pendingBets || pendingBets.length === 0) return;

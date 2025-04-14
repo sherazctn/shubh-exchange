@@ -111,23 +111,23 @@ const LiveCricket = () => {
 
   useEffect(() => {
     fn_getMarkets();
-  
+
     const marketInterval = setInterval(() => {
       fn_getMarkets()
     }, 5 * 60 * 1000);
-  
+
     return () => clearInterval(marketInterval);
   }, []);
 
   useEffect(() => {
     if (eventDetails) {
       fn_getMarketsOdds();
-  
-      // const oddsInterval = setInterval(() => {
-      //   fn_getMarketsOdds();
-      // }, 1000);
-  
-      // return () => clearInterval(oddsInterval);
+
+      const oddsInterval = setInterval(() => {
+        fn_getMarketsOdds();
+      }, 1000);
+
+      return () => clearInterval(oddsInterval);
     }
   }, [eventDetails]);
 

@@ -55,7 +55,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
             </div>
             <div className="relative pt-[56.25%]">
               <iframe
-                src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
+                src={`https://crickexpo.in/tv/?EventId=${eventId}`}
                 className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
                 allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                 allowFullScreen
@@ -79,7 +79,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
         >
           <div className="relative pt-[56.25%]">
             <iframe
-              src={`https://dpmatka.in/protv.php?sportId=${sportId}&eventId=${eventId}`}
+              src={`https://crickexpo.in/tv/?EventId=${eventId}`}
               className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
@@ -94,22 +94,7 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
         <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
           <div className="relative pt-[56.25%] mt-[7px]">
             <iframe
-              src={`https://dpmatka.in/sr.php?eventid=${eventId}&sportid=${sportId}`}
-              className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              frameBorder="0"
-              scrolling="no"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
-            ></iframe>
-          </div>
-        </div>
-      )}
-      {sportId === "5" && (
-        <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-          <div className="relative pt-[56.25%] mt-[7px]">
-            <iframe
-              src={`https://dpmatka.in/ppanim.php?eventId=${eventId}`}
+              src={`https://crickexpo.in/score/sportRadar/?eventId=${eventId}`}
               className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
