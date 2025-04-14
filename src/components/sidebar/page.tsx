@@ -56,9 +56,9 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    if (savedEventData) {
+    if (savedEventData && savedEventData !== "undefined") {
       setLoader(false);
-      setData(JSON.parse(savedEventData));
+      setData(JSON.parse(savedEventData) || []);
     }
     aos.init({ once: true });
 

@@ -23,3 +23,16 @@ export const fn_getMarketsOddsApi = async (data: any) => {
         return { status: false, message: error?.response?.data?.message || "Network Error" };
     }
 };
+
+export const fn_getLiveEventsApi = async (id: any) => {
+    try {
+        const response = await axios.get(`${URL}/new/in-play?sportId=${id}`);
+        return { status: true, data: response?.data };
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}

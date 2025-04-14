@@ -22,7 +22,7 @@ const Home = () => {
     const gameData = redisGames;
     if (gameData) {
       return setSportIds(gameData?.map((game: any) => `${game?.id}`).sort((a: any, b: any) => parseInt(b?.sportid) - parseInt(a?.sportId)));
-    } else if (savedGameData) {
+    } else if (savedGameData && savedGameData !== "undefined") {
       return setSportIds(JSON.parse(savedGameData)?.map((game: any) => `${game?.sportId}`));
     } else {
       return console.log("nothing");

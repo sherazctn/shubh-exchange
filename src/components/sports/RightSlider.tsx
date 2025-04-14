@@ -90,25 +90,22 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
           </div>
         </Modal>
       </div>
-      {sportId !== "4" && (
-        <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
-          <div className="relative pt-[56.25%] mt-[7px]">
-            <iframe
-              src={`https://crickexpo.in/score/sportRadar/?eventId=${eventId}`}
-              className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              frameBorder="0"
-              scrolling="no"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
-            ></iframe>
-          </div>
+      <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative">
+        <div className="relative pt-[56.25%] mt-[7px]">
+          <iframe
+            src={`https://crickexpo.in/score/sportRadar/?eventId=${eventId}`}
+            className="absolute top-0 left-0 w-full h-full bg-black rounded-[7px]"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowFullScreen
+            frameBorder="0"
+            scrolling="no"
+            sandbox="allow-scripts allow-same-origin allow-presentation"
+          ></iframe>
         </div>
-      )}
-      {sportId === "4" && cricketScore?.data && (
+      </div>
+      {/* {sportId === "4" && cricketScore?.data && (
         <div className="w-full max-w-[450px] mx-auto rounded-[7px] relative mt-[7px] p-[7px] flex flex-col gap-[5px]">
           <p className="text-center uppercase text-[16px] font-[600] border-b pb-[10px] mb-[5px]">{selectedEvent?.competitionName}</p>
-          {/* first team score */}
           <div className={`flex justify-between text-[15px] font-[500] ${cricketScore?.data?.activenation1 === "1" ? "text-black" : "text-gray-400"}`}>
             <p className="flex">{cricketScore?.data?.spnnation1}{cricketScore?.data?.activenation1 === "1" && <GoDotFill className="text-[#e34242] animate-pulse scale-[0.7] ml-[-2px]" />}</p>
             <div>
@@ -124,7 +121,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
               )}
             </div>
           </div>
-          {/* second team score */}
           <div className={`flex justify-between text-[15px] font-[500] mb-[4px] ${cricketScore?.data?.activenation2 === "1" ? "text-black" : "text-gray-400"}`}>
             <p className="flex">{cricketScore?.data?.spnnation2}{cricketScore?.data?.activenation2 === "1" && <GoDotFill className="text-[#e34242] animate-pulse scale-[0.7] ml-[-2px]" />}</p>
             <div>
@@ -140,7 +136,6 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
               )}
             </div>
           </div>
-          {/* balls */}
           <div className="flex w-full justify-between items-center border-y py-[10px]">
             <p className="text-[12px] sm:text-[14px] font-[500] uppercase">Last 6 balls</p>
             <div className="flex gap-[5px] mt-[-2px] justify-center">
@@ -154,12 +149,11 @@ const RightSlider: React.FC<RightSliderProps> = ({ sportId, eventId, cricketScor
               ))}
             </div>
           </div>
-          {/* message */}
           {cricketScore?.data?.spnmessage && cricketScore?.data?.spnmessage !== "" && (
             <p className="text-center text-[15px] font-[500] text-[#05a9f5] mt-[7px]">{cricketScore?.data?.spnmessage}</p>
           )}
         </div>
-      )}
+      )} */}
     </>
   );
 };
