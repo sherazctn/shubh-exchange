@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuWallet2 } from "react-icons/lu";
-// import { FaHandHoldingDollar } from "react-icons/fa6";
+import { FaHandHoldingDollar } from "react-icons/fa6";
 import { SiBetfair } from "react-icons/si";
 import { MdOutlineHistory } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -14,7 +14,7 @@ import { ImCreditCard } from "react-icons/im";
 import { webLogoApi, webNameApi } from "../../api/api";
 import { updateSmallsidebar } from "../../features/features";
 
-import img from "../../assets/Shubh_Exchange.png"
+import img from "../../assets/Shubh_Exchange.png";
 
 const Sidebar = ({ colors, path }: any) => {
   const dispatch = useDispatch();
@@ -132,7 +132,7 @@ const Sidebar = ({ colors, path }: any) => {
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
         /> */}
-        {/* <Menus
+        <Menus
           title={"Bonus Statement"}
           colors={colors}
           pathEquals={"bonusStatement"}
@@ -142,7 +142,7 @@ const Sidebar = ({ colors, path }: any) => {
           smallSidebar={smallSidebar}
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
-        /> */}
+        />
         {/* <Menus
           title={"Payment Information"}
           colors={colors}

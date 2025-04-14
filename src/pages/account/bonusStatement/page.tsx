@@ -9,6 +9,7 @@ import useColorScheme from "../../../hooks/useColorScheme";
 import BonusStatementTable from "../../../components/account/BonusStatement/BonusStatementTable";
 
 import { FaCalendarAlt } from "react-icons/fa";
+import { fn_getBonusesApi } from "../../../api/api";
 
 const BonusStatement = ({ darkTheme }: any) => {
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
@@ -23,8 +24,11 @@ const BonusStatement = ({ darkTheme }: any) => {
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
 
+  const [bonuses, setBonuses] = useState([]);
+
   useEffect(() => {
     Aos.init({ once: true });
+    fn_getBonuses();
   }, []);
 
   const onChangeStart = (date: any, dateString: any) => {
@@ -34,6 +38,12 @@ const BonusStatement = ({ darkTheme }: any) => {
   const onChangeEnd = (date: any, dateString: any) => {
     console.log(date, dateString, endDate);
     setEndDate(dateString);
+  };
+  const fn_getBonuses = async () => {
+    const response = await fn_getBonusesApi();
+    if (response?.status) {
+      setBonuses(response?.data?.data)
+    }
   };
 
   return (
@@ -94,7 +104,7 @@ const BonusStatement = ({ darkTheme }: any) => {
             className="rounded-[22px] pb-[10px] sm:p-[10px] md:px-[15px]"
             style={{ backgroundColor: colors.dark }}
           >
-            <BonusStatementTable colors={colors} />
+            <BonusStatementTable colors={colors} bonuses={bonuses} />
           </div>
         </div>
       </div>

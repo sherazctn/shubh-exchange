@@ -652,6 +652,26 @@ export const SignInApi = async (data: any) => {
     }
 };
 
+export const fn_getBonusesApi = async () => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.get(`${URL}/bonus/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response?.status === 200) {
+            return { status: true, data: response?.data }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+};
+
 export const fn_updatePasswordApi = async (data: any) => {
     try {
         const response = await axios.put(`${URL}/user/updatePassword`, data);

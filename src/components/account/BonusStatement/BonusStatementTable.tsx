@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { FaExclamationCircle } from "react-icons/fa";
 
-const BonusStatementTable = ({ colors }: any) => {
+const BonusStatementTable = ({ colors, bonuses }: any) => {
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
   return (
@@ -14,21 +15,22 @@ const BonusStatementTable = ({ colors }: any) => {
               className="leading-[40px] font-[600] text-[15px]"
               style={{ color: panelSecColor, backgroundColor: panelMainColor }}
             >
-              <td className="ps-[5px] w-[100px]">Code<SortingArrows /></td>
-              <td>Bonus Amount<SortingArrows /></td>
-              <td>Required Turnover to Activate<SortingArrows /></td>
-              <td>Required Turnover to Withdraw<SortingArrows /></td>
-              <td>Bonus Date</td>
-              <td>Bonus Expiry</td>
-              <td>Is Expired?</td>
+              <td className="ps-[5px] w-[100px]">Sr. No.</td>
+              <td>Bonus Amount</td>
+              <td>Bonus Type</td>
+              <td>Bonus Created Date</td>
+              <td>Bonus Given Time</td>
+              <td>Status</td>
             </tr>
           </thead>
           <tbody>
-            <TableRows colors={colors} />
-            <TableRows colors={colors} />
-            <TableRows colors={colors} />
-            <TableRows colors={colors} />
-            <TableRows colors={colors} />
+            {bonuses?.length > 0 ? bonuses?.map((item: any, index: any) => (
+              <TableRows key={index} colors={colors} item={item} index={index} panelSecColor={panelSecColor} />
+            )) : (
+              <tr>
+                <td colSpan={6} className="text-center pt-[10px] text-[14px] font-[500]"><FaExclamationCircle className="inline-block me-[10px] text-[18px] mt-[-3px]" />No Bonuses Found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -91,25 +93,28 @@ const BonusStatementTable = ({ colors }: any) => {
 
 export default BonusStatementTable;
 
-const TableRows = ({ colors }: any) => {
+const TableRows = ({ colors, item, index, panelSecColor }: any) => {
   return (
     <tr
       className="text-[13px] font-[500] leading-[34px] border-b"
       style={{ borderColor: colors.line, color: colors.subText }}
     >
-      <td className="ps-[5px]">04564</td>
-      <td>74,500</td>
-      <td>21,000</td>
-      <td>15,000</td>
-      <td>04 Sep 2024</td>
-      <td>04 Dec 2024</td>
-      <td>No</td>
+      <td className="ps-[5px]">{index + 1}</td>
+      <td>{item?.bonusAmount}</td>
+      <td>
+        {item?.bonusType === "immediately" && (<><span>User Got Bonus </span><span style={{ color: panelSecColor, fontWeight: "600" }}>Immediately</span></>)}
+        {item?.bonusType === "days" && (<><span>User Got Bonus when </span><span style={{ color: panelSecColor, fontWeight: "600" }}>Older then {item?.bonusValue} Days</span></>)}
+        {item?.bonusType === "points" && (<><span>User Got Bonus when </span><span style={{ color: panelSecColor, fontWeight: "600" }}>Spend {item?.bonusValue} points</span></>)}
+      </td>
+      <td>{new Date(item?.createdAt).toLocaleDateString()}</td>
+      <td>-</td>
+      <td>{item?.status}</td>
     </tr>
   );
 };
 
 const SortingArrows = () => {
-  return(
+  return (
     <div className="inline-block ms-[10px] mb-[-4px]">
       <BiSolidUpArrow className="h-[9px] cursor-pointer" />
       <BiSolidDownArrow className="h-[9px] cursor-pointer" />
