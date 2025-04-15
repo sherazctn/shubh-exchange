@@ -26,6 +26,7 @@ import allSport from "../../assets/inplay.png";
 import URL, { getAvailableGames, getInplayMarketsApi } from "../../api/api";
 import { updateSelectedEvent } from "../../features/features";
 import { MdWatchLater } from "react-icons/md";
+import { fn_getLiveEventsApi, fn_getMarketsOddsApi } from "../../api/newApis";
 
 const LeftSection = () => {
   const location = useLocation();
@@ -34,8 +35,8 @@ const LeftSection = () => {
   const toastRef = useRef<string | null>(null);
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [marketData, setMarketData] = useState<any>([]);
   const webColor = useSelector((state: any) => state.websiteColor);
-  const [marketData, setMarketData] = useState([]);
   const sportPermission = useSelector((state: any) => state.sportPermission);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const LeftSection = () => {
 
   useEffect(() => {
     if (tab !== "") {
+      fetchMarkets();
       const cleanup = fn_getInPlayMarkets();
       return cleanup;
     }
@@ -65,17 +67,17 @@ const LeftSection = () => {
     }
   };
 
+  const fetchMarkets = async () => {
+    try {
+      const response = await fn_getLiveEventsApi(2);
+      setMarketData(response?.data?.competitions);
+    } catch (error) {
+      console.error("Error fetching in-play markets:", error);
+    }
+  };
+
   const fn_getInPlayMarkets = () => {
     let intervalId: NodeJS.Timeout;
-
-    const fetchMarkets = async () => {
-      try {
-        const response = await getInplayMarketsApi(tab);
-        setMarketData(response?.data);
-      } catch (error) {
-        console.error("Error fetching in-play markets:", error);
-      }
-    };
 
     // Start the interval
     intervalId = setInterval(() => {
@@ -84,7 +86,7 @@ const LeftSection = () => {
       } else {
         clearInterval(intervalId); // Clear interval if not on the correct page
       }
-    }, 500);
+    }, 20 * 1000);
 
     // Return a cleanup function to clear the interval
     return () => clearInterval(intervalId);
@@ -99,7 +101,51 @@ const LeftSection = () => {
       duration: 4000,
       position: 'top-center'
     });
-  }
+  };
+
+  const fn_getMarketsOdds = async (matchOddMarketId: string) => {
+    try {
+      const response = await fn_getMarketsOddsApi(matchOddMarketId);
+      setMarketData((prevData: any) =>
+        prevData.map((competition: any) => ({
+          ...competition,
+          events: competition.events.map((event: any) =>
+            event.matchOddMarketId === matchOddMarketId
+              ? { ...event, odd: response?.data?.[0] }
+              : event
+          ),
+        }))
+      );
+    } catch (error) {
+      console.log("error while fetching markets odds", error);
+    }
+  };
+
+  const fetchMarketsOdds = async () => {
+    for (const competition of marketData) {
+      for (const event of competition?.events || []) {
+        if (event?.matchOddMarketId) {
+          await fn_getMarketsOdds(event.matchOddMarketId);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    let marketsOddsInterval: any;
+
+    if (location.pathname === "/in-play" && marketData?.length > 0) {
+      fetchMarketsOdds();
+
+      marketsOddsInterval = setInterval(() => {
+        fetchMarketsOdds();
+      }, 2000);
+    }
+
+    return () => {
+      clearInterval(marketsOddsInterval);
+    };
+  }, [location.pathname, marketData.length]);
 
   return (
     <div
@@ -334,7 +380,7 @@ const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: s
   };
 
   // Sort competitions based on totalMatched in descending order
-  const sortedCompetitions = competitions.sort((a: any, b: any) => {
+  const sortedCompetitions = competitions?.sort((a: any, b: any) => {
     const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
     const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
     return totalMatchedB - totalMatchedA;
@@ -389,9 +435,8 @@ const List = ({ event, webColor, tab, compName, adminGamesData, sportPermission 
 
   return (
     <a
-    className={`min-h-[65px] relative border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] ${
-      sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false ? "cursor-not-allowed" : "cursor-pointer"
-    }`}
+      className={`min-h-[65px] relative border-b pb-[10px] md:pb-0 flex flex-col md:flex-row items-center justify-between px-[11px] ${sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false ? "cursor-not-allowed" : "cursor-pointer"
+        }`}
       href={sportPermission?.[event?.eventTypeId === 4 ? "cricket" : event?.eventTypeId == 1 ? "soccer" : event?.eventTypeId == 2 ? "tennis" : ""] === false ? "#" : `/match?sportId=${event?.eventTypeId}&eventId=${event?.eventId}`}
       onClick={() => {
         dispatch(updateSelectedEvent({
@@ -422,7 +467,7 @@ const List = ({ event, webColor, tab, compName, adminGamesData, sportPermission 
           />
         )}
         <p className="text-[14px]">
-          {event?.matchName}
+          {event?.eventName}
         </p>
         <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
           Live
