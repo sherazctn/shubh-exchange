@@ -145,7 +145,7 @@ const LeftSection = () => {
     return () => {
       clearInterval(marketsOddsInterval);
     };
-  }, [location.pathname, marketData.length]);
+  }, [location.pathname, marketData]);
 
   return (
     <div
@@ -380,15 +380,15 @@ const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: s
   };
 
   // Sort competitions based on totalMatched in descending order
-  const sortedCompetitions = competitions?.sort((a: any, b: any) => {
-    const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
-    const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + (event.odd.totalMatched || 0), 0);
-    return totalMatchedB - totalMatchedA;
-  });
+  // const sortedCompetitions = competitions?.sort((a: any, b: any) => {
+  //   const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + (event?.odd?.totalMatched || 0), 0);
+  //   const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + (event?.odd?.totalMatched || 0), 0);
+  //   return totalMatchedB - totalMatchedA;
+  // });
 
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
-      {sortedCompetitions?.length > 0 ? sortedCompetitions?.map((comp: any) => (
+      {competitions?.length > 0 ? competitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
             onClick={() => fn_controlMatchesView(comp?.competitionId)}

@@ -765,6 +765,49 @@ const Fancy = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs
     dispatch(updateBettingSlip("open"));
   };
 
+  const handleNewBetClicked = (e: any, item: any, side: any, selectionName: string, marketName: string, marketId: string, gameName: string, gameId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (longPress) return;
+    if (showAmounts !== "") setAmount("");
+    if (!authentication) return toast.error("Login Yourself");
+    if (oneTouchEnable) {
+      dispatch(updateTrigger(trigger + 1));
+      fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, item?.odds, side, selectionName);
+      return;
+    };
+    dispatch(updateBettingSlip("open"));
+    dispatch(updateSlipTab("slip"));
+    const loss = 10;
+    const profit = parseFloat((10 * (item?.odds - 1))?.toFixed(2));
+    const obj = {
+      afterLoss: wallet - 10,
+      afterWin: wallet + profit,
+      exposure: side === "Back" ? -10 : -Number(((parseFloat(item?.size) / 100) * 10).toFixed(2)), //
+      profit: side === "Back" ? Number(((parseFloat(item?.size) / 100) * 10).toFixed(2)) : 10, //
+      duplicateOdd: item?.odds,
+      odd: item?.odds,
+      stake: 10,
+      sportId: "4",
+      side: side,
+      selectionName: selectionName,
+      marketName: marketName,
+      marketId: marketId,
+      loss,
+      gameName: gameName,
+      gameId: gameId,
+      eventId: eventId,
+      amount: 10,
+      size: item?.size
+    };
+    const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId) || [];
+    const updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
+    dispatch(updateRecentExp(updatedCalculation));
+    const updatedBets = [obj];
+    dispatch(updateBets(updatedBets));
+    dispatch(updateBettingSlip("open"));
+  };
+
   const handleStart = (e: any, item: any, num: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -808,17 +851,6 @@ const Fancy = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs
       setOneTimeRendered(false);
     }, 1000);
   }, [oneTimeRendered]);
-
-  // useEffect(() => {
-  //   if (eventId) {
-  //     fn_updateFancyMarket();
-  //   }
-  //   return () => {
-  //     if (intervalRef.current) {
-  //       clearInterval(intervalRef.current);
-  //     }
-  //   };
-  // }, [eventId, tabs, bets]);
 
   const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string, selectionName: string) => {
     e.preventDefault();
@@ -966,7 +998,7 @@ const Fancy = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs
                     {/* lay odd */}
                     <div
                       className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                      onClick={(e) => handleBetClicked(e, item?.ls1, `${item?.nat} ${item?.l1}`, `${item?.mid}-${item?.sid}`, "Lay", `${item?.nat} ${item?.l1}`, item)}
+                      onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", `${item?.nat}`, market?.mname, market?.mid, eventName, eventId)}
                       onMouseDown={(e) => handleStart(e, item, '1')}
                       onTouchStart={(e) => handleStart(e, item, '1')}
                     >
@@ -989,7 +1021,7 @@ const Fancy = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs
                     {/* back odd */}
                     <div
                       className="h-[43px] sm:h-[47px] w-[57px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                      onClick={(e) => handleBetClicked(e, item?.bs1, `${item?.nat} ${item?.b1}`, `${item?.mid}-${item?.sid}`, "Back", `${item?.nat} ${item?.b1}`, item)}
+                      onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", `${item?.nat}`, market?.mname, market?.mid, eventName, eventId)}
                       onMouseDown={(e) => handleStart(e, item, '2')}
                       onTouchStart={(e) => handleStart(e, item, '2')}
                     >

@@ -157,7 +157,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                 const amount = parseInt(value);
                 let profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd - 1)).toFixed(2))) : amount;
                 let exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd - 1)).toFixed(2))) : -amount;
-                if (bet?.marketName === "bookmaker" || bet?.marketId?.includes("-") && bet?.marketName !== "tied_match" && bet?.marketName !== "oddeven" && !bet?.marketName?.includes("CrickCasino")) {
+                if (bet?.marketName === "bookmaker" || bet?.marketName !== "tied_match" && bet?.marketName !== "oddeven") {
                     profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd / 100)).toFixed(2))) : amount;
                     exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd / 100)).toFixed(2))) : -amount;
                 }
@@ -173,15 +173,15 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                     exposure: exposure
                 };
                 const updatedPendingBets = pendingBets?.filter((bet: any) => {
-                    if (bet?.marketName !== "fancy") {
-                        const marketId = newObj.marketId?.includes("-") ? newObj.marketId?.split("-")?.[0] : newObj?.marketId;
-                        const compareMarketId = bet.marketId?.includes("-") ? bet.marketId?.split("-")?.[0] : bet?.marketId;
+                    if (bet?.marketName !== "Normal") {
+                        const marketId = newObj?.marketId;
+                        const compareMarketId = bet?.marketId;
                         return compareMarketId == marketId;
                     } else {
                         return bet?.marketId == newObj?.marketId
                     }
                 });
-                if (newObj?.marketName !== "fancy") {
+                if (newObj?.marketName !== "Normal") {
                     const updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
                     dispatch(updateRecentExp(updatedCalculation));
                     return {
