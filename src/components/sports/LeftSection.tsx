@@ -17,7 +17,8 @@ import footballAnimation from "../../assets/animations/football-player.json";
 import Loader from "../Loader";
 import Footer from "../footer/page";
 import { updateSelectedEvent } from "../../features/features";
-import { getAvailableGames, getMarketOddsApi, getSingleSportMarketsApi } from "../../api/api";
+import { fn_getAllEventsBySportApi, fn_getMarketsOddsApi } from "../../api/newApis";
+import { getAvailableGames, getMarketOddsApi } from "../../api/api";
 
 const LeftSection = () => {
 
@@ -25,7 +26,8 @@ const LeftSection = () => {
   const [data, setData] = useState([]);
   const [searchParams] = useSearchParams();
   const [loader, setLoader] = useState(true);
-  const [marketData, setMarketData] = useState([]);
+  const [marketData, setMarketData] = useState<any>([]);
+  const [testMarketData, setTestMarketData] = useState<any>([]);
   const divHeight = `${window.innerHeight - 60}px`;
   const [contentLoader, setContentLoader] = useState(true);
   const webColor = useSelector((state: any) => state.websiteColor);
@@ -51,6 +53,12 @@ const LeftSection = () => {
     fn_getInPlayMarkets(tab);
   }, [tab]);
 
+  useEffect(() => {
+    if (marketData?.length > 0) {
+      fetchMarketsOdds();
+    };
+  }, [testMarketData]);
+
   const fn_controlTabs = (id: string) => {
     setTab(id)
   };
@@ -74,14 +82,46 @@ const LeftSection = () => {
     }
   };
 
+  const fn_getMarketsOdds = async (matchOddMarketId: string) => {
+    try {
+      const response = await fn_getMarketsOddsApi(matchOddMarketId);
+      setMarketData((prevData: any) =>
+        prevData.map((competition: any) => ({
+          ...competition,
+          events: competition.events.map((event: any) =>
+            event.matchOddMarketId === matchOddMarketId
+              ? { ...event, odd: response?.data?.[0] }
+              : event
+          ),
+        }))
+      );
+    } catch (error) {
+      console.log("error while fetching markets odds", error);
+    }
+  };
+
+  const fetchMarketsOdds = async () => {
+    for (const competition of marketData) {
+      for (const event of competition?.events || []) {
+        if (event?.matchOddMarketId) {
+          console.log(event.matchOddMarketId);
+          await fn_getMarketsOdds(event.matchOddMarketId);
+        }
+      }
+    }
+  };
+
   const fn_getInPlayMarkets = async (tab: string) => {
     if (tab === "") return;
-    const response = await getSingleSportMarketsApi(tab);
+    const response = await fn_getAllEventsBySportApi(tab);
     if (response?.status) {
-      setMarketData(response?.data);
+      setMarketData(response?.data?.competitions);
+      setTestMarketData(response?.data?.competitions);
     }
     setContentLoader(false);
   };
+
+  console.log(marketData)
 
   return (
     <div
@@ -141,11 +181,11 @@ const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: s
   const [competitionsId, setCompetitionsId] = useState<any>([]);
 
   // Sort competitions based on totalMatched in descending order
-  const sortedCompetitions = competitions.sort((a: any, b: any) => {
-    const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
-    const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
-    return totalMatchedB - totalMatchedA;
-  });
+  // const sortedCompetitions = competitions.sort((a: any, b: any) => {
+  //   const totalMatchedA = a.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+  //   const totalMatchedB = b.events.reduce((sum: number, event: any) => sum + event.odd.totalMatched, 0);
+  //   return totalMatchedB - totalMatchedA;
+  // });
 
   const fn_updateCompetitionsId = (id: string) => {
     setCompetitionsId((prevIds: any) => {
@@ -158,7 +198,7 @@ const AllTabs = ({ webColor, competitions, tab, sportPermission }: { webColor: s
   };
   return (
     <div className="flex flex-col gap-[8px] py-[15px] pb-[40px]" style={{ minHeight: `${window.innerHeight - 330}px` }}>
-      {sortedCompetitions?.length > 0 ? sortedCompetitions?.map((comp: any) => (
+      {competitions?.length > 0 ? competitions?.map((comp: any) => (
         <div key={comp?.competitionId}>
           <div
             onClick={() => fn_updateCompetitionsId(comp?.competitionId)}
@@ -194,17 +234,6 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
   const [odds, setOdds] = useState<any>({});
   const smallText = tab === "4" ? "cricket" : tab === "1" ? "soccer" : tab === "2" ? "tennis" : "";
 
-  const fn_getUpdatedOdds = async () => {
-    const response = await getMarketOddsApi(event?.market_id);
-    if (response?.status) {
-      setOdds(response?.data)
-    }
-  }
-
-  useEffect(() => {
-    fn_getUpdatedOdds();
-  }, [event]);
-
   return (
     <a
       href={sportPermission?.[smallText] === false ? "#" : `/match?sportId=${tab}&eventId=${event?.eventId}`}
@@ -213,13 +242,13 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
         dispatch(updateSelectedEvent({
           competitionName: compName,
           eventId: event?.eventId,
-          eventName: event?.matchName,
+          eventName: event?.eventName,
           date: event?.date || event?.openDate
         }));
         localStorage.setItem('selectedEvent', JSON.stringify({
           competitionName: compName,
           eventId: event?.eventId,
-          eventName: event?.matchName,
+          eventName: event?.eventName,
           date: event?.date || event?.openDate
         }))
       }}
@@ -231,9 +260,9 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
       )}
       <div className="flex w-full md:w-auto items-center gap-4 ms-2.5 min-h-[55px] md:min-h-auto">
         <p className="text-[14px]">
-          {event?.matchName}
+          {event?.eventName}
         </p>
-        {new Date() >= new Date(event?.openDate) && (
+        {new Date() >= new Date(event?.date) && (
           <div className="flex md:hidden text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
             Live
             <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
@@ -241,32 +270,32 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
         )}
       </div>
       <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center min-h-[65px] md:min-h-auto">
-        {new Date() >= new Date(event?.openDate) && (
+        {new Date() >= new Date(event?.date) && (
           <div className="hidden md:flex text-[--text-color] h-[25px] w-[47px] rounded-[7px] font-[500] text-[12px] pt-[2px] justify-center items-center relative" style={{ backgroundColor: webColor }}>
             Live
             <GoDotFill className="absolute top-[1px] right-[1px] text-[10px] text-green-500 animate-pulse-scale" />
           </div>
         )}
-        {odds?.numberOfRunners === 3 ? (
+        {event?.odd?.numberOfRunners === 3 ? (
           <>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
+                {event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.price}
               </p>
               <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[0]?.size}
+                {event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
+                {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
+                {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
 
@@ -274,20 +303,20 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[2]?.ex?.availableToBack[0]?.price}
+                {event?.odd?.runners?.[2]?.ex?.availableToBack[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[2]?.ex?.availableToBack[0]?.size}
+                {event?.odd?.runners?.[2]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[2]?.ex?.availableToLay[0]?.price}
+                {event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[2]?.ex?.availableToLay[0]?.size}
+                {event?.odd?.runners?.[2]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
 
@@ -295,20 +324,20 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
+                {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
+                {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+                {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+                {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
           </>
@@ -318,20 +347,20 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[0]?.price}
+                {event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.price}
               </p>
               <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[0]?.ex?.availableToBack[0]?.size}
+                {event?.odd?.runners?.[0]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[0]?.ex?.availableToLay[0]?.price}
+                {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[0]?.ex?.availableToLay[0]?.size}
+                {event?.odd?.runners?.[0]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
 
@@ -360,20 +389,20 @@ const List = ({ event, webColor, tab, compName, sportPermission }: any) => {
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.price}
+                {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToBack[0]?.size}
+                {event?.odd?.runners?.[1]?.ex?.availableToBack[0]?.size}
               </p>
             </div>
             <div
               className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px]"
             >
               <p className="font-[800] text-center text-[12px] sm:text-[14px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.price}
+                {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.price}
               </p>
               <p className="font-[600] text-center text-[10px] text-gray-700 leading-[11px]">
-                {odds?.runners?.[1]?.ex?.availableToLay[0]?.size}
+                {event?.odd?.runners?.[1]?.ex?.availableToLay[0]?.size}
               </p>
             </div>
           </>
