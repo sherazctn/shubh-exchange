@@ -371,7 +371,6 @@ export const marketOddsFormulation = (obj: any, pendingBets: any) => {
     const maxProfitEntry = profitMap.find((entry) => entry.profit === totalProfit);
 
     const recentObjDetails = obj;
-
     return {
         totalProfit: Number(totalProfit.toFixed(2)),
         totalExp: checkSameBets ? Number(sameGameExposure?.toFixed(2)) : isSamePointsExposure ? Number(samePointsExposure?.toFixed(2)) : Number(totalExp.toFixed(2)),
