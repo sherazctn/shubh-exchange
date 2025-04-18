@@ -105,7 +105,7 @@ const LiveCricketLeftSection2 = ({ allEventsOdds, eventDetails, extraMarkets, ma
             return <NormalMarkets singleMarket={item} oddsPrice={oddsPrice} market={item} webColor={webColor} matchOdds={matchOdds} setMatchOdds={setMatchOdds} runner={filterData ? filterData[0] : null} sportId={sportId} eventId={eventId} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} oddRate={oddRate} eventName={eventDetails?.eventName} />
           })}
           {extraMarkets?.map((market: any) => {
-            if (market?.mname === "oddeven") return;
+            if (market?.mname === "oddeven" || market?.mname === "Completed Match" || market?.mname === "COMPLETED_MATCH") return;
             const marketType = (market?.mname === "MATCH_ODDS" || market?.mname === "TIED_MATCH") ? "m1" : (market?.mname === "Bookmaker") ? "m3" : "m2";
             return (
               <MainMarkets market={market} marketType={marketType} webColor={webColor} eventId={eventId} tabs={tabs} eventName={eventDetails?.eventName} pendingBets={pendingBets} oneTouchEnable={oneTouchEnable} trigger={trigger} />

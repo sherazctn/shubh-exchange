@@ -9,6 +9,7 @@ import { TbLadder } from 'react-icons/tb';
 import { BsGraphUp } from 'react-icons/bs';
 import { IoIosArrowUp } from 'react-icons/io';
 import { voiceLanguage } from '../../assets/data';
+import FancyModal from './FancyModal';
 
 const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger, fancyRate }: any) => {
 
@@ -44,13 +45,11 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     };
 
     const fn_openModal = async (item: any) => {
-        const mId = `${item?.mid}-${item?.sid}`;
+        const mId = market?.mid;
         setOneTimeRendered(true);
         const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
         const scores = checkBet?.map((bet: any) => {
-            const selectionNameArray = bet?.selectionName.split(" ");
-            const score = parseFloat(selectionNameArray?.[selectionNameArray?.length - 1]);
-            return { score: score, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
+            return { score: bet?.size, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
         })?.sort((a: any, b: any) => a.score - b.score);
         const data = await fn_fancyModalCalculation(scores || []) as any;
         console.log("data ", data);
@@ -68,7 +67,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     };
 
     const fn_totalCalFancy = (gameId: any): any => {
-        const filteredPendingBets = pendingBets?.filter((bet: any) => bet?.gameId == gameId);
+        const filteredPendingBets = pendingBets?.filter((bet: any) => bet?.gameId == gameId && bet?.marketId == market?.mid);
         const result: any = fancy_calculatingBets(filteredPendingBets);
         return result;
     };
@@ -175,18 +174,20 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
         if (marketType === "m1") {
             if (side === "Back") {
                 calculatedExposure = -10;
-                calculatedProfit = Number((parseFloat(item?.odds) * 10).toFixed(2));
+                calculatedProfit = Number(((parseFloat(item?.odds) - 1) * 10).toFixed(2));
             } else {
-                calculatedExposure = -Number((parseFloat(item?.odds) * 10).toFixed(2));
+                calculatedExposure = -Number(((parseFloat(item?.odds) - 1) * 10).toFixed(2));
                 calculatedProfit = 10;
             };
         } else if (marketType === "m2") {
             if (side === "Back") {
                 calculatedExposure = -10;
-                calculatedProfit = Number((parseFloat(item?.size) / 10).toFixed(2));
+                calculatedProfit = Number(((parseFloat(item?.size) / 100) * 10).toFixed(2));
             } else {
-                calculatedExposure = -Number((parseFloat(item?.size) / 10).toFixed(2));
+                calculatedExposure = -Number(((parseFloat(item?.size) / 100) * 10).toFixed(2));
                 calculatedProfit = 10;
+                // profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
+                //   exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
             };
         } else {
 
@@ -363,7 +364,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     if (market?.section?.length > 0 && marketType === "m2") {
         return (
             <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
-                {/* {showModal && <FancyModa showModal={showModal} fn_closeModal={fn_closeModal} webColor={webColor} selectedFancyBets={selectedFancyBets} />} */}
+                {showModal && <FancyModal showModal={showModal} fn_closeModal={fn_closeModal} webColor={webColor} selectedFancyBets={selectedFancyBets} />}
                 {/* header */}
                 <div
                     className="h-[47px] flex justify-between border-b cursor-pointer"
@@ -403,14 +404,14 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                 <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
                                         <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
-                                        {pendingBets?.find((pb: any) => pb?.gameId == item?.sid) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
+                                        {pendingBets?.find((pb: any) => pb?.gameId == item?.sid && pb?.marketId == market?.mid) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
                                         <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
                                             <p>
                                                 <span className="text-red-600">{fn_totalCalFancy(item?.sid)?.totalExp}</span>
                                             </p>
                                             <p>
-                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
                                             </p>
                                         </div>
                                     </div>

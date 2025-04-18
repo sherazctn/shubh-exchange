@@ -200,8 +200,8 @@ export const fancy_calculatingBets = (pendingBets: any) => {
     if (allBets.length === 1) {
         const singleBet = allBets[0];
         return {
-            totalProfit: singleBet?.side === "Back" ? ((singleBet?.odd / 100) * singleBet?.stake) : singleBet?.stake,
-            totalExp: -(singleBet?.side === "Lay" ? ((singleBet?.odd / 100) * singleBet?.stake) : singleBet?.stake),
+            totalProfit: singleBet?.side === "Back" ? ((singleBet?.size / 100) * singleBet?.stake) : singleBet?.stake,
+            totalExp: -(singleBet?.side === "Lay" ? ((singleBet?.size / 100) * singleBet?.stake) : singleBet?.stake),
             profitableRunner: singleBet.gameId,
             recentObjDetails: singleBet,
             side: singleBet.side,
@@ -392,8 +392,8 @@ export const fancy_marketOddsFormulation = (obj: any, pendingBets: any) => {
     if (allBets.length === 1) {
         const singleBet = allBets[0];
         return {
-            totalProfit: singleBet?.side === "Back" ? ((singleBet?.odd / 100) * singleBet?.stake) : singleBet?.stake,
-            totalExp: -(singleBet?.side === "Lay" ? ((singleBet?.odd / 100) * singleBet?.stake) : singleBet?.stake),
+            totalProfit: singleBet?.side === "Back" ? ((singleBet?.size / 100) * singleBet?.stake) : singleBet?.stake,
+            totalExp: -(singleBet?.side === "Lay" ? ((singleBet?.size / 100) * singleBet?.stake) : singleBet?.stake),
             profitableRunner: singleBet.gameId,
             recentObjDetails: singleBet,
             side: singleBet.side,
