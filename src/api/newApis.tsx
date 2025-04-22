@@ -1,8 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const URL = "https://backend.shubhexchange.com";
-// const URL = "https://test-backend.shubhexchange.com";
+// const URL = "https://backend.shubhexchange.com";
+const URL = "https://test-backend.shubhexchange.com";
 
 export const fn_getMarketsApi = async (data: any) => {
     try {

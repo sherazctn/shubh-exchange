@@ -54,7 +54,7 @@ const TableRows = ({ colors, item, index }: any) => {
       <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${fn_returnOnlyName(item?.selectionName)})`}{dashedOdd && ` - ${item?.odd}`}</td>
       <td className="capitalize">{item?.marketName}</td>
       <td>
-        <p className="w-[max-content] min-w-[45px] h-[25px] flex justify-center items-center rounded-[7px]" style={{ backgroundColor: item?.side === "Lay" ? "var(--red)" : "var(--blue)" }}>{item?.side}</p>
+        <p className="w-[max-content] min-w-[45px] h-[25px] flex justify-center items-center rounded-[7px]" style={{ backgroundColor: item?.side === "Lay" ? "var(--red)" : "var(--blue)" }}>{item?.marketName === "Normal" && item?.side === "Lay" ? "No" : item?.marketName === "Normal" && item?.side === "Back" ? "Yes" : item?.side}</p>
       </td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{/\s\d+(\.\d+)?$/.test(item?.selectionName) ? item?.selectionName.match(/\d+(\.\d+)?$/)?.[0] : item?.odd}</td>

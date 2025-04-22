@@ -51,7 +51,7 @@ const TableRows = ({ colors, item, index }: any) => {
       <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${item?.selectionName})`}</td>
       {/* <td>{item?.runner}</td> */}
       <td className="capitalize">{item?.marketName}</td>
-      <td>{item?.side}</td>
+      <td>{item?.marketName === "Normal" && item?.side === "Lay" ? "No" : item?.marketName === "Normal" && item?.side === "Back" ? "Yes" : item?.side}</td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{item?.odd}</td>
       <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : "orange" }} >{item?.status === "win" ? `+${item?.profit}` : item?.status === "loss" ? `-${item?.loss}` : "Abandoned"}</td>

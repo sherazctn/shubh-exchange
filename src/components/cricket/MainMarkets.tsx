@@ -8,7 +8,6 @@ import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets,
 import { TbLadder } from 'react-icons/tb';
 import { BsGraphUp } from 'react-icons/bs';
 import { IoIosArrowUp } from 'react-icons/io';
-import { voiceLanguage } from '../../assets/data';
 import FancyModal from './FancyModal';
 
 const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger, fancyRate }: any) => {
@@ -16,11 +15,8 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const timerRef = useRef<any>(null);
-    const [data, setData] = useState<any>([]);
     const [showAmounts, setAmount] = useState("");
     const [longPress, setLongPress] = useState(false);
-    const bets = useSelector((state: any) => state.bets);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const wallet = useSelector((state: any) => state.wallet);
     const authentication = useSelector((state: any) => state.authentication);
 
@@ -45,12 +41,16 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     };
 
     const fn_openModal = async (item: any) => {
+        alert("open modal");
         const mId = market?.mid;
+        console.log("mId ==> ", mId); //
         setOneTimeRendered(true);
-        const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId);
+        const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId && bet?.gameId == item?.sid);
+        console.log("checkBet ==> ", checkBet); //
         const scores = checkBet?.map((bet: any) => {
-            return { score: bet?.size, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
+            return { score: bet?.odd, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
         })?.sort((a: any, b: any) => a.score - b.score);
+        console.log("scores ==> ", scores);
         const data = await fn_fancyModalCalculation(scores || []) as any;
         console.log("data ", data);
         setSelectedFancyBets(data || []);
@@ -107,53 +107,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     //   }, 500);
     // };
 
-    const handleBetClicked = (e: any, odd: any, runnerName: any, runnerId: any, side: string, selectionName: string, item: any) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (longPress) return;
-        if (showAmounts !== "") setAmount("");
-        if (!authentication) return toast.error("Login Yourself");
-        if (!odd || odd == 0 || odd == 1) return;
-        if (!runnerName) return;
-        if (oneTouchEnable) {
-            // dispatch(updateBettingSlip("open"));
-            // dispatch(updateSlipTab("open"));
-            dispatch(updateTrigger(trigger + 1));
-            fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, odd, side, selectionName);
-            return;
-        };
-        dispatch(updateSlipTab('slip'));
-        const profit = parseFloat((10 * (odd - 1))?.toFixed(2));
-        const loss = 10;
-        const obj = {
-            afterLoss: wallet - 10,
-            afterWin: wallet + profit,
-            amount: 10,
-            stake: 10,
-            eventId: eventId,
-            gameId: runnerId,
-            gameName: eventName,
-            loss,
-            marketId: runnerId,
-            marketName: "fancy",
-            odd: parseFloat(odd),
-            profit: side === "Back" ? Number(((parseFloat(odd) / 100) * 10).toFixed(2)) : 10,
-            exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) / 100) * 10).toFixed(2)),
-            side: side,
-            sportId: "4",
-            selectionName: selectionName
-        };
-        console.log("obj ==> ", obj);
-        const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketName === "fancy" && bet?.marketId == runnerId) || [];
-        console.log("updatedPendingBets ", updatedPendingBets);
-        const updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
-        dispatch(updateRecentExp(updatedCalculation));
-        const updatedBets = [obj];
-        dispatch(updateBets(updatedBets));
-        dispatch(updateBettingSlip("open"));
-    };
-
-    const handleNewBetClicked = (e: any, item: any, side: any, selectionName: string, marketName: string, marketId: string, gameName: string, gameId: string) => {
+    const handleNewBetClicked = (e: any, item: any, side: any, selectionName: string, marketName: string, marketId: string, gameName: string, gameId: string, fixedAmount: number | null) => {
         e.preventDefault();
         e.stopPropagation();
         if (longPress) return;
@@ -161,7 +115,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
         if (!authentication) return toast.error("Login Yourself");
         if (oneTouchEnable) {
             dispatch(updateTrigger(trigger + 1));
-            fn_immediateBet(e, Number(localStorage.getItem('oneTouch') || 10), item, item?.odds, side, selectionName);
+            fn_immediateBet(e, item, side, selectionName, marketName, marketId, gameName, gameId, fixedAmount);
             return;
         };
         if (marketType === "m1" && item?.odds >= 4) return toast.error("Odds should be less than 4");
@@ -229,7 +183,81 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
         dispatch(updateBettingSlip("open"));
     };
 
-    const handleStart = (e: any, item: any, num: any) => {
+    const fn_immediateBet = async (e: any, item: any, side: any, selectionName: string, marketName: string, marketId: string, gameName: string, gameId: string, fixedAmount: number | null) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (longPress) return;
+        setAmount("");
+        if (!authentication) return toast.error("Login Yourself");
+        if (marketType === "m1" && item?.odds >= 4) return toast.error("Odds should be less than 4");
+        const oneTouchAmount = fixedAmount || Number(localStorage.getItem('oneTouch'));
+        if (!oneTouchAmount) return toast.error("Please Set One Touch Amount");
+        const loss = oneTouchAmount;
+        const profit = parseFloat((oneTouchAmount * (item?.odds - 1))?.toFixed(2));
+        let calculatedProfit = 0;
+        let calculatedExposure = 0;
+        if (marketType === "m1") {
+            if (side === "Back") {
+                calculatedExposure = -oneTouchAmount;
+                calculatedProfit = Number(((parseFloat(item?.odds) - 1) * oneTouchAmount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(item?.odds) - 1) * oneTouchAmount).toFixed(2));
+                calculatedProfit = oneTouchAmount;
+            };
+        } else if (marketType === "m2") {
+            if (side === "Back") {
+                calculatedExposure = -oneTouchAmount;
+                calculatedProfit = Number(((parseFloat(item?.size) / 100) * oneTouchAmount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(item?.size) / 100) * oneTouchAmount).toFixed(2));
+                calculatedProfit = oneTouchAmount;
+            };
+        } else {
+            if (side === "Back") {
+                calculatedExposure = -oneTouchAmount;
+                calculatedProfit = Number(((parseFloat(item?.odds) / 100) * oneTouchAmount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(item?.odds) / 100) * oneTouchAmount).toFixed(2));
+                calculatedProfit = oneTouchAmount;
+            };
+        };
+        const obj = {
+            afterLoss: wallet - oneTouchAmount,
+            afterWin: wallet + profit,
+            exposure: calculatedExposure,
+            profit: calculatedProfit,
+            duplicateOdd: item?.odds,
+            odd: item?.odds,
+            stake: oneTouchAmount,
+            sportId: "4",
+            side: side,
+            selectionName: selectionName,
+            marketName: marketName,
+            marketId: marketId,
+            loss,
+            gameName: gameName,
+            gameId: gameId,
+            eventId: eventId,
+            amount: oneTouchAmount,
+            size: item?.size
+        };
+        const response = await placeBetsApi([obj]);
+        if (response?.status) {
+            dispatch(updateBets([]));
+            dispatch(updateWallet(response?.wallet));
+            dispatch(updateRecentExp({}));
+
+            const res = await getOpenBetsByUserApi(null);
+            if (res?.status) {
+                dispatch(updatePendingBets(res?.data));
+            }
+            return toast.success(response?.message);
+        } else {
+            return toast.error(response?.message);
+        }
+    };
+
+    const handleStart = (e: any, mid: any, sid: any) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -242,7 +270,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
 
         timerRef.current = setTimeout(() => {
             setLongPress(true);
-            setAmount(`${item?.mid}-${item?.sid}-${num}`);
+            setAmount(`${mid}-${sid}`);
         }, 1000);
 
         // Add listeners to cancel the long press if the user releases the touch or mouse early
@@ -272,54 +300,6 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
             setOneTimeRendered(false);
         }, 1000);
     }, [oneTimeRendered]);
-
-    const fn_immediateBet = async (e: React.MouseEvent, amount: number, item: any, odd: any, side: string, selectionName: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!authentication) return toast.error("Login Yourself");
-        setAmount("");
-        const profit = parseFloat((amount * (odd - 1))?.toFixed(2));
-        const loss = amount;
-        const obj = {
-            afterLoss: wallet - amount,
-            afterWin: wallet + profit,
-            amount: amount,
-            stake: amount,
-            eventId: eventId,
-            gameId: `${item?.mid}-${item?.sid}`,
-            gameName: eventName,
-            loss,
-            marketId: `${item?.mid}-${item?.sid}`,
-            marketName: "fancy",
-            odd: parseFloat(odd),
-            profit: side === "Back" ? Number(((parseFloat(odd) / 100) * amount).toFixed(2)) : amount,
-            exposure: side === "Back" ? -amount : -Number(((parseFloat(odd) / 100) * amount).toFixed(2)),
-            side: side,
-            sportId: "4",
-            selectionName: selectionName
-        };
-        const response = await placeBetsApi([obj]);
-        if (response?.status) {
-            const selectedLanguage = Number(localStorage.getItem('voiceLanguage')) || 0;
-            const lan = voiceLanguage[selectedLanguage];
-            const msg = new SpeechSynthesisUtterance();
-            msg.text = lan.line || 'Bet has been placed';
-            msg.lang = lan.name || 'en';
-            // window.speechSynthesis.speak(msg);
-            dispatch(updateBets([]));
-            if (!oneTouchEnable) dispatch(updateSlipTab("open"));
-            dispatch(updateWallet(response?.wallet));
-            dispatch(updateRecentExp({}));
-            const res = await getOpenBetsByUserApi(null);
-            if (res?.status) {
-                dispatch(updatePendingBets(res?.data));
-                console.log(res?.data);
-            }
-            return toast.success(response?.message);
-        } else {
-            return toast.error(response?.message);
-        }
-    };
 
     const calculatePrice = (price: any) => {
         let finalPrice = price || 0;
@@ -419,9 +399,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                         {/* lay odd */}
                                         <div
                                             className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                            onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid)}
-                                            onMouseDown={(e) => handleStart(e, item, '1')}
-                                            onTouchStart={(e) => handleStart(e, item, '1')}
+                                            onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                            onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                            onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
                                         >
                                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                 {calculatePrice(item?.odds?.find((i: any) => i?.oname === "lay1")?.odds)}
@@ -429,22 +409,22 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                                                 {calculateSize(item?.odds?.find((i: any) => i?.oname === "lay1")?.size)}
                                             </p>
-                                            {showAmounts === `${item?.mid}-${item?.sid}-1` && (
+                                            {showAmounts === `${market?.mid}-${item?.sid}` && (
                                                 <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[0] || 1000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[1] || 2000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[2] || 3000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[3] || 4000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[4] || 5000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
                                                 </div>
                                             )}
                                         </div>
                                         {/* back odd */}
                                         <div
                                             className="h-[43px] sm:h-[47px] w-[57px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
-                                            onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid)}
-                                            onMouseDown={(e) => handleStart(e, item, '2')}
-                                            onTouchStart={(e) => handleStart(e, item, '2')}
+                                            onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                            onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                            onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
                                         >
                                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                 {calculatePrice(item?.odds?.find((i: any) => i?.oname === "back1")?.odds)}
@@ -454,11 +434,11 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             </p>
                                             {showAmounts === `${item?.mid}-${item?.sid}-2` && (
                                                 <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[0] || 1000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[1] || 2000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[2] || 3000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[3] || 4000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.bs1, "Back", `${item?.nat} ${item?.b1}`)}>{oddsPrice?.[4] || 5000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
+                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "back1"), "Back", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
                                                 </div>
                                             )}
                                         </div>
@@ -636,9 +616,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             return (
                                                 <div
                                                     className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative ${i?.otype === "back" ? "bg-[--blue]" : "bg-[--red]"}`}
-                                                    onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid)}
-                                                    onMouseDown={(e) => handleStart(e, item, '1')}
-                                                    onTouchStart={(e) => handleStart(e, item, '1')}
+                                                    onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                                    onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                                    onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
                                                 >
                                                     <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                         {calculatePrice(i?.odds)}
@@ -646,13 +626,13 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                                     <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                                                         {calculateSize(i?.size)}
                                                     </p>
-                                                    {showAmounts === `${item?.mid}-${item?.sid}-1` && (
+                                                    {showAmounts === `${market?.mid}-${item?.sid}` && (
                                                         <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[0] || 1000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[1] || 2000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[2] || 3000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[3] || 4000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[4] || 5000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -855,9 +835,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             return (
                                                 <div
                                                     className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative ${i?.otype === "back" ? "bg-[--blue]" : "bg-[--red]"}`}
-                                                    onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid)}
-                                                    onMouseDown={(e) => handleStart(e, item, '1')}
-                                                    onTouchStart={(e) => handleStart(e, item, '1')}
+                                                    onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                                    onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                                    onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
                                                 >
                                                     <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                         {calculatePrice(i?.odds)}
@@ -865,13 +845,13 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                                     <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                                                         {calculateSize(i?.size)}
                                                     </p>
-                                                    {showAmounts === `${item?.mid}-${item?.sid}-1` && (
+                                                    {showAmounts === `${market?.mid}-${item?.sid}` && (
                                                         <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[0] || 1000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[0] || 1000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[1] || 2000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[1] || 2000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[2] || 3000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[2] || 3000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[3] || 4000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[3] || 4000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, oddsPrice?.[4] || 5000, item, item?.ls1, "Lay", `${item?.nat} ${item?.l1}`)}>{oddsPrice?.[4] || 5000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 2000)}>{oddsPrice?.[2] || 3000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 3000)}>{oddsPrice?.[3] || 4000}</button>
+                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 4000)}>{oddsPrice?.[4] || 5000}</button>
                                                         </div>
                                                     )}
                                                 </div>

@@ -2,14 +2,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 // import { messaging, getToken } from "../firebase";
 
-const URL = "https://backend.shubhexchange.com";
-// const URL = "https://test-backend.shubhexchange.com";
+// const URL = "https://backend.shubhexchange.com";
+const URL = "https://test-backend.shubhexchange.com";
 
 export const fn_calculatingBets = (pendingBets: any) => {
     if (!pendingBets || pendingBets.length === 0) return;
     if (pendingBets.length === 1) {
         const obj = pendingBets[0];
-        console.log("single obj ", obj);
         return {
             totalProfit: obj.profit,
             totalExp: obj.exposure,
@@ -480,6 +479,7 @@ export const fancy_marketOddsFormulation = (obj: any, pendingBets: any) => {
 };
 
 export const fn_fancyModalCalculation = async (data: any[]) => {
+    console.log("data ", data);
     if (!data || data.length === 0) return null;
     // if one record is coming
     if (data.length === 1) {
