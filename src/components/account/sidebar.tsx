@@ -23,6 +23,8 @@ const Sidebar = ({ colors, path }: any) => {
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
   const panelMainColor = useSelector((state: any) => state.panelMainColor);
   const panelSecColor = useSelector((state: any) => state.panelSecColor);
+  const enableBanks = useSelector((state: any) => state.enableBanks);
+
   const fn_webName = async () => {
     const response = await webNameApi();
     if (response?.status) {
@@ -99,28 +101,32 @@ const Sidebar = ({ colors, path }: any) => {
           panelSecColor={panelSecColor}
           panelMainColor={panelMainColor}
         />
-        <Menus
-          title={"Deposit/Withdraw"}
-          colors={colors}
-          pathEquals={"depositWithdraw"}
-          path={path}
-          url={"/account/deposit-withdraw"}
-          icon={<BsBank className="text-[20px]" />}
-          smallSidebar={smallSidebar}
-          panelSecColor={panelSecColor}
-          panelMainColor={panelMainColor}
-        />
-        <Menus
-          title={"Payment Information"}
-          colors={colors}
-          pathEquals={"paymentInformation"}
-          path={path}
-          url={"/account/payment-information"}
-          icon={<ImCreditCard className="text-[20px]" />}
-          smallSidebar={smallSidebar}
-          panelSecColor={panelSecColor}
-          panelMainColor={panelMainColor}
-        />
+        {enableBanks && (
+          <Menus
+            title={"Deposit/Withdraw"}
+            colors={colors}
+            pathEquals={"depositWithdraw"}
+            path={path}
+            url={"/account/deposit-withdraw"}
+            icon={<BsBank className="text-[20px]" />}
+            smallSidebar={smallSidebar}
+            panelSecColor={panelSecColor}
+            panelMainColor={panelMainColor}
+          />
+        )}
+        {enableBanks && (
+          <Menus
+            title={"Payment Information"}
+            colors={colors}
+            pathEquals={"paymentInformation"}
+            path={path}
+            url={"/account/payment-information"}
+            icon={<ImCreditCard className="text-[20px]" />}
+            smallSidebar={smallSidebar}
+            panelSecColor={panelSecColor}
+            panelMainColor={panelMainColor}
+          />
+        )}
         {/* <Menus
           title={"Account Statement"}
           colors={colors}

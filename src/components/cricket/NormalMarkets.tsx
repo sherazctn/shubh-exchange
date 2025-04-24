@@ -76,6 +76,7 @@ const NormalMarkets = ({ singleMarket, oddsPrice, market, webColor, matchOdds, s
             marketId: singleMarket.marketId,
             marketName: singleMarket.marketName,
             odd: odd,
+            marketType: "m1",
             profit: side === "Back" ? Number(((parseFloat(odd) - 1) * 10).toFixed(2)) : 10, //
             exposure: side === "Back" ? -10 : -Number(((parseFloat(odd) - 1) * 10).toFixed(2)), //
             side: side,

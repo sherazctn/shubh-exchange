@@ -39,7 +39,8 @@ const initialState = {
   oddRate: { value: 0, type: 'percentage' },
   bookmakerRate: { value: 0, type: 'percentage' },
   fancyRate: { value: 0, type: 'number' },
-  whatsappPhone: null
+  whatsappPhone: null,
+  enableBanks: true
 };
 
 export const featuresSlice = createSlice({
@@ -162,7 +163,10 @@ export const featuresSlice = createSlice({
     },
     updateWhatsappPhone: (state, action) => {
       state.whatsappPhone = action.payload;
-    }
+    },
+    updateEnableBanks: (state, action) => {
+      state.enableBanks = action.payload;
+    },
   },
 });
 
@@ -205,7 +209,8 @@ export const {
   updateOddRate,
   updateBookmakerRate,
   updateFancyRate,
-  updateWhatsappPhone
+  updateWhatsappPhone,
+  updateEnableBanks
 } = featuresSlice.actions;
 
 export const featuresReducer = featuresSlice.reducer;

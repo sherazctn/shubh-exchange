@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useRef, useState } from 'react';
 
 import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateTrigger, updateWallet } from '../../features/features';
 import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, getOpenBetsByUserApi, marketOddsFormulation, placeBetsApi } from '../../api/api';
@@ -41,12 +41,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     };
 
     const fn_openModal = async (item: any) => {
-        alert("open modal");
         const mId = market?.mid;
-        console.log("mId ==> ", mId); //
         setOneTimeRendered(true);
         const checkBet = pendingBets?.filter((bet: any) => bet?.marketId == mId && bet?.gameId == item?.sid);
-        console.log("checkBet ==> ", checkBet); //
         const scores = checkBet?.map((bet: any) => {
             return { score: bet?.odd, side: bet?.side, exposure: bet?.exposure, profit: bet?.profit, stake: bet?.stake, odd: bet?.odd };
         })?.sort((a: any, b: any) => a.score - b.score);
@@ -71,41 +68,6 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
         const result: any = fancy_calculatingBets(filteredPendingBets);
         return result;
     };
-
-    // const fn_updateFancyMarket = async () => {
-    //   if (intervalRef.current) {
-    //     clearInterval(intervalRef.current);
-    //   }
-
-    //   intervalRef.current = setInterval(async () => {
-    //     const response = await getUpdatedFancyMarket(eventId);
-    //     if (response?.status) {
-    //       if (response?.data) {
-    //         const updatedBets = bets?.map((b: any) => {
-    //           const singleMarket = response?.data?.find(
-    //             (market: any) => `${market?.mid}-${market?.sid}` === b?.marketId
-    //           );
-
-    //           if (singleMarket && b?.marketId === `${singleMarket?.mid}-${singleMarket?.sid}`) {
-    //             if (b.status !== singleMarket?.gstatus) {
-    //               return { ...b, status: singleMarket?.gstatus };
-    //             }
-    //           }
-    //           return b;
-    //         });
-    //         if (JSON.stringify(updatedBets) !== JSON.stringify(bets)) {
-    //           dispatch(updateBets(updatedBets));
-    //         }
-    //         if (tabs === "Main") {
-    //           // setData(response?.data?.slice(0, 5));
-    //           setData(response?.data);
-    //         } else {
-    //           setData(response?.data);
-    //         }
-    //       }
-    //     }
-    //   }, 500);
-    // };
 
     const handleNewBetClicked = (e: any, item: any, side: any, selectionName: string, marketName: string, marketId: string, gameName: string, gameId: string, fixedAmount: number | null) => {
         e.preventDefault();
@@ -171,9 +133,12 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
             gameId: gameId,
             eventId: eventId,
             amount: 10,
-            size: item?.size
+            size: item?.size,
+            marketType: marketType
         };
-        const updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId) || [];
+        let updatedPendingBets = null;
+        if(marketType === "m1" || marketType === "m3") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId) || [];
+        if(marketType === "m2") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId && bet?.gameId == gameId) || [];
         let updatedCalculation = null as any;
         if (marketType === "m1" || marketType === "m3") updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
         if (marketType === "m2") updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
@@ -447,7 +412,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                             )
                         } else if (item?.gstatus === "SUSPENDED") {
                             return (
-                                <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                                         <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                                         {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
@@ -455,34 +420,42 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             <p>
                                                 <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
                                             </p>
+                                            <p>
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                                        <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
+                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                -
+                                            </p>
+                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                -
+                                            </p>
+                                        </div>
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
+                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                -
+                                            </p>
+                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                -
+                                            </p>
+                                        </div>
+                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                             SUSPENDED
-                                        </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
-                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                -
-                                            </p>
-                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                -
-                                            </p>
-                                        </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
-                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                -
-                                            </p>
-                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                -
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             )
                         } else if (item?.gstatus === "Ball Running") {
                             return (
-                                <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
                                     <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                                         <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                                         {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
@@ -490,43 +463,59 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             <p>
                                                 <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
                                             </p>
+                                            <p>
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                                        <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
+                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                -
+                                            </p>
+                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                -
+                                            </p>
+                                        </div>
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
+                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                -
+                                            </p>
+                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                -
+                                            </p>
+                                        </div>
+                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
                                             Ball Running
-                                        </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
-                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                -
-                                            </p>
-                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                -
-                                            </p>
-                                        </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
-                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                -
-                                            </p>
-                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                -
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             )
                         } else if (item?.gstatus === "Starting Soon.") {
                             return (
-                                <div className="min-h-[55px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto">
+                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto relative flex-1">
                                         <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize" onClick={() => fn_openModal(item)}>{item?.nat}</p>
                                         {pendingBets?.find((pb: any) => pb?.marketId == `${item?.mid}-${item?.sid}`) && <TbLadder className='cursor-pointer' onClick={() => fn_openModal(item)} />}
+                                        <div className={`text-[11px] font-[600] absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                            <p>
+                                                <span className="text-red-600">{fn_totalCal(`${item?.mid}-${item?.sid}`)?.totalExp}</span>
+                                            </p>
+                                            <p>
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                {recentExp?.recentObjDetails?.gameId == item?.sid && recentExp?.recentObjDetails?.marketId == market?.mid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-[7px] sm:gap-[11px] items-center relative">
-                                        <div className="h-[25px] rounded-[7px] w-[105px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[12px] flex justify-center items-center">
-                                            Starting Soon.
-                                        </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
+                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
                                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                 -
                                             </p>
@@ -534,13 +523,18 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                                 -
                                             </p>
                                         </div>
-                                        <div className="h-[43px] sm:h-[47px] w-[43px] sm:w-[47px] rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px]">
+                                        <div
+                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--suspended-odds] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                        >
                                             <p className="font-[800] text-center text-[13px] sm:text-[15px]">
                                                 -
                                             </p>
                                             <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
                                                 -
                                             </p>
+                                        </div>
+                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                            Starting Soon
                                         </div>
                                     </div>
                                 </div>

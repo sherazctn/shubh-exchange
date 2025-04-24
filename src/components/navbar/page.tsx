@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import SignupModal from "./SignupModal";
 import URL, { fn_updatePasswordApi, SignInApi, webLogoApi, webNameApi } from "../../api/api";
-import { authenticate, updateBets, updateBookmakerRate, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet, updateWhatsappPhone } from "../../features/features";
+import { authenticate, updateBets, updateBookmakerRate, updateEnableBanks, updateExposure, updateFancyRate, updateMobileMenu, updateMobileSidebar, updateOddRate, updateOneTouchEnable, updateSportPermission, updateUsername, updateWallet, updateWhatsappPhone } from "../../features/features";
 
 import { SlLogout } from "react-icons/sl";
 import { SiBetfair } from "react-icons/si";
@@ -21,9 +21,11 @@ import { MdKeyboardDoubleArrowRight, MdOutlineHistory, MdOutlineSportsBaseball, 
 
 import indianFlag from "../../assets/indian_flag.webp";
 import bangaliFlag from "../../assets/bangladesh_flag.png";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const mobileMenu = useSelector((state: any) => state.mobileMenu);
   const oneTouchEnable = useSelector((state: any) => state.oneTouchEnable);
   const mobileSidebar = useSelector((state: any) => state.mobileSidebar);
@@ -50,6 +52,7 @@ const Navbar = () => {
   const wallet = useSelector((state: any) => state.wallet);
   const exposure = useSelector((state: any) => state.exposure);
   const username = useSelector((state: any) => state.username);
+  const enableBanks = useSelector((state: any) => state.enableBanks);
 
   const countries = [
     { name: "India", flag: indianFlag },
@@ -108,6 +111,7 @@ const Navbar = () => {
         dispatch(updateWallet(response?.data?.wallet || 0));
         dispatch(updateSportPermission(response?.data?.sportPermission || {}));
         dispatch(updateExposure(response?.data?.exposure || 0));
+        dispatch(updateEnableBanks(response?.data?.enableBanks || true));
         dispatch(updateUsername(response?.data?.username));
         dispatch(updateWhatsappPhone(response?.data?.phone || null));
         dispatch(updateOddRate({ value: response?.data?.oddRate || 0, type: response?.data?.oddRateType || "percentage" }));
@@ -316,10 +320,12 @@ const Navbar = () => {
             >
               <MdTouchApp className="text-[20px]" />
             </div>
-            <p style={{ color: webColor }} className="flex items-center justify-center px-[15px] gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] min-w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
-              <PiHandDeposit className="w-[19px] h-[19px]" />
-              <span className="me-[5px]">Deposit / Withdraw</span>
-            </p>
+            {enableBanks && (
+              <p style={{ color: webColor }} className="flex items-center justify-center px-[15px] gap-[10px] bg-[--text-color] h-[37px] rounded-[5px] min-w-[120px] shadow-md scale-up-down" onClick={fn_depositClicked}>
+                <PiHandDeposit className="w-[19px] h-[19px]" />
+                <span className="me-[5px]">Deposit / Withdraw</span>
+              </p>
+            )}
             <a href={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
               <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
               My Markets
@@ -348,11 +354,11 @@ const Navbar = () => {
           </ul>
           {authentication ? (
             <div className="min-w-[270px] bg-[#ffffff5e] rounded-[5px] flex justify-between">
-              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white flex-nowrap">
+              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white flex-nowrap cursor-pointer" onClick={() => navigate("/account/wallet")}>
                 <span className="text-[11px] leading-[10px] font-[500]">Balance</span>
                 <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{Number(wallet).toFixed(2)}</span>
               </p>
-              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white">
+              <p className="flex flex-col justify-center ps-[13px] gap-[3px] pt-[2px] text-white cursor-pointer" onClick={() => navigate("/account/bets/current-bets")}>
                 <span className="text-[11px] leading-[10px] font-[500]">Exp</span>
                 <span className="text-[14px] leading-[14px] font-[600] text-nowrap"><FaIndianRupeeSign className="inline-block mt-[-1px]" />{exposure <= 0 ? Number(exposure).toFixed(2) : `-${Number(exposure).toFixed(2)}`}</span>
               </p>
@@ -397,9 +403,11 @@ const Navbar = () => {
           >
             <MdTouchApp className="text-[16px]" />
           </div>
-          <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
-            <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit / Withdraw
-          </div>
+          {enableBanks && (
+            <div className="scale-up-down flex justify-center items-center md:hidden min-w-[29px] h-[29px] rounded-[5px] bg-[--text-color] cursor-pointer text-[12px] font-[600] px-[10px]" onClick={fn_depositClicked}>
+              <PiHandDeposit className="scale-[1.2] me-[4px]" />Deposit / Withdraw
+            </div>
+          )}
           {!authentication && (
             <div className="flex justify-center items-center md:hidden w-[29px] h-[29px] rounded-[30px] bg-[--text-color] cursor-pointer text-[13px] font-[600]" onClick={() => setLoginModal(true)}>
               <FaUser className="mt-[-1px]" />
@@ -425,7 +433,7 @@ const Navbar = () => {
           {authentication && (
             <div className="text-white text-[13px] font-[600] absolute text-nowrap top-[48px] bg-black w-full left-0 flex justify-between items-center px-[10px] py-[1px]">
               <p>Balance: <FaIndianRupeeSign className="inline-block text-[14px]" />{Number(wallet).toFixed(2)}</p>
-              <p>Exposure: <FaIndianRupeeSign className="inline-block text-[14px]" />{exposure <= 0 ? Number(exposure).toFixed(2) : `-${Number(exposure).toFixed(2)}`}</p>
+              <p onClick={() => navigate("/account/bets/current-bets")}>Exposure: <FaIndianRupeeSign className="inline-block text-[14px]" />{exposure <= 0 ? Number(exposure).toFixed(2) : `-${Number(exposure).toFixed(2)}`}</p>
             </div>
           )}
         </div>
@@ -514,13 +522,6 @@ const Navbar = () => {
             >
               <LuLayoutDashboard />
               Dashboard
-            </a>
-            <a
-              href={"/account/deposit-withdraw"}
-              className="border-b flex-1 flex items-center gap-[5px] w-[100%] text-[13px] font-[500] px-[13px] py-[5px] cursor-pointer hover:bg-gray-300 rounded-t-[7px]"
-            >
-              <PiHandDeposit className="scale-[1.15]" />
-              Deposit
             </a>
             <a
               href={"/account/wallet"}

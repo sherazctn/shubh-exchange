@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 
 import Loader from '../Loader';
 import { AuthCheckApi, CheckAdminApi, fancy_calculatingBets, fn_calculatingBets, getOpenBetsByUserApi, panelColorApi, UpdateUserExposureApi, webColorApi } from '../../api/api';
-import { authenticate, updateBookmakerRate, updateExposure, updateFancyRate, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor, updateWhatsappPhone } from '../../features/features';
+import { authenticate, updateBookmakerRate, updateEnableBanks, updateExposure, updateFancyRate, updateOddRate, updatePanelMainColor, updatePanelSecColor, updatePendingBets, updateSportPermission, updateUser, updateUsername, updateWallet, updateWebsiteColor, updateWhatsappPhone } from '../../features/features';
 
 import img from "../../assets/block-website.png";
 import { FaExclamationTriangle } from 'react-icons/fa';
@@ -103,9 +103,11 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ children }) => {
         }
         dispatch(authenticate(response.status ? true : false));
         if (response?.status) {
+            console.log("response ==> ", response);
             dispatch(updateUser(response?.data?.user))
             dispatch(updateWallet(response?.data?.wallet))
             dispatch(updateExposure(response?.data?.exposure || 0))
+            dispatch(updateEnableBanks(response?.data?.enableBanks))
             dispatch(updateUsername(response?.data?.username))
             dispatch(updateWhatsappPhone(response?.data?.phone || null));
             dispatch(updateSportPermission(response?.data?.user?.sportPermission || {}));

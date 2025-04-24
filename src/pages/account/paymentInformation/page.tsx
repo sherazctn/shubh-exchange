@@ -8,8 +8,10 @@ import useColorScheme from "../../../hooks/useColorScheme";
 import { PiHandDeposit, PiHandWithdraw } from "react-icons/pi";
 import PaymentInformationTable from "../../../components/account/PaymentInformation/PaymentInformationTable";
 import WithdrawTable from "../../../components/account/PaymentInformation/WithdrawTable";
+import { useNavigate } from "react-router-dom";
 
 const PaymentInformation = ({ darkTheme }: any) => {
+    const navigate = useNavigate();
     const dashboardDarkTheme = useSelector((state: any) => state.dashboardDarkTheme);
     const smallSidebar = useSelector((state: any) => state.smallSidebar);
     const colorScheme = useSelector((state: any) => state.colorScheme);
@@ -20,9 +22,12 @@ const PaymentInformation = ({ darkTheme }: any) => {
 
     const [selectedTab, setSelectedTab] = useState("deposit");
 
+    const enableBanks = useSelector((state: any) => state.enableBanks);
+
     useEffect(() => {
+        if (!enableBanks) return navigate("/account/dashboard")
         Aos.init({ once: true });
-    }, []);
+    }, [enableBanks]);
 
     return (
         <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>

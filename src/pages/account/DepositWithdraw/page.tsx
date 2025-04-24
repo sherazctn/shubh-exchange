@@ -7,8 +7,10 @@ import Sidebar from "../../../components/account/sidebar";
 import useColorScheme from "../../../hooks/useColorScheme";
 import DepositMoney from "../../../components/account/DepositWithdraw/DepositMoney";
 import WithdrawMoney from "../../../components/account/DepositWithdraw/WithdrawMoney";
+import { useNavigate } from "react-router-dom";
 
 const DepositWithdraw = ({ darkTheme }: any) => {
+  const navigate = useNavigate();
   const smallSidebar = useSelector((state: any) => state.smallSidebar);
   const dashboardDarkTheme = useSelector(
     (state: any) => state.dashboardDarkTheme
@@ -16,9 +18,12 @@ const DepositWithdraw = ({ darkTheme }: any) => {
   const colorScheme = useSelector((state: any) => state.colorScheme);
   const colors = useColorScheme(dashboardDarkTheme, colorScheme);
 
+  const enableBanks = useSelector((state: any) => state.enableBanks);
+
   useEffect(() => {
+    if(!enableBanks) return navigate("/account/dashboard")
     Aos.init({ once: true });
-  }, []);
+  }, [enableBanks]);
 
   return (
     <div className={`min-h-[100vh]`} style={{ backgroundColor: colors.bg }}>

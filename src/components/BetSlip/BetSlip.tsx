@@ -124,7 +124,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
             value = (parseInt(bets[index].amount || '0') - 1).toString();
         }
         if (value) {
-            fn_changeAmountInput(value, index);
+            fn_changeAmountInput(value);
         }
     }
 
@@ -151,68 +151,55 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
         dispatch(updateBets(updatedBets));
     };
 
-    const fn_changeAmountInput = (value: any, index: any) => {
-        const updatedBets = bets.map((bet: any, i: any) => {
-            if (i === index) {
-                const amount = parseInt(value);
-                let profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd - 1)).toFixed(2))) : amount;
-                let exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd - 1)).toFixed(2))) : -amount;
-                if (bet?.marketName === "bookmaker" || bet?.marketName !== "tied_match" && bet?.marketName !== "oddeven") {
-                    profit = bet?.side === "Back" ? (parseFloat((amount * (bet.odd / 100)).toFixed(2))) : amount;
-                    exposure = bet?.side === "Lay" ? -(parseFloat((amount * (bet.odd / 100)).toFixed(2))) : -amount;
-                }
-                const loss = amount;
-                const newObj = {
-                    ...bet,
-                    amount: amount,
-                    afterWin: wallet + profit,
-                    afterLoss: wallet - loss,
-                    profit: profit,
-                    loss: loss,
-                    stake: amount,
-                    exposure: exposure
-                };
-                const updatedPendingBets = pendingBets?.filter((bet: any) => {
-                    if (bet?.marketName !== "Normal") {
-                        const marketId = newObj?.marketId;
-                        const compareMarketId = bet?.marketId;
-                        return compareMarketId == marketId;
-                    } else {
-                        return bet?.marketId == newObj?.marketId
-                    }
-                });
-                if (newObj?.marketName !== "Normal") {
-                    const updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
-                    dispatch(updateRecentExp(updatedCalculation));
-                    return {
-                        ...bet,
-                        amount: amount,
-                        afterWin: wallet + profit,
-                        afterLoss: wallet - loss,
-                        profit: profit,
-                        loss: loss,
-                        stake: amount,
-                        exposure: exposure
-                    };
-                } else {
-                    const updatedCalculation = fancy_marketOddsFormulation(newObj, updatedPendingBets);
-                    dispatch(updateRecentExp(updatedCalculation));
-                    return {
-                        ...bet,
-                        amount: amount,
-                        afterWin: wallet + profit,
-                        afterLoss: wallet - loss,
-                        profit: profit,
-                        loss: loss,
-                        stake: amount,
-                        exposure: exposure
-                    };
-                }
-            }
-            return bet;
-        });
-        console.log("updatedBets ==> ", bets);
-        dispatch(updateBets(updatedBets));
+    const fn_changeAmountInput = (value: any) => {
+        const bet = bets[0];
+        const amount = parseInt(value);
+        let calculatedExposure = bet?.exposure;
+        let calculatedProfit = bet?.profit;
+        if (bet?.marketType === "m2") {
+            if (bet?.side === "Back") {
+                calculatedExposure = -amount;
+                calculatedProfit = Number(((parseFloat(bet?.size) / 100) * amount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(bet?.size) / 100) * amount).toFixed(2));
+                calculatedProfit = amount;
+            };
+        } else if (bet?.marketType === "m1") {
+            if (bet?.side === "Back") {
+                calculatedExposure = -amount;
+                calculatedProfit = Number(((parseFloat(bet?.odd) - 1) * amount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(bet?.odd) - 1) * amount).toFixed(2));
+                calculatedProfit = amount;
+            };
+        } else {
+            if (bet?.side === "Back") {
+                calculatedExposure = -amount;
+                calculatedProfit = Number(((parseFloat(bet?.odd) / 100) * amount).toFixed(2));
+            } else {
+                calculatedExposure = -Number(((parseFloat(bet?.odds) / 100) * amount).toFixed(2));
+                calculatedProfit = amount;
+            };
+        }
+        const loss = amount;
+        const newObj = {
+            ...bet,
+            amount: amount,
+            afterWin: wallet + calculatedProfit,
+            afterLoss: wallet - loss,
+            profit: calculatedProfit,
+            loss: loss,
+            stake: amount,
+            exposure: calculatedExposure
+        };
+        let updatedPendingBets = null;
+        if(newObj?.marketType === "m1" || newObj?.marketType === "m3") updatedPendingBets = pendingBets?.filter((b: any) => b?.marketId == newObj?.marketId) || [];
+        if(newObj?.marketType === "m2") updatedPendingBets = pendingBets?.filter((b: any) => b?.marketId == newObj?.marketId && b?.gameId == newObj?.gameId) || [];
+        let updatedCalculation = null;
+        if (newObj?.marketType === "m1" || newObj?.marketType === "m3") updatedCalculation = marketOddsFormulation(newObj, updatedPendingBets);
+        if (newObj?.marketType === "m2") updatedCalculation = fancy_marketOddsFormulation(newObj, updatedPendingBets);
+        dispatch(updateRecentExp(updatedCalculation));
+        dispatch(updateBets([newObj]));
     };
 
     const fn_closeBet = (index: any) => {
@@ -355,10 +342,8 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                         </div>
                         <div className="flex gap-[10px]">
                             <input
-                                min={1}
+                                disabled
                                 value={item?.odd}
-                                // onChange={(e) => fn_changeOddInput(e.target.value, index)}
-                                type="number"
                                 className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                             />
                             {index === 0 ? (
@@ -368,7 +353,7 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                     type="number"
                                     value={item?.amount}
                                     // onKeyDown={(e) => fn_keyDown(e, index)}
-                                    onChange={(e) => fn_changeAmountInput(e.target.value, index)}
+                                    onChange={(e) => fn_changeAmountInput(e.target.value)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />) : (
                                 <input
@@ -376,58 +361,59 @@ const BetSlipTab = ({ webColor, inputRef, fn_getOpenBets, updateSlipTab }: { web
                                     type="number"
                                     value={item?.amount}
                                     // onKeyDown={(e) => fn_keyDown(e, index)}
-                                    onChange={(e) => fn_changeAmountInput(e.target.value, index)}
+                                    onChange={(e) => fn_changeAmountInput(e.target.value)}
                                     className="w-[60px] sm:w-[155px] bg-gray-100 border rounded focus:outline-none h-[28px] text-[13px] font-[500] px-[7px]"
                                 />
                             )}
                         </div>
-                        {/* <p className="flex text-[11px] mt-[5px] font-[500] gap-[15px] items-center text-[red]">
-                            <span>Min Bet: 10</span>
-                            <span>Max Bet: 100k</span>
-                            <span>Max Profit: 2.5M</span>
-                        </p> */}
                         <div className="text-[11px] mt-[10px] font-[600] flex-wrap sm:flex-nowrap flex gap-[5px] sm:justify-between">
                             {bets.map((bet: any, index: number) => (
                                 <div key={index} className="flex gap-[5px] flex-nowrap overflow-auto">
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(1000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(1000)}
+                                    >
+                                        500
+                                    </button>
+                                    <button
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(1000)}
                                     >
                                         1000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(5000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(5000)}
                                     >
                                         5000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(25000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(25000)}
                                     >
                                         25000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(50000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(50000)}
                                     >
                                         50000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(100000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(100000)}
                                     >
                                         100000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(200000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(200000)}
                                     >
                                         200000
                                     </button>
                                     <button
-                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] pt-[3px] rounded-[4px] flex-1 min-w-[50px]"
-                                        onClick={() => fn_setAmount(500000, index)}
+                                        className="bg-gray-200 cursor-pointer border border-gray-400 h-[28px] rounded-[4px] flex-1 min-w-[50px]"
+                                        onClick={() => fn_changeAmountInput(500000)}
                                     >
                                         500000
                                     </button>

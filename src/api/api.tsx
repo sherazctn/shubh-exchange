@@ -2,8 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 // import { messaging, getToken } from "../firebase";
 
-const URL = "https://backend.shubhexchange.com";
-// const URL = "https://test-backend.shubhexchange.com";
+// const URL = "https://backend.shubhexchange.com";
+const URL = "https://test-backend.shubhexchange.com";
 
 export const fn_calculatingBets = (pendingBets: any) => {
     if (!pendingBets || pendingBets.length === 0) return;
@@ -384,8 +384,6 @@ export const marketOddsFormulation = (obj: any, pendingBets: any) => {
 export const fancy_marketOddsFormulation = (obj: any, pendingBets: any) => {
     const allBets = [...(pendingBets || []), obj];
 
-    console.log("bets length ==> ", allBets?.length);
-
     if (!allBets || allBets.length === 0) return;
 
     if (allBets.length === 1) {
@@ -400,70 +398,6 @@ export const fancy_marketOddsFormulation = (obj: any, pendingBets: any) => {
             marketName: "fancy"
         };
     };
-
-    // if (allBets.length === 2) {
-    //     const bet1 = allBets[0];
-    //     const bet2 = allBets[1];
-    //     if (bet1?.side === bet2?.side) {
-    //         return {
-    //             totalProfit: bet1?.profit + bet2?.profit,
-    //             totalExp: bet1?.exposure + bet2?.exposure,
-    //             profitableRunner: bet1?.gameId,
-    //             recentObjDetails: obj,
-    //             side: obj?.side,
-    //             marketId: obj?.marketId,
-    //             marketName: "fancy"
-    //         }
-    //     } else {
-    //         return {
-    //             totalProfit: bet1?.profit > bet2?.profit ? bet1?.profit - bet2?.profit : bet1?.profit <= bet2?.profit ? bet2?.profit - bet1?.profit : 0,
-    //             totalExp: bet1?.exposure + bet2?.profit < bet2?.exposure + bet1?.profit ? bet1?.exposure + bet2?.profit : bet2?.exposure + bet1?.profit,
-    //             profitableRunner: bet1?.exposure + bet2?.profit > bet2?.exposure + bet1?.profit ? bet2 : bet1,
-    //             recentObjDetails: obj,
-    //             side: obj?.side,
-    //             marketId: obj?.marketId,
-    //             marketName: "fancy"
-    //         };
-    //     }
-    // };
-
-    // if (allBets.length === 3) {
-    //     const layBet = allBets?.find((bet) => bet?.side === "Lay");
-    //     const backBet = allBets?.find((bet) => bet?.side === "Back");
-    //     let sameBets = "";
-    //     if (layBet && !backBet) {
-    //         sameBets = "Lay";
-    //     } else if (backBet && !layBet) {
-    //         sameBets = "Back";
-    //     } else {
-    //         sameBets = "";
-    //     };
-    //     if (sameBets === "Lay" || sameBets === "Back") {
-    //         const totalExp = allBets?.reduce((acc, i) => acc + i?.exposure, 0);
-    //         const totalProfit = allBets?.reduce((acc, i) => acc + i?.profit, 0);
-    //         return {
-    //             totalProfit: totalProfit,
-    //             totalExp: totalExp,
-    //             profitableRunner: obj?.gameId,
-    //             recentObjDetails: obj,
-    //             side: obj?.side,
-    //             marketId: obj?.marketId,
-    //             marketName: "fancy"
-    //         };
-    //     } else {
-    //         const totalExp = allBets?.reduce((acc, i) => acc + i?.exposure, 0);
-    //         const totalProfit = allBets?.reduce((acc, i) => acc + i?.profit, 0);
-    //         return {
-    //             totalProfit: totalProfit,
-    //             totalExp: totalExp,
-    //             profitableRunner: obj?.gameId,
-    //             recentObjDetails: obj,
-    //             side: obj?.side,
-    //             marketId: obj?.marketId,
-    //             marketName: "fancy"
-    //         };
-    //     }
-    // };
 
     const totalExp = allBets?.reduce((acc, i) => acc + i?.exposure, 0);
     const totalProfit = allBets?.reduce((acc, i) => acc + i?.profit, 0);

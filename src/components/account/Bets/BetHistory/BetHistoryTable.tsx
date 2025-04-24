@@ -51,10 +51,14 @@ const TableRows = ({ colors, item, index }: any) => {
       <td>{item?.gameName} {item?.selectionName && item?.selectionName !== "" && `(${item?.selectionName})`}</td>
       {/* <td>{item?.runner}</td> */}
       <td className="capitalize">{item?.marketName}</td>
-      <td>{item?.marketName === "Normal" && item?.side === "Lay" ? "No" : item?.marketName === "Normal" && item?.side === "Back" ? "Yes" : item?.side}</td>
+      <td>
+        <p className="w-[max-content] min-w-[45px] h-[25px] flex justify-center items-center rounded-[7px]" style={{ backgroundColor: item?.side === "Lay" ? "var(--red)" : "var(--blue)" }}>{item?.marketName === "Normal" && item?.side === "Lay" ? "No" : item?.marketName === "Normal" && item?.side === "Back" ? "Yes" : item?.side}</p>
+      </td>
       <td><FaIndianRupeeSign className="inline-block me-[2px]" />{item?.amount}</td>
       <td>{item?.odd}</td>
-      <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : "orange" }} >{item?.status === "win" ? `+${item?.profit}` : item?.status === "loss" ? `-${item?.loss}` : "Abandoned"}</td>
+      <td style={{ color: item?.status === "win" ? "green" : item?.status === "loss" ? "red" : item?.status === "abandoned" ? "orange" : "black" }}>
+        {item?.status === "win" ? `+${item?.profit}` : item?.status === "loss" ? `-${item?.loss}` : item?.status === "abandoned" ? `Abandoned` : `Continue`}
+      </td>
       <td>{formatDate(item?.createdAt)}</td>
       <td>
         {item?.status === "win" && <p style={{ letterSpacing: "0.1px" }} className="bg-[#daf2d5] h-[25px] rounded-full w-[75px] text-[11px] font-[600] text-[#2b872a] flex justify-center items-center">Win</p>}
