@@ -184,6 +184,8 @@ const Navbar = () => {
     }
   };
 
+  console.log("enableBanks ", enableBanks);
+
   return (
     <>
       <div className="navbar h-[70px] sm:h-[60px] px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>
@@ -326,10 +328,12 @@ const Navbar = () => {
                 <span className="me-[5px]">Deposit / Withdraw</span>
               </p>
             )}
-            <a href={"/"} className={`menu ${pageNav === "home" && "active"} flex items-center gap-[4px]`}>
-              <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
-              My Markets
-            </a>
+            {authentication && (
+              <a href={"/account/bets/profit-loss"} className={`menu ${pageNav === "profit-loss" && "active"} flex items-center gap-[4px]`}>
+                <GiNetworkBars className="w-[17px] h-[17px] text-[--text-color]" />
+                My Markets
+              </a>
+            )}
             <a
               href={"/all-sports"}
               className={`menu ${pageNav === "sports" && "active"} flex items-center gap-[4px]`}
