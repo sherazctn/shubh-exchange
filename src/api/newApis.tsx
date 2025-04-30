@@ -61,4 +61,4 @@ export const fn_getAllEventsBySportApi = async (id: any) => {
             return { status: false, message: "Network Error" }
         }
     }
-}
+};
