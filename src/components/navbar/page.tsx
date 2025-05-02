@@ -184,8 +184,6 @@ const Navbar = () => {
     }
   };
 
-  console.log("enableBanks ", enableBanks);
-
   return (
     <>
       <div className="navbar h-[70px] sm:h-[60px] px-[10px] sm:px-[20px] shadow-md" style={{ backgroundColor: webColor }}>

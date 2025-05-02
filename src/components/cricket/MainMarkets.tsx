@@ -2,13 +2,15 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import FancyModal from './FancyModal';
 import { updateBets, updateBettingSlip, updatePendingBets, updateRecentExp, updateSlipTab, updateTrigger, updateWallet } from '../../features/features';
 import { fancy_calculatingBets, fancy_marketOddsFormulation, fn_calculatingBets, fn_fancyModalCalculation, getOpenBetsByUserApi, marketOddsFormulation, placeBetsApi } from '../../api/api';
 
 import { TbLadder } from 'react-icons/tb';
 import { BsGraphUp } from 'react-icons/bs';
 import { IoIosArrowUp } from 'react-icons/io';
-import FancyModal from './FancyModal';
+import CashOut from "../../assets/cashout.png";
+import { fn_cashoutCalculation } from '../../api/newApis';
 
 const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger, fancyRate }: any) => {
 
@@ -25,6 +27,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     const [oneTimeRendered, setOneTimeRendered] = useState(false);
     const recentExp = useSelector((state: any) => state.recentExp);
     const [selectedFancyBets, setSelectedFancyBets] = useState([]);
+    const [cashoutValue, setCashoutValue] = useState<any>(0);
 
     useEffect(() => {
         if (pendingBets?.length > 0) {
@@ -122,6 +125,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
             profit: calculatedProfit,
             duplicateOdd: item?.odds,
             odd: item?.odds,
+            tno: item?.tno,
             stake: 10,
             sportId: "4",
             side: side,
@@ -137,8 +141,8 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
             marketType: marketType
         };
         let updatedPendingBets = null;
-        if(marketType === "m1" || marketType === "m3") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId) || [];
-        if(marketType === "m2") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId && bet?.gameId == gameId) || [];
+        if (marketType === "m1" || marketType === "m3") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId) || [];
+        if (marketType === "m2") updatedPendingBets = pendingBets?.filter((bet: any) => bet?.marketId == marketId && bet?.gameId == gameId) || [];
         let updatedCalculation = null as any;
         if (marketType === "m1" || marketType === "m3") updatedCalculation = marketOddsFormulation(obj, updatedPendingBets);
         if (marketType === "m2") updatedCalculation = fancy_marketOddsFormulation(obj, updatedPendingBets);
@@ -193,6 +197,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
             profit: calculatedProfit,
             duplicateOdd: item?.odds,
             odd: item?.odds,
+            tno: item?.tno,
             stake: oneTouchAmount,
             sportId: "4",
             side: side,
@@ -306,6 +311,15 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
         }
     };
 
+    const fn_cashout = async (e: any, marketName: any, marketId: any, currentOdds: any) => {
+        e.stopPropagation();
+        console.log("fn_cashout");
+        const updatedPendingBets = pendingBets.filter((p: any) => p?.marketName == marketName && p?.marketId == marketId);
+        const cashout = fn_cashoutCalculation(updatedPendingBets, currentOdds);
+        console.log("cashout ==> ", cashout);
+        setCashoutValue(cashout);
+    };
+
     if (market?.section?.length > 0 && marketType === "m2") {
         return (
             <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
@@ -334,12 +348,14 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                 {/* content */}
                 <div>
                     <div className="min-h-[20px] py-[4px] flex flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-                        <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
-                            <div className="h-[25px] w-[57px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
-                                No
-                            </div>
+                        <div className={`flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative ${market?.mname === "fancy1" ? "flex-row-reverse" : "flex-row"}`}>
+                            {market?.mname !== "khado" && (
+                                <div className="h-[25px] w-[57px] sm:w-[47px] border-[2px] border-red-500 sm:rounded-[5px] bg-[--red] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer relative">
+                                    {(market?.mname === "Bookmaker 2" || market?.mname === "fancy1") ? "Lay" : "No"}
+                                </div>
+                            )}
                             <div className="h-[25px] w-[57px] border-[2px] border-blue-500 sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex justify-center items-center text-[13px] font-[500] py-[6px] cursor-pointer">
-                                Yes
+                                {(market?.mname === "Bookmaker 2" || market?.mname === "fancy1" || market?.mname === "khado") ? "Back" : "Yes"}
                             </div>
                         </div>
                     </div>
@@ -360,30 +376,32 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                    <div className={`flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative ${market?.mname === "fancy1" ? "flex-row-reverse" : "flex-row"}`}>
                                         {/* lay odd */}
-                                        <div
-                                            className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
-                                            onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
-                                            onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
-                                            onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
-                                        >
-                                            <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                {calculatePrice(item?.odds?.find((i: any) => i?.oname === "lay1")?.odds)}
-                                            </p>
-                                            <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                {calculateSize(item?.odds?.find((i: any) => i?.oname === "lay1")?.size)}
-                                            </p>
-                                            {showAmounts === `${market?.mid}-${item?.sid}` && (
-                                                <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
-                                                    <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
-                                                </div>
-                                            )}
-                                        </div>
+                                        {market?.mname !== "khado" && (
+                                            <div
+                                                className="h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] bg-[--red] flex flex-col justify-between py-[6px] cursor-pointer relative"
+                                                onClick={(e) => handleNewBetClicked(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                                onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                                onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
+                                            >
+                                                <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                    {calculatePrice(item?.odds?.find((i: any) => i?.oname === "lay1")?.odds)}
+                                                </p>
+                                                <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                    {calculateSize(item?.odds?.find((i: any) => i?.oname === "lay1")?.size)}
+                                                </p>
+                                                {showAmounts === `${market?.mid}-${item?.sid}` && (
+                                                    <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                                                        <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                        <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                        <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
+                                                        <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
+                                                        <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, item?.odds?.find((i: any) => i?.oname === "lay1"), "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                         {/* back odd */}
                                         <div
                                             className="h-[43px] sm:h-[47px] w-[57px] border sm:w-[47px] sm:rounded-[5px] bg-[--blue] flex flex-col justify-between py-[6px] cursor-pointer"
@@ -557,6 +575,12 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
                         {market?.mname}
                     </div>
                     <div className="flex gap-[7px] items-center pe-[10px]">
+                        {/* {market?.mname === "MATCH_ODDS" && (
+                            <div className="bg-[--cashout] text-[13px] font-[500] w-[90px] h-[30px] flex justify-center items-center rounded-[7px] text-green-800 gap-[4px]" onClick={(e) => fn_cashout(e, market?.mname, market?.mid, market?.section)}>
+                                <img src={CashOut} className="w-[15px]" />
+                                Cashout
+                            </div>
+                        )} */}
                         <div className='flex flex-col items-end gap-[3px]'>
                             <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {market?.min} INR</p>
                             <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {market?.max} INR</p>
