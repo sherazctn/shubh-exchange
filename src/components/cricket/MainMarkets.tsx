@@ -11,6 +11,7 @@ import { BsGraphUp } from 'react-icons/bs';
 import { IoIosArrowUp } from 'react-icons/io';
 import CashOut from "../../assets/cashout.png";
 import { fn_cashoutCalculation } from '../../api/newApis';
+import CashoutModal from './CashoutModal';
 
 const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, setTabs, eventName, pendingBets, oneTouchEnable, trigger, fancyRate }: any) => {
 
@@ -20,6 +21,7 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     const [showAmounts, setAmount] = useState("");
     const [longPress, setLongPress] = useState(false);
     const wallet = useSelector((state: any) => state.wallet);
+    const [cashoutModal, setCashoutModal] = useState(false);
     const authentication = useSelector((state: any) => state.authentication);
 
     const [viewFancy, setViewFancy] = useState(true);
@@ -28,7 +30,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     const recentExp = useSelector((state: any) => state.recentExp);
     const [selectedFancyBets, setSelectedFancyBets] = useState([]);
     const [cashoutValue, setCashoutValue] = useState<any>(0);
-
+    const [cashoutEventId, setCashoutEventId] = useState("");
+    const [cashoutMarketId, setCashoutMarketId] = useState("");
+ 
     useEffect(() => {
         if (pendingBets?.length > 0) {
             const specificMarketBets = pendingBets?.filter((bet: any) => bet?.marketId == market.mid)
@@ -41,6 +45,9 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
 
     const fn_closeModal = () => {
         setShowModal(false);
+        setCashoutModal(false);
+        setCashoutEventId("");
+        setCashoutMarketId("");
     };
 
     const fn_openModal = async (item: any) => {
@@ -313,11 +320,13 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
 
     const fn_cashout = async (e: any, marketName: any, marketId: any, currentOdds: any) => {
         e.stopPropagation();
-        console.log("fn_cashout");
         const updatedPendingBets = pendingBets.filter((p: any) => p?.marketName == marketName && p?.marketId == marketId);
-        const cashout = fn_cashoutCalculation(updatedPendingBets, currentOdds);
-        console.log("cashout ==> ", cashout);
+        if (updatedPendingBets?.length === 0) return toast.error("No Bid Found");
+        const cashout = await fn_cashoutCalculation(updatedPendingBets, currentOdds);
         setCashoutValue(cashout);
+        setCashoutEventId(eventId);
+        setCashoutMarketId(marketId);
+        setCashoutModal(true);
     };
 
     if (market?.section?.length > 0 && marketType === "m2") {
@@ -565,227 +574,230 @@ const MainMarkets = ({ market, marketType, oddsPrice, webColor, eventId, tabs, s
     } else if (market?.section?.length > 0 && marketType === "m1") {
         // ================================================================= MATCH ODDS =====================================================================
         return (
-            <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
-                {/* header */}
-                <div
-                    className="h-[47px] flex justify-between border-b cursor-pointer"
-                    onClick={() => setAmount("")}
-                >
-                    <div className="text-[--text-color] uppercase flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
-                        {market?.mname}
-                    </div>
-                    <div className="flex gap-[7px] items-center pe-[10px]">
-                        {/* {market?.mname === "MATCH_ODDS" && (
-                            <div className="bg-[--cashout] text-[13px] font-[500] w-[90px] h-[30px] flex justify-center items-center rounded-[7px] text-green-800 gap-[4px]" onClick={(e) => fn_cashout(e, market?.mname, market?.mid, market?.section)}>
-                                <img src={CashOut} className="w-[15px]" />
-                                Cashout
-                            </div>
-                        )} */}
-                        <div className='flex flex-col items-end gap-[3px]'>
-                            <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {market?.min} INR</p>
-                            <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {market?.max} INR</p>
+            <>
+                <CashoutModal showModal={cashoutModal} fn_closeModal={fn_closeModal} webColor={webColor} amount={cashoutValue} eventId={cashoutEventId} marketId={cashoutMarketId} />
+                <div className="bg-white shadow-sm rounded-[7px]" onClick={() => setAmount("")}>
+                    {/* header */}
+                    <div
+                        className="h-[47px] flex justify-between border-b cursor-pointer"
+                        onClick={() => setAmount("")}
+                    >
+                        <div className="text-[--text-color] uppercase flex justify-center items-center rounded-br-[13px] w-[max-content] h-[100%] px-[10px] text-[14px] font-[600]" style={{ backgroundColor: webColor }}>
+                            {market?.mname}
                         </div>
-                        <IoIosArrowUp
-                            className={`transition-all duration-300 ${viewFancy ? "rotate-0" : "rotate-180"}`}
-                        />
-                    </div>
-                </div>
-                {/* content */}
-                <div>
-                    <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
-                        <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
-                            <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
-                            <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
-                            <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
-                                Back
+                        <div className="flex gap-[7px] items-center pe-[10px]">
+                            {market?.mname === "MATCH_ODDS" && (
+                                <div className="bg-[--cashout] text-[13px] font-[500] w-[90px] h-[30px] flex justify-center items-center rounded-[7px] text-green-800 gap-[4px]" onClick={(e) => fn_cashout(e, market?.mname, market?.mid, market?.section)}>
+                                    <img src={CashOut} className="w-[15px]" />
+                                    Cashout
+                                </div>
+                            )}
+                            <div className='flex flex-col items-end gap-[3px]'>
+                                <p className='text-[11px] italic text-gray-600 leading-[12px]'>Min Bet: {market?.min} INR</p>
+                                <p className='text-[11px] italic text-gray-600 leading-[12px]'>Max Bet: {market?.max} INR</p>
                             </div>
-                            <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
-                                Lay
-                            </div>
-                            <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
-                            <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                            <IoIosArrowUp
+                                className={`transition-all duration-300 ${viewFancy ? "rotate-0" : "rotate-180"}`}
+                            />
                         </div>
                     </div>
-                    {market?.section?.map((item: any) => {
-                        if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running" && item?.gstatus !== "Starting Soon.") {
-                            return (
-                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
-                                        <BsGraphUp className='hidden sm:inline' />
-                                        <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
-                                        <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
-                                            <p>
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                            </p>
-                                            <p>
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
-                                        {item?.odds?.map((i: any, index: number) => {
-                                            if (window.innerWidth < 640 && (index === 0 || index === 1 || index === 4 || index === 5)) return;
-                                            return (
-                                                <div
-                                                    className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative ${i?.otype === "back" ? "bg-[--blue]" : "bg-[--red]"}`}
-                                                    onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
-                                                    onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
-                                                    onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
-                                                >
-                                                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                        {calculatePrice(i?.odds)}
-                                                    </p>
-                                                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                        {calculateSize(i?.size)}
-                                                    </p>
-                                                    {showAmounts === `${market?.mid}-${item?.sid}` && (
-                                                        <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
-                                                            <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
+                    {/* content */}
+                    <div>
+                        <div className="min-h-[20px] py-[4px] flex flex-col sm:flex-row gap-[5px] justify-end items-center px-[4px] sm:px-[10px] border-b">
+                            <div className="flex flex-row w-full sm:w-auto sm:flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center">
+                                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                                <div className={`h-[25px] border-[2px] border-blue-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--blue]`}>
+                                    Back
                                 </div>
-                            )
-                        } else if (item?.gstatus === "SUSPENDED") {
-                            return (
-                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
-                                        <BsGraphUp className='hidden sm:inline' />
-                                        <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
-                                        <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
-                                            <p>
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                            </p>
-                                            <p>
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
-                                        {[0, 1, 2, 3, 4, 5].map((i: any) => {
-                                            if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
-                                            return (
-                                                <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
-                                                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                        -
-                                                    </p>
-                                                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                        -
-                                                    </p>
-                                                </div>
-                                            )
-                                        })}
-                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
-                                            SUSPENDED
-                                        </div>
-                                    </div>
+                                <div className={`h-[25px] border-[2px] border-red-500 w-[57px] sm:w-[47px] sm:rounded-[5px] flex justify-center items-center py-[6px] relative text-[13px] font-[500] bg-[--red]`}>
+                                    Lay
                                 </div>
-                            )
-                        } else if (item?.gstatus === "Ball Running") {
-                            return (
-                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
-                                        <BsGraphUp className='hidden sm:inline' />
-                                        <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
-                                        <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
-                                            <p>
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                            </p>
-                                            <p>
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                            </p>
+                                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                                <div className={`h-[20px] w-full sm:w-[47px] sm:rounded-[5px] hidden sm:flex flex-col justify-between py-[6px] relative`}></div>
+                            </div>
+                        </div>
+                        {market?.section?.map((item: any) => {
+                            if (item?.gstatus !== "SUSPENDED" && item?.gstatus !== "Ball Running" && item?.gstatus !== "Starting Soon.") {
+                                return (
+                                    <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                        <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                                            <BsGraphUp className='hidden sm:inline' />
+                                            <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
+                                            <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                                <p>
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                </p>
+                                                <p>
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                            {item?.odds?.map((i: any, index: number) => {
+                                                if (window.innerWidth < 640 && (index === 0 || index === 1 || index === 4 || index === 5)) return;
+                                                return (
+                                                    <div
+                                                        className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative ${i?.otype === "back" ? "bg-[--blue]" : "bg-[--red]"}`}
+                                                        onClick={(e) => handleNewBetClicked(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, null)}
+                                                        onMouseDown={(e) => handleStart(e, market?.mid, item?.sid)}
+                                                        onTouchStart={(e) => handleStart(e, market?.mid, item?.sid)}
+                                                    >
+                                                        <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                            {calculatePrice(i?.odds)}
+                                                        </p>
+                                                        <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                            {calculateSize(i?.size)}
+                                                        </p>
+                                                        {showAmounts === `${market?.mid}-${item?.sid}` && (
+                                                            <div className="absolute top-[43px] sm:top-[47px] bg-white border shadow-md z-[99] w-[120px] min-h-[30px] rounded-[6px] p-[5px] flex flex-col gap-[4px]">
+                                                                <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[0] || 1000)}>{oddsPrice?.[0] || 1000}</button>
+                                                                <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[1] || 2000)}>{oddsPrice?.[1] || 2000}</button>
+                                                                <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[2] || 3000)}>{oddsPrice?.[2] || 3000}</button>
+                                                                <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[3] || 4000)}>{oddsPrice?.[3] || 4000}</button>
+                                                                <button style={{ backgroundColor: webColor }} className="text-white text-[12px] font-[500] w-full rounded-[6px] py-[5px]" onClick={(e) => fn_immediateBet(e, i, i?.otype === "back" ? "Back" : "Lay", item?.nat, market?.mname, market?.mid, eventName, item?.sid, oddsPrice?.[4] || 5000)}>{oddsPrice?.[4] || 5000}</button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
-                                        {[0, 1, 2, 3, 4, 5].map((i: any) => {
-                                            if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
-                                            return (
-                                                <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
-                                                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                        -
-                                                    </p>
-                                                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                        -
-                                                    </p>
-                                                </div>
-                                            )
-                                        })}
-                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
-                                            Ball Running
+                                )
+                            } else if (item?.gstatus === "SUSPENDED") {
+                                return (
+                                    <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                        <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                                            <BsGraphUp className='hidden sm:inline' />
+                                            <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
+                                            <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                                <p>
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                </p>
+                                                <p>
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                            {[0, 1, 2, 3, 4, 5].map((i: any) => {
+                                                if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
+                                                return (
+                                                    <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
+                                                        <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                            -
+                                                        </p>
+                                                        <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                            -
+                                                        </p>
+                                                    </div>
+                                                )
+                                            })}
+                                            <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                                SUSPENDED
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        } else if (item?.gstatus === "Starting Soon.") {
-                            return (
-                                <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
-                                    <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
-                                        <BsGraphUp className='hidden sm:inline' />
-                                        <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
-                                        <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
-                                            <p>
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
-                                                {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
-                                            </p>
-                                            <p>
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
-                                                {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
-                                            </p>
+                                )
+                            } else if (item?.gstatus === "Ball Running") {
+                                return (
+                                    <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                        <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                                            <BsGraphUp className='hidden sm:inline' />
+                                            <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
+                                            <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                                <p>
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                </p>
+                                                <p>
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                            {[0, 1, 2, 3, 4, 5].map((i: any) => {
+                                                if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
+                                                return (
+                                                    <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
+                                                        <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                            -
+                                                        </p>
+                                                        <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                            -
+                                                        </p>
+                                                    </div>
+                                                )
+                                            })}
+                                            <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                                Ball Running
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
-                                        {[0, 1, 2, 3, 4, 5].map((i: any) => {
-                                            if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
-                                            return (
-                                                <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
-                                                    <p className="font-[800] text-center text-[13px] sm:text-[15px]">
-                                                        -
-                                                    </p>
-                                                    <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
-                                                        -
-                                                    </p>
-                                                </div>
-                                            )
-                                        })}
-                                        <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
-                                            Starting Soon
+                                )
+                            } else if (item?.gstatus === "Starting Soon.") {
+                                return (
+                                    <div className="min-h-[55px] py-[4px] flex flex-row gap-[5px] justify-between items-center px-[4px] sm:px-[10px] border-b">
+                                        <div className="flex h-[100%] items-center gap-[5px] text-gray-500 w-full sm:w-auto flex-1 relative">
+                                            <BsGraphUp className='hidden sm:inline' />
+                                            <p className="text-[13px] sm:text-[15px] font-[500] cursor-pointer capitalize text-nowrap">{item?.nat}</p>
+                                            <div className={`text-[11px] font-[600] sm:absolute left-0 bottom-[-15px] w-full flex flex-row justify-between`}>
+                                                <p>
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Back" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Back" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner == item?.sid && totalCal?.side === "Lay" && (<span className="text-red-600">{totalCal?.totalExp}</span>)}
+                                                    {totalCal?.profitableRunner != item?.sid && totalCal?.side === "Lay" && (<span className="text-green-600">{totalCal?.totalProfit}</span>)}
+                                                </p>
+                                                <p>
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Back" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Back" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner == item?.sid && recentExp?.side === "Lay" && (<span className="text-red-600">{recentExp?.totalExp}</span>)}
+                                                    {recentExp?.recentObjDetails?.marketId === market.mid && recentExp?.profitableRunner != item?.sid && recentExp?.side === "Lay" && (<span className="text-green-600">{recentExp?.totalProfit}</span>)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap sm:gap-[11px] justify-end sm:justify-center items-center relative">
+                                            {[0, 1, 2, 3, 4, 5].map((i: any) => {
+                                                if (window.innerWidth < 640 && (i === 0 || i === 1 || i === 4 || i === 5)) return;
+                                                return (
+                                                    <div className={`h-[43px] sm:h-[47px] w-[57px] sm:w-[47px] border sm:rounded-[5px] flex flex-col justify-between py-[6px] cursor-pointer relative bg-[--suspended-odds]`}>
+                                                        <p className="font-[800] text-center text-[13px] sm:text-[15px]">
+                                                            -
+                                                        </p>
+                                                        <p className="font-[600] text-center text-[9px] sm:text-[10px] text-gray-700 leading-[11px]">
+                                                            -
+                                                        </p>
+                                                    </div>
+                                                )
+                                            })}
+                                            <div className="h-[25px] rounded-[7px] w-[115px] bg-[--suspended-odds-dark] mt-[2px] absolute text-white font-[500] text-[13px] flex justify-center items-center">
+                                                Starting Soon
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        }
-                    })}
+                                )
+                            }
+                        })}
+                    </div>
                 </div>
-            </div>
+            </>
         );
     } else if (market?.section?.length > 0 && marketType === "m3") {
         // ================================================================= BOOKMAKER =====================================================================

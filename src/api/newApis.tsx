@@ -116,3 +116,23 @@ export const fn_cashoutCalculation = async (data: any[], currentOdds: any[]) => 
     console.log(`Total Cashout Value: ₹${totalCashout.toFixed(2)}`);
     return totalCashout;
 };
+
+export const fn_cashoutApi = async (data: any) => {
+    try {
+        const token = Cookies.get('token');
+        const response = await axios.post(`${URL}/new/cashout`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (response?.status === 200) {
+            return { status: true, message: "Cashout Successfully" }
+        }
+    } catch (error: any) {
+        if (error?.status === 400) {
+            return { status: false, message: error?.response?.data?.message };
+        } else {
+            return { status: false, message: "Network Error" }
+        }
+    }
+}
